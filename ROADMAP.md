@@ -11,7 +11,7 @@
 - [x] Academic/technical administration, record editing, appeals, notifications, reports, audited exceptions.
 - [x] Configurable points/badges/opt-in rankings, certificates and revocation. No production values invented.
 - [x] Fourteen versioned migrations; isolated PostgreSQL RLS/concurrency tests.
-- [x] 26 automated unit/database tests; 5 browser tests; 18 screenshot captures at 390/768/1440.
+- [x] 26 automated unit/database tests; 6 browser tests; 18 screenshot captures at 390/768/1440.
 - [x] Independent visual review: ship at public/representative-preview scope only.
 - [x] Operational, bootstrap, retention, deployment and backup instructions.
 

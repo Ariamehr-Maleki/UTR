@@ -135,6 +135,10 @@ export function UploadFlow({
                 value={event}
                 onChange={(e) => {
                   setEvent(e.target.value);
+                  setUploadId(crypto.randomUUID());
+                  setFile(null);
+                  if (preview) URL.revokeObjectURL(preview);
+                  setPreview("");
                   setSaved(null);
                   setOffering("");
                 }}
