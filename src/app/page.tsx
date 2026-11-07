@@ -1,234 +1,310 @@
 import Link from "next/link";
 import {
+  ArrowUpLeft,
   CalendarDays,
   BookOpen,
-  GraduationCap,
   Library,
-  ArrowUpLeft,
+  GraduationCap,
+  ArrowLeft,
 } from "lucide-react";
 import { publicRecords } from "@/lib/data";
-import { inWeek } from "@/lib/time";
+import { inWeek, persianDate } from "@/lib/time";
+import { GroupRibbon } from "@/components/group-ribbon";
 export default async function Home() {
-  const [allEvents, news, opportunities] = await Promise.all([
+  const [events, archive, journals, news, opportunities] = await Promise.all([
     publicRecords("events"),
+    publicRecords("content", "event_archive"),
+    publicRecords("content", "journals"),
     publicRecords("content", "news"),
     publicRecords("content", "opportunities"),
   ]);
-  const events = allEvents
-    .filter((e) => e.status === "published")
-    .filter((e) => e.starts_at && inWeek(e.starts_at, new Date()));
-  const upcoming = allEvents.filter(
-    (e) => e.starts_at && new Date(e.starts_at) > new Date(),
+  const week = events.filter(
+    (e) =>
+      e.status === "published" &&
+      e.starts_at &&
+      inWeek(e.starts_at, new Date()),
   );
+  const featured = archive
+    .filter((e) => e.editorial?.year === "1404-1405")
+    .sort((a, b) => (a.editorial?.order || 0) - (b.editorial?.order || 0));
+  const spotlight = [featured[4], featured[8], featured[3]].filter(Boolean);
   return (
     <>
-      <section className="hero">
-        <div className="container hero-grid">
-          <div>
+      <section className="research-hero">
+        <div className="container research-hero-grid">
+          <div className="hero-copy">
             <h1>
-              پژوهش، از یک پرسش
+              پژوهش،
               <br />
-              تا یک گام رو به جلو.
+              از همین‌جا
+              <br />
+              آغاز می‌شود.
             </h1>
             <p>
-              پلتفرم جامع معاونت پژوهش و فناوری دانشکدگان فارابی دانشگاه تهران؛
-              نقطه دسترسی شما به رویدادها، فرصت‌ها و منابع پژوهشی.
+              رویدادها، فرصت‌ها و منابع علمی در یک مسیر.
+              <br />
+              پلتفرم پژوهش و فناوری دانشکدگان فارابی دانشگاه تهران.
             </p>
             <div className="actions">
               <Link className="button" href="/events">
-                کاوش در رویدادها <ArrowUpLeft size={18} />
+                کاوش در رویدادها <ArrowUpLeft size={20} />
               </Link>
-              <Link className="button secondary" href="/club">
-                آشنایی با باشگاه پژوهشیاران
+              <Link className="text-action" href="/club">
+                باشگاه پژوهشیاران <ArrowLeft size={19} />
               </Link>
             </div>
-            <p className="hero-note">ویژه جامعه دانشگاهی دانشکدگان فارابی</p>
+            <div className="hero-signature">
+              <img src="/assets/ut-emblem.png" width="36" height="36" alt="" />
+              <span>
+                University of Tehran Research Hub
+                <br />
+                <b>دانشکدگان فارابی · دانشگاه تهران</b>
+              </span>
+            </div>
           </div>
-          <div className="hero-art">
-            <img
-              src="/assets/ut-emblem.png"
-              alt="دانشگاه تهران"
-              width="310"
-              height="310"
-            />
+          <div className="research-board">
+            <div className="board-heading">
+              <span>از آرشیو رویدادهای فارابی</span>
+              <bdi>۱۴۰۴–۱۴۰۵</bdi>
+            </div>
+            <div className="board-posters">
+              {spotlight.map((e, i) => (
+                <Link
+                  key={e.id}
+                  className={`board-poster board-poster-${i}`}
+                  href={`/events/archive/${e.id}`}
+                >
+                  <img
+                    src={e.editorial?.image}
+                    alt={e.title}
+                    width="1000"
+                    height="1415"
+                  />
+                  <span>{e.title}</span>
+                </Link>
+              ))}
+            </div>
+            <Link className="board-footer" href="/events">
+              <span>ایده‌های تازه، گفت‌وگوهای ماندگار</span>
+              <ArrowUpLeft size={24} />
+            </Link>
           </div>
         </div>
       </section>
       <div className="container">
-        <div className="service-links">
+        <div className="service-rail">
           {[
-            [CalendarDays, "رویدادهای علمی", "/events"],
-            [GraduationCap, "فرصت‌های پژوهشی", "/opportunities"],
-            [BookOpen, "نشریات علمی", "/journals"],
-            [Library, "کتابخانه و منابع", "/resources"],
-          ].map(([Icon, label, href]) => {
+            [CalendarDays, "رویدادهای علمی", "کارگاه و نشست", "/events"],
+            [
+              GraduationCap,
+              "فرصت‌های پژوهشی",
+              "فراخوان و همکاری",
+              "/opportunities",
+            ],
+            [BookOpen, "نشریات علمی", "مقاله و انتشار", "/journals"],
+            [Library, "کتابخانه و منابع", "جست‌وجو و مطالعه", "/resources"],
+          ].map(([Icon, title, desc, href]) => {
             const I = Icon as typeof CalendarDays;
             return (
-              <Link href={href as string} key={href as string}>
-                <I size={25} />
-                <span>{label as string}</span>
-                <ArrowUpLeft size={16} />
+              <Link key={href as string} href={href as string}>
+                <I size={26} />
+                <span>
+                  <strong>{title as string}</strong>
+                  <small>{desc as string}</small>
+                </span>
+                <ArrowUpLeft size={18} />
               </Link>
             );
           })}
         </div>
-        <section className="section">
+        <section className="section weekly-section">
           <div className="section-heading">
             <div>
               <h2>این هفته در UTR</h2>
-              <p>
-                فرصت‌های پیش رو و نشست‌هایی که مهلت ارسال خلاصه آن‌ها باز است.
-              </p>
+              <p>نشست‌های این هفته و فرصت‌های تازه برای همراه شدن.</p>
             </div>
-            <Link href="/events">تقویم رویدادها</Link>
-          </div>
-          {events.length ? (
-            events.slice(0, 3).map((e) => (
-              <article className="resource-row" key={e.id}>
-                <Link href={`/events/${e.id}`}>{e.title}</Link>
-                <span>{e.description}</span>
-              </article>
-            ))
-          ) : (
-            <div className="empty">
-              <strong>برنامه این هفته به‌زودی منتشر می‌شود</strong>
-              <p>
-                رویدادهای تأییدشده پس از انتشار معاونت پژوهشی، همراه با زمان
-                برگزاری و مهلت ارسال خلاصه در این بخش قرار می‌گیرند.
-              </p>
-              <Link href="/events">مشاهده همه رویدادها</Link>
-            </div>
-          )}
-        </section>
-        <section className="section" style={{ paddingTop: 0 }}>
-          <h2>رویدادهای پیش رو</h2>
-          {upcoming.length ? (
-            upcoming.slice(0, 4).map((e) => (
-              <article className="resource-row" key={e.id}>
-                <Link href={`/events/${e.id}`}>{e.title}</Link>
-              </article>
-            ))
-          ) : (
-            <p className="muted">
-              رویداد تازه‌ای برای روزهای آینده منتشر نشده است.
-            </p>
-          )}
-        </section>
-        <section className="club-panel">
-          <div>
-            <h2>باشگاه پژوهشیاران</h2>
-            <p style={{ fontSize: 22 }}>«یک نشست، یک خلاصه، یک قدم جلوتر»</p>
-            <p>
-              در یک رویداد علمی شرکت کنید، برداشت خود را بنویسید و با بازخورد
-              استاد، مسیر پژوهش را ادامه دهید.
-            </p>
-            <Link className="button" href="/club">
-              قوانین و مسیر عضویت
+            <Link className="text-action" href="/events#current-calendar">
+              تقویم رویدادها <ArrowUpLeft size={18} />
             </Link>
           </div>
-          <ol className="steps">
-            <li>
-              در نشست تأییدشده شرکت کنید
-              <small>حضور شما توسط مسئول رویداد تأیید می‌شود.</small>
-            </li>
-            <li>
-              خلاصه دست‌نویس را بارگذاری کنید
-              <small>یک صفحه خوانا، روی فرم رسمی باشگاه.</small>
-            </li>
-            <li>
-              بازخورد استاد مرتبط را دریافت کنید
-              <small>
-                ارزیابی هر رویداد از صفر تا یک؛ بدون تضمین امتیاز کامل.
-              </small>
-            </li>
-          </ol>
-        </section>
-        <section className="section split">
-          <div>
-            <div className="section-heading">
-              <h2>فرصت‌های پژوهشی</h2>
-              <Link href="/opportunities">همه فرصت‌ها</Link>
+          {week.length ? (
+            <div>
+              {week.map((e) => (
+                <article className="resource-row" key={e.id}>
+                  <Link href={`/events/${e.id}`}>{e.title}</Link>
+                  <span>{e.starts_at && persianDate(e.starts_at)}</span>
+                </article>
+              ))}
             </div>
-            <p className="muted">
-              فراخوان‌ها، همکاری‌های پژوهشی و مسیرهای تازه یادگیری؛ پس از بررسی
-              و انتشار معاونت پژوهشی.
-            </p>
-            {opportunities.slice(0, 3).map((item) => (
-              <article className="resource-row" key={item.id}>
-                <Link href={`/opportunities/${item.id}`}>{item.title}</Link>
-              </article>
-            ))}
-            <Link href="/opportunities">جست‌وجوی فرصت‌های منتشرشده</Link>
-          </div>
-          <div>
-            <h2>دانش در دسترس</h2>
-            <div className="resource-row">
-              <div>
-                <h3>نشریات علمی</h3>
-                <p>راهنمای نشریات و مسیر دسترسی به خدمات رسمی</p>
-              </div>
-              <Link href="/journals" aria-label="مشاهده نشریات">
-                <ArrowUpLeft />
-              </Link>
-            </div>
-            <div className="resource-row">
-              <div>
-                <h3>کتابخانه و منابع علمی</h3>
-                <p>منابع منتخب و ابزارهای موردنیاز پژوهش</p>
-              </div>
-              <Link href="/resources" aria-label="مشاهده منابع">
-                <ArrowUpLeft />
-              </Link>
-            </div>
-          </div>
-        </section>
-        <section className="section" style={{ paddingTop: 0 }}>
-          <div className="section-heading">
-            <h2>خبرها و دستاوردهای پژوهشی</h2>
-            <Link href="/news">همه خبرها</Link>
-          </div>
-          {news.length ? (
-            news.slice(0, 3).map((item) => (
-              <article className="resource-row" key={item.id}>
-                <Link href={`/news/${item.id}`}>{item.title}</Link>
-              </article>
-            ))
           ) : (
-            <div className="empty">
-              <strong>روایت پژوهش‌های دانشکدگان</strong>
-              <p>
-                خبرها و دستاوردهای تأییدشده پس از انتشار در این بخش قابل مشاهده
-                خواهند بود.
-              </p>
+            <div className="week-empty">
+              <CalendarDays size={40} strokeWidth={1.3} />
+              <div>
+                <h3>برنامه‌های تازه در راه‌اند</h3>
+                <p>
+                  رویداد جدیدی برای این هفته منتشر نشده است. تا آن زمان،
+                  برنامه‌های سال‌های گذشته را مرور کنید.
+                </p>
+              </div>
+              <Link href="/events">
+                مرور آرشیو <ArrowLeft size={18} />
+              </Link>
             </div>
           )}
         </section>
-        <section className="section" style={{ paddingTop: 0 }}>
-          <h2>گروه‌های مشارکت‌کننده</h2>
-          <div className="groups">
-            <span>گروه کامپیوتر دانشکده مهندسی</span>
-            <span>گروه مدیریت دولتی دانشکده مدیریت و حسابداری</span>
-            <span>گروه صنایع دانشکده مهندسی</span>
+        <section className="section archive-feature">
+          <div className="section-heading">
+            <div>
+              <h2>از ایده تا گفت‌وگو</h2>
+              <p>
+                منتخبی از برنامه‌های پژوهشی سال تحصیلی <bdi>۱۴۰۴–۱۴۰۵</bdi>
+              </p>
+            </div>
+            <Link className="text-action" href="/events">
+              همه برنامه‌ها <ArrowUpLeft size={18} />
+            </Link>
+          </div>
+          <div className="home-event-grid">
+            {spotlight.map((e) => (
+              <Link
+                key={e.id}
+                className="home-event"
+                href={`/events/archive/${e.id}`}
+              >
+                <div>
+                  <img
+                    src={e.editorial?.image}
+                    alt={`پوستر ${e.title}`}
+                    loading="lazy"
+                    width="1000"
+                    height="1415"
+                  />
+                </div>
+                <span>{e.editorial?.date} · آرشیو</span>
+                <h3>{e.title}</h3>
+                <p>{e.editorial?.speaker}</p>
+              </Link>
+            ))}
           </div>
         </section>
-        <section className="section" style={{ paddingTop: 0 }}>
-          <h2>پرسش‌های متداول</h2>
+        <section className="club-invitation">
+          <div>
+            <h2>
+              یک نشست، یک خلاصه،
+              <br />
+              یک قدم جلوتر.
+            </h2>
+            <p>
+              باشگاه پژوهشیاران؛ حضور در رویداد علمی، نوشتن برداشت شما و دریافت
+              بازخورد استاد مرتبط.
+            </p>
+            <Link className="button" href="/club">
+              با باشگاه آشنا شوید <ArrowUpLeft size={19} />
+            </Link>
+          </div>
+          <div className="club-invitation-path">
+            <span>شرکت در نشست</span>
+            <span>خلاصه دست‌نویس</span>
+            <span>بازخورد استاد</span>
+            <small>برای دانشجویان همه مقاطع · بدون تحویل کاغذی</small>
+          </div>
+        </section>
+        <section className="section knowledge-section">
+          <div className="knowledge-copy">
+            <h2>
+              دانش،
+              <br />
+              در دسترس شما.
+            </h2>
+            <p>
+              نشریه مرتبط با پژوهش خود را پیدا کنید، راهنمای نویسندگان را
+              بخوانید و به منابع علمی دانشگاه دسترسی داشته باشید.
+            </p>
+            <Link className="text-action" href="/journals">
+              کاوش در نشریات <ArrowUpLeft size={18} />
+            </Link>
+            <Link className="text-action" href="/resources">
+              کتابخانه و منابع علمی <ArrowUpLeft size={18} />
+            </Link>
+          </div>
+          <div className="journal-shelf">
+            {journals.slice(2, 5).map((j) => (
+              <Link href="/journals" key={j.id}>
+                <img
+                  src={j.editorial?.image}
+                  alt={`جلد ${j.title}`}
+                  loading="lazy"
+                  width="240"
+                  height="340"
+                />
+                <span>{j.title}</span>
+              </Link>
+            ))}
+          </div>
+        </section>
+        <section className="section split editorial-updates">
+          <div>
+            <h2>فرصت‌های پژوهشی</h2>
+            {opportunities.length ? (
+              opportunities.slice(0, 3).map((o) => (
+                <article className="resource-row" key={o.id}>
+                  <Link href={`/opportunities/${o.id}`}>{o.title}</Link>
+                </article>
+              ))
+            ) : (
+              <p>
+                فراخوان‌ها و فرصت‌های همکاری پس از انتشار معاونت پژوهشی، اینجا
+                در دسترس خواهند بود.
+              </p>
+            )}
+            <Link className="text-action" href="/opportunities">
+              مشاهده فرصت‌ها <ArrowUpLeft size={17} />
+            </Link>
+          </div>
+          <div>
+            <h2>خبرها و دستاوردها</h2>
+            {news.length ? (
+              news.slice(0, 3).map((n) => (
+                <article className="resource-row" key={n.id}>
+                  <Link href={`/news/${n.id}`}>{n.title}</Link>
+                </article>
+              ))
+            ) : (
+              <p>
+                روایت فعالیت‌ها و دستاوردهای پژوهشی دانشکدگان، پس از تأیید و
+                انتشار مسئول مربوط.
+              </p>
+            )}
+            <Link className="text-action" href="/news">
+              مشاهده خبرها <ArrowUpLeft size={17} />
+            </Link>
+          </div>
+        </section>
+      </div>
+      <GroupRibbon />
+      <section className="container section faq-section">
+        <div>
+          <h2>پرسشی مانده؟</h2>
+          <p>چند پاسخ کوتاه، پیش از شروع.</p>
+          <Link href="/policy">قوانین کامل مشارکت</Link>
+        </div>
+        <div>
           {[
             [
               "چه کسانی می‌توانند عضو باشگاه شوند؟",
               "دانشجویان کارشناسی، کارشناسی ارشد و دکتری، پس از تکمیل پروفایل و تأیید وضعیت دانشجویی.",
             ],
             [
-              "آیا برای هر نشست یک امتیاز کامل دریافت می‌کنم؟",
-              "خیر. استاد برای هر رویداد از صفر تا یک امتیاز تعیین می‌کند. امتیاز مثبت حتی به‌صورت کسری، امکان ارجاع به استاد دیگر را می‌بندد.",
+              "آیا هر نشست یک امتیاز کامل دارد؟",
+              "خیر. استاد برای هر رویداد از صفر تا یک امتیاز تعیین می‌کند. امتیاز کامل تضمین نمی‌شود و هر امتیاز مثبت، حتی کسری، ارجاع دوباره را می‌بندد.",
             ],
             [
-              "آیا تحویل نسخه کاغذی لازم است؟",
-              "خیر. تصویر یا اسکن خوانای خلاصه یک‌صفحه‌ای روی فرم رسمی باشگاه را در سامانه بارگذاری می‌کنید.",
+              "نسخه کاغذی خلاصه را کجا تحویل بدهم؟",
+              "تحویل فیزیکی لازم نیست. تصویر یا اسکن خوانای خلاصه یک‌صفحه‌ای روی فرم رسمی را در سامانه بارگذاری می‌کنید.",
             ],
             [
-              "امتیاز باشگاه چگونه در نمره درس اعمال می‌شود؟",
-              "امتیاز باشگاه با ثبت نمره در سامانه رسمی دانشگاه متفاوت است. اعمال امتیازهای تجمیعی تابع مقررات آموزشی مؤسسه است.",
+              "امتیاز باشگاه همان نمره رسمی درس است؟",
+              "خیر. امتیاز باشگاه با ثبت نمره در سامانه دانشگاه متفاوت است. اعمال امتیازهای تجمیعی تابع مقررات آموزشی مؤسسه است.",
             ],
           ].map(([q, a]) => (
             <details key={q}>
@@ -236,8 +312,8 @@ export default async function Home() {
               <p>{a}</p>
             </details>
           ))}
-        </section>
-      </div>
+        </div>
+      </section>
     </>
   );
 }

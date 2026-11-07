@@ -37,6 +37,15 @@ const labels: Record<string, string> = {
   approved: "تأیید",
   confirmed: "حضور تأیید شده",
   kind: "نوع محتوا",
+  year: "سال تحصیلی",
+  date: "تاریخ نمایشی",
+  time: "ساعت نمایشی",
+  topic: "حوزه موضوعی",
+  image: "نشانی تصویر رسمی",
+  source: "پیوند منبع رسمی",
+  email: "ایمیل دفتر",
+  phone: "تلفن دفتر",
+  order: "ترتیب نمایش",
   external_url: "نشانی رسمی HTTPS",
   resolution: "پاسخ به درخواست",
   state: "وضعیت پرونده",
@@ -104,6 +113,17 @@ const operations: Record<string, [string, string[]]> = {
       "title",
       "description",
       "external_url",
+      "year",
+      "date",
+      "time",
+      "speaker",
+      "venue",
+      "topic",
+      "image",
+      "source",
+      "email",
+      "phone",
+      "order",
       "department_id",
       "status",
     ],
@@ -149,6 +169,7 @@ const selects: Record<string, string[][]> = {
   kind: [
     ["opportunities", "فرصت پژوهشی"],
     ["journals", "نشریه"],
+    ["event_archive", "رویداد آرشیوی"],
     ["resources", "منبع علمی"],
     ["news", "خبر و دستاورد"],
     ["about", "درباره و تماس"],
@@ -204,7 +225,7 @@ export function AdminConsole({
   const records = catalog[table] || [];
   const record = records.find((r) => r.id === selected);
   function value(key: string) {
-    const raw = record?.[key];
+    const raw = record?.[key] ?? record?.editorial?.[key];
     if (raw == null) return "";
     if (
       [
@@ -382,6 +403,15 @@ export function AdminConsole({
             "max_alternatives",
             "review_hours",
             "department_id",
+            "year",
+            "date",
+            "time",
+            "topic",
+            "image",
+            "source",
+            "email",
+            "phone",
+            "order",
           ].includes(key);
           return (
             <label key={key}>

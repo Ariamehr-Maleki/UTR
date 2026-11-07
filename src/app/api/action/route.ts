@@ -152,13 +152,50 @@ export async function POST(req: Request) {
       case "read_notification":
         result = await db.rpc("read_notification", { p_id: uuid.parse(d.id) });
         break;
-      case "admin":
+      case "admin": {
+        const payload = JSON.parse(d.payload);
+        if (d.operation === "content") {
+          payload.editorial = {};
+          for (const key of [
+            "year",
+            "date",
+            "time",
+            "speaker",
+            "venue",
+            "topic",
+            "image",
+            "source",
+            "email",
+            "phone",
+            "order",
+          ]) {
+            if (payload[key] !== undefined && payload[key] !== "")
+              payload.editorial[key] =
+                key === "order"
+                  ? z.coerce
+                      .number()
+                      .int()
+                      .min(0)
+                      .max(10000)
+                      .parse(payload[key])
+                  : z.string().max(1000).parse(payload[key]);
+            delete payload[key];
+          }
+          if (payload.editorial.source)
+            z.string()
+              .url()
+              .startsWith("https://")
+              .parse(payload.editorial.source);
+          if (payload.editorial.email)
+            z.string().email().parse(payload.editorial.email);
+        }
         result = await db.rpc("admin_action", {
           p_action: d.operation,
-          p_data: JSON.parse(d.payload),
+          p_data: payload,
           p_reason: z.string().min(5).max(2000).parse(d.reason),
         });
         break;
+      }
       case "logout":
         await db.auth.signOut();
         return NextResponse.json({ redirect: "/" });

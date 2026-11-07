@@ -42,7 +42,8 @@ export default function RootLayout({
               <Link href="/events">رویدادها</Link>
               <Link href="/club">باشگاه پژوهشیاران</Link>
               <Link href="/opportunities">فرصت‌های پژوهشی</Link>
-              <Link href="/resources">منابع علمی</Link>
+              <Link href="/journals">نشریات</Link>
+              <Link href="/resources">کتابخانه</Link>
             </nav>
             <Link className="button small" href="/auth/login">
               ورود به سامانه

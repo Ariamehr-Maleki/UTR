@@ -20,3 +20,5 @@
 - Creating UTR Staging in the user-approved UTR organization was rejected by Supabase: account-level maximum of two active Free projects already reached. No project was paused/deleted and no paid upgrade was purchased.
 
 - User deferred activation-email setup on 2026-11-08. SMTP is no longer a blocker for completing non-email implementation/testing. No student status or privileged role is auto-approved by this deferral; public signup and password recovery remain disabled until an explicit supported account-provisioning path is configured.
+
+- 2026-11-08: User requested a full visual redesign and authorized importing official Farabi event archives, journals and library content. 1405–1406 remains coming soon. Historical editorial records are separate from operational academic events; importing them never asserts attendance, club eligibility or credit. Public previews may use the reviewed public-content snapshot while production remains database-managed. Authentic poster colors are retained; the interface keeps the blue/cyan institutional palette.

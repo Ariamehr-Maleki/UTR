@@ -75,3 +75,13 @@ Run `npm run test:workflows` to exercise the actual UploadFlow and Assessment co
 ## Public site without account activation
 
 `UTR_PUBLIC_CONTENT_ENABLED=true` enables live published directories, events and certificate verification using a stateless anonymous client and RLS. It grants no academic writes or account access. Private workspace activation remains controlled by `UTR_LIVE_ENABLED`; signup remains a separate gate. Public queries always use anonymous privileges, even when an administrator is logged in, and fetch fresh data per request. Production project references remain blocked on previews. Activation-email work is deferred by the user.
+
+## Official Farabi editorial archive (2026-11-08)
+
+The public redesign includes 19 historical workshop posters (9 for 1403–1404 and 10 for 1404–1405), nine journals with their real covers and fourteen library services/resources. The 1405–1406 archive explicitly says coming soon. Sources are the user-supplied official pages 43935, 50799, 4231 and 4230 on farabi.ut.ac.ir. Titles, presenters, dates and venues were checked against each poster; the 18 Azar 1404 item preserves both sessions. The original posters remain complete and retain their original colors. Optimized local WebP copies have source URLs in public/assets/official/provenance.json.
+
+Production reads published `content` records through anonymous RLS. Administrators use **محتوا و منابع** and choose **رویداد آرشیوی**, **نشریه** or **منبع علمی**; the editor includes year, display date/time, presenter, venue, source, image, contact and order. Unpublishing immediately removes a record from public queries. Archive records have no academic event IDs and cannot create registrations, attendance or credit. Current operational events continue under the existing event workflow.
+
+Isolated previews use the reviewed public snapshot in src/content/official.json; they never query production. This snapshot is real public-source material, not fabricated demonstration data. `scripts/build-official-content.mjs` reproduces that snapshot only. To change production content, use authorized administration or a new reviewed migration; never rewrite the applied import migration. `scripts/import-official-assets.mjs` can re-download provenance-listed official assets. It does not access private files or identities.
+
+The paused/reduced-motion-aware participating-group ribbon is on the club and home pages. `node scripts/review-redesign.mjs` captures 13 routes at 390/768/1440 against a local production server on port 3110; artifacts are ignored by Git. Browser tests cover archive year/filter/detail behavior, official directory links and ribbon controls. Hosted account/file workflows remain subject to the existing release gates.

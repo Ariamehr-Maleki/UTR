@@ -1,6 +1,7 @@
 import { publicContentEnabled } from "./config";
 import { connection } from "next/server";
 import { publicDatabase } from "./supabase/public";
+import official from "@/content/official.json";
 export type RecordItem = {
   id: string;
   title: string;
@@ -19,12 +20,29 @@ export type RecordItem = {
   registration_opens?: string;
   registration_closes?: string;
   status?: string;
+  editorial?: {
+    year?: string;
+    date?: string;
+    time?: string;
+    speaker?: string;
+    venue?: string;
+    topic?: string;
+    image?: string;
+    source?: string;
+    email?: string;
+    phone?: string;
+    order?: number;
+  };
 };
 export async function publicRecords(
   table: "events" | "content",
   kind?: string,
 ): Promise<RecordItem[]> {
-  if (!publicContentEnabled()) return [];
+  // Production never falls back: editorial unpublishing must be respected.
+  if (!publicContentEnabled())
+    return table === "content" && process.env.VERCEL_ENV !== "production"
+      ? (official as RecordItem[]).filter((r) => !kind || r.kind === kind)
+      : [];
   await connection();
   const db = publicDatabase();
   let q = db.from(table).select("*");

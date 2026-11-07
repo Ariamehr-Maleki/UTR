@@ -445,4 +445,57 @@ describe.skipIf(!url)("Postgres RLS and transactional workflow", () => {
       ).rowCount,
     ).toBe(1);
   });
+
+  it("editorial metadata is scoped, auditable and unpublished records stay private", async () => {
+    const contentId = id();
+    const payload = {
+      id: contentId,
+      kind: "event_archive",
+      title: "Test archive",
+      description: "Isolated test record",
+      department_id: dep,
+      status: "published",
+      editorial: {
+        year: "1404-1405",
+        image: "/assets/official/news-50799-1.webp",
+        order: 1,
+      },
+    };
+    await as(
+      admin,
+      "select admin_action('content',$1::jsonb,'Approved editorial test')",
+      [JSON.stringify(payload)],
+    );
+    expect(
+      (
+        await pool.query("select editorial from content where id=$1", [
+          contentId,
+        ])
+      ).rows[0].editorial.year,
+    ).toBe("1404-1405");
+    await expect(
+      as(
+        student,
+        "select admin_action('content',$1::jsonb,'Unauthorized edit attempt')",
+        [JSON.stringify(payload)],
+      ),
+    ).rejects.toThrow();
+    await as(
+      admin,
+      "select admin_action('content',$1::jsonb,'Unpublish editorial test')",
+      [JSON.stringify({ ...payload, status: "draft" })],
+    );
+    const client = await pool.connect();
+    try {
+      await client.query("begin");
+      await client.query("set local role anon");
+      expect(
+        (await client.query("select id from content where id=$1", [contentId]))
+          .rowCount,
+      ).toBe(0);
+      await client.query("rollback");
+    } finally {
+      client.release();
+    }
+  });
 });
