@@ -1,0 +1,3 @@
+import {notFound} from 'next/navigation';
+import {publicRecords} from '@/lib/data';
+export default async function Detail({params}:{params:Promise<{section:string;id:string}>}){const {section,id}=await params;if(!['opportunities','journals','resources','news'].includes(section))notFound();const row=(await publicRecords('content',section)).find(x=>x.id===id);if(!row)notFound();return <article className="container content prose"><header className="page-head"><h1>{row.title}</h1></header><p style={{whiteSpace:'pre-wrap'}}>{row.description}</p>{row.external_url&&<a className="button" href={row.external_url} rel="noopener noreferrer" target="_blank">رفتن به خدمت رسمی</a>}</article>}
