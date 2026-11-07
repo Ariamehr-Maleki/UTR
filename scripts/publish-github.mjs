@@ -50,7 +50,7 @@ for (const f of fs.readdirSync("."))
     [".json", ".md", ".ts"].some((ext) => f.endsWith(ext))
   )
     add(f);
-for (const f of [".gitignore", ".env.example"]) add(f);
+for (const f of [".gitignore", ".gitattributes", ".env.example"]) add(f);
 if (fs.existsSync(".github")) walk(".github");
 if (fs.existsSync(".impeccable/design.json")) add(".impeccable/design.json");
 const tree = api("git/trees", { tree: entries });

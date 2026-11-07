@@ -58,7 +58,9 @@ test("private endpoints reject unauthenticated requests", async ({
 
 test("expired authentication links explain recovery", async ({ page }) => {
   await page.goto("/auth/login?error=expired");
-  await expect(page.getByRole("alert")).toContainText("منقضی");
+  await expect(
+    page.getByRole("alert").filter({ hasText: "منقضی" }),
+  ).toContainText("منقضی");
   await expect(page.getByRole("link", { name: "فراموشی رمز" })).toHaveAttribute(
     "href",
     "/auth/reset",
