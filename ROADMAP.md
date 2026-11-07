@@ -11,7 +11,7 @@
 - [x] Academic/technical administration, record editing, appeals, notifications, reports, audited exceptions.
 - [x] Configurable points/badges/opt-in rankings, certificates and revocation. No production values invented.
 - [x] Fifteen versioned migrations; isolated PostgreSQL RLS/concurrency tests.
-- [x] 26 automated unit/database tests; 6 browser tests; 18 screenshot captures at 390/768/1440.
+- [x] 28 automated unit/database tests; 6 public browser tests plus 9 operational-component browser tests; 18 screenshot captures at 390/768/1440.
 - [x] Independent visual review: ship at public/representative-preview scope only.
 - [x] Operational, bootstrap, retention, deployment and backup instructions.
 
@@ -19,7 +19,7 @@
 
 - [x] Apply 15 hosted migrations; verify 27 RLS-enabled tables, private buckets, approved weekly deadline, and rollback-only hosted workflow smoke tests. Auth/Storage end-to-end checks remain below.
 - [ ] Configure isolated staging Supabase, server-only finalizer key and exact environment origins.
-- [ ] Configure institutional SMTP and test verification/recovery/delivery with real mailboxes.
+- [ ] Deferred by user: configure institutional SMTP and test verification/recovery/delivery with real mailboxes.
 - [ ] Exercise real hosted Storage/RLS and authenticated mobile upload/assessment across test roles, including revoked sessions and network retries.
 - [ ] Supply approved official form; configure trusted PDF scanner if PDFs are enabled.
 - [ ] Approve revision/referral rules, institutional identity checks and retention policy. Weekly boundary is approved.

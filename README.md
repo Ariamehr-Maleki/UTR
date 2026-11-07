@@ -67,3 +67,11 @@ Configure Supabase email templates to link to the exact application `/auth/callb
 ## Hosting state
 
 The repository began empty; `codex/utr-platform` is its only/default branch. There is no separate base branch for a meaningful PR. Vercel project `utr-farabi` is linked to this repository. `https://utr-farabi.vercel.app` is a gated public preview on the production hostname, not a live academic service. Branch previews may require Vercel account access.
+
+## Isolated operational UI tests
+
+Run `npm run test:workflows` to exercise the actual UploadFlow and Assessment components in a local-only Vite harness. API calls are intercepted with deterministic responses; no Supabase project or real users are involved. Coverage includes mobile failed-upload recovery, attachment retry identifiers, revision instructor lock, exact-version grading, positive-score confirmation, duplicate action prevention and responsive document controls. These tests complement database tests; they do not replace hosted Auth/Storage end-to-end verification. The harness is under tests and is not routed into the deployed Next.js app.
+
+## Public site without account activation
+
+`UTR_PUBLIC_CONTENT_ENABLED=true` enables live published directories, events and certificate verification using a stateless anonymous client and RLS. It grants no academic writes or account access. Private workspace activation remains controlled by `UTR_LIVE_ENABLED`; signup remains a separate gate. Public queries always use anonymous privileges, even when an administrator is logged in, and fetch fresh data per request. Production project references remain blocked on previews. Activation-email work is deferred by the user.

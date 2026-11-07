@@ -1,5 +1,5 @@
-import { database } from "@/lib/supabase/server";
-import { liveEnabled } from "@/lib/config";
+import { publicDatabase } from "@/lib/supabase/public";
+import { publicContentEnabled } from "@/lib/config";
 import { z } from "zod";
 import { persianDate } from "@/lib/time";
 export default async function Verification({
@@ -9,8 +9,8 @@ export default async function Verification({
 }) {
   const { id } = await searchParams;
   let certificate;
-  if (liveEnabled() && z.uuid().safeParse(id).success) {
-    const db = await database();
+  if (publicContentEnabled() && z.uuid().safeParse(id).success) {
+    const db = publicDatabase();
     const { data } = await db.rpc("verify_certificate", { p_verification: id });
     certificate = data?.[0];
   }

@@ -191,6 +191,7 @@ export function AdminConsole({
   );
   const [op, setOp] = useState(allowed[0]);
   const [selected, setSelected] = useState("");
+  const [mutationId, setMutationId] = useState(() => crypto.randomUUID());
   const table = (
     {
       event: "events",
@@ -247,6 +248,7 @@ export function AdminConsole({
             value={op}
             onChange={(e) => {
               setOp(e.target.value);
+              setMutationId(crypto.randomUUID());
               setSelected("");
               setMessage("");
             }}
@@ -264,7 +266,10 @@ export function AdminConsole({
           انتخاب رکورد موجود برای بررسی یا ویرایش
           <select
             value={selected}
-            onChange={(e) => setSelected(e.target.value)}
+            onChange={(e) => {
+              setSelected(e.target.value);
+              setMutationId(crypto.randomUUID());
+            }}
           >
             <option value="">رکورد جدید / انتخاب کنید</option>
             {records.map((r) => (
@@ -294,6 +299,11 @@ export function AdminConsole({
           const data = Object.fromEntries(
             Object.entries(all).filter(([, v]) => v !== ""),
           );
+          if (
+            !data.id &&
+            ["event", "content", "offering", "department"].includes(op)
+          )
+            data.id = mutationId;
           for (const k of [
             "starts_at",
             "ends_at",

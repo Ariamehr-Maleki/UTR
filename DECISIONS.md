@@ -18,3 +18,5 @@
 
 - Hosted rollback-only smoke test passed on 2026-11-08: attendance requirement, unauthorized role escalation, canonical-submission retry, cross-student/instructor isolation, zero re-referral, positive referral/file lock, assessment idempotency, and technical/academic separation. No fixture persists. This is database verification, not live email/HTTP Storage verification.
 - Creating UTR Staging in the user-approved UTR organization was rejected by Supabase: account-level maximum of two active Free projects already reached. No project was paused/deleted and no paid upgrade was purchased.
+
+- User deferred activation-email setup on 2026-11-08. SMTP is no longer a blocker for completing non-email implementation/testing. No student status or privileged role is auto-approved by this deferral; public signup and password recovery remain disabled until an explicit supported account-provisioning path is configured.

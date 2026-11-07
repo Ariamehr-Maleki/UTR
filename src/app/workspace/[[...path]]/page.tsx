@@ -77,6 +77,7 @@ export default async function Workspace({
             name: "student_number",
             label: "شماره دانشجویی",
             value: profile?.student_number,
+            required: !(instructor || admin || superadmin),
           },
           {
             name: "degree",
@@ -87,12 +88,14 @@ export default async function Workspace({
               { value: "doctorate", label: "دکتری" },
             ],
             value: profile?.degree,
+            required: !(instructor || admin || superadmin),
           },
           {
             name: "department_id",
             label: "گروه آموزشی",
             options: (deps || []).map((d) => ({ value: d.id, label: d.name })),
             value: profile?.department_id,
+            required: !(instructor || admin || superadmin),
           },
           {
             name: "leaderboard_consent",

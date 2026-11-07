@@ -1,5 +1,6 @@
-import { liveEnabled } from "./config";
-import { database } from "./supabase/server";
+import { publicContentEnabled } from "./config";
+import { connection } from "next/server";
+import { publicDatabase } from "./supabase/public";
 export type RecordItem = {
   id: string;
   title: string;
@@ -23,8 +24,9 @@ export async function publicRecords(
   table: "events" | "content",
   kind?: string,
 ): Promise<RecordItem[]> {
-  if (!liveEnabled()) return [];
-  const db = await database();
+  if (!publicContentEnabled()) return [];
+  await connection();
+  const db = publicDatabase();
   let q = db.from(table).select("*");
   q =
     table === "events"

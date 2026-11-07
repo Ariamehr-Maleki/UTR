@@ -1,5 +1,4 @@
-export function liveEnabled() {
-  if (process.env.UTR_LIVE_ENABLED !== "true") return false;
+function configuredEnvironment() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   if (!url || !process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY) return false;
   if (process.env.VERCEL_ENV !== "production") {
@@ -11,4 +10,14 @@ export function liveEnabled() {
     );
   }
   return true;
+}
+export function liveEnabled() {
+  return process.env.UTR_LIVE_ENABLED === "true" && configuredEnvironment();
+}
+export function publicContentEnabled() {
+  return (
+    (process.env.UTR_PUBLIC_CONTENT_ENABLED === "true" ||
+      process.env.UTR_LIVE_ENABLED === "true") &&
+    configuredEnvironment()
+  );
 }

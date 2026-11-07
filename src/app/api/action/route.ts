@@ -18,9 +18,9 @@ export async function POST(req: Request) {
       case "profile":
         result = await db.rpc("update_profile", {
           p_name: z.string().min(2).max(150).parse(d.display_name),
-          p_number: d.student_number,
-          p_degree: d.degree,
-          p_department: uuid.parse(d.department_id),
+          p_number: d.student_number || null,
+          p_degree: d.degree || null,
+          p_department: d.department_id ? uuid.parse(d.department_id) : null,
           p_leaderboard: d.leaderboard_consent === "true",
           p_publication: d.publication_consent === "true",
         });

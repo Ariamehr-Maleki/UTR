@@ -99,6 +99,20 @@ export function UploadFlow({
       setBusy(false);
     }
   }
+  if (!events.length)
+    return (
+      <div className="empty">
+        <h2>رویداد واجد شرایطی برای ارسال ندارید</h2>
+        <p>
+          ابتدا باید حضور شما در یک رویداد تأییدشده باشگاه ثبت شود. اگر حضور
+          داشته‌اید، از پشتیبانی درخواست بررسی کنید.
+        </p>
+        <Link href="/workspace/events">رویدادها و وضعیت حضور</Link>
+        <p>
+          <Link href="/workspace/support">درخواست بررسی حضور</Link>
+        </p>
+      </div>
+    );
   if (receipt)
     return (
       <div className="panel" role="status">
@@ -135,6 +149,7 @@ export function UploadFlow({
                 value={event}
                 onChange={(e) => {
                   setEvent(e.target.value);
+                  setConfirmed(false);
                   setUploadId(crypto.randomUUID());
                   setFile(null);
                   if (preview) URL.revokeObjectURL(preview);
@@ -200,12 +215,17 @@ export function UploadFlow({
                   const f = e.target.files?.[0];
                   if (!f) return;
                   if (f.size > 4194304) {
+                    setFile(null);
+                    setConfirmed(false);
+                    if (preview) URL.revokeObjectURL(preview);
+                    setPreview("");
                     setMessage("حجم فایل بیشتر از ۴ مگابایت است.");
                     e.target.value = "";
                     return;
                   }
                   if (preview) URL.revokeObjectURL(preview);
                   setUploadId(crypto.randomUUID());
+                  setConfirmed(false);
                   setFile(f);
                   setPreview(URL.createObjectURL(f));
                   setSaved(null);
@@ -262,7 +282,10 @@ export function UploadFlow({
               درس و استاد مرتبط از نیمسال جاری
               <select
                 value={offering}
-                onChange={(e) => setOffering(e.target.value)}
+                onChange={(e) => {
+                  setOffering(e.target.value);
+                  setConfirmed(false);
+                }}
                 required
                 disabled={resume?.state === "revision_requested"}
               >
