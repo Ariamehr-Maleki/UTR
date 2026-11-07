@@ -1,0 +1,55 @@
+-- Hosted smoke test: all fixtures and audit entries are rolled back.
+begin;
+do $$
+declare
+ student uuid:=gen_random_uuid(); other_student uuid:=gen_random_uuid(); teacher uuid:=gen_random_uuid(); teacher2 uuid:=gen_random_uuid(); tech uuid:=gen_random_uuid();
+ dep uuid:=gen_random_uuid(); sem uuid:=gen_random_uuid(); frm uuid:=gen_random_uuid(); pol uuid:=gen_random_uuid(); ev uuid:=gen_random_uuid(); course1 uuid:=gen_random_uuid(); course2 uuid:=gen_random_uuid();
+ sub uuid; attachment uuid:=gen_random_uuid(); referral uuid; new_referral uuid; receipt uuid; duplicate_receipt uuid; request_id uuid:=gen_random_uuid(); denied boolean;
+begin
+ insert into public.departments(id,name) values(dep,'rollback-test-'||dep);
+ insert into auth.users(id,email) select u,u::text||'@example.invalid' from unnest(array[student,other_student,teacher,teacher2,tech]) u;
+ update public.profiles set membership='approved',department_id=dep where id=any(array[student,other_student,teacher,teacher2,tech]);
+ update public.roles set approved=true where user_id=any(array[student,other_student]) and role='student';
+ insert into public.roles(user_id,role,department_id,approved) values(teacher,'instructor',dep,true),(teacher2,'instructor',dep,true),(tech,'superadmin',null,true);
+ insert into public.semesters values(sem,'rollback test',current_date-30,current_date+30);
+ insert into public.forms values(frm,'rollback-'||frm,'rollback form','rollback.pdf',true);
+ insert into public.policies(id,name,approved,revision_hours,referral_hours,max_alternatives,week_start_dow,week_cutoff) values(pol,'rollback test',true,48,48,2,6,'23:59:59');
+ insert into public.events(id,title,starts_at,ends_at,club_approved,summary_deadline,form_id,policy_id,department_id,status) values(ev,'rollback event',now()-interval '1 hour',now()-interval '1 minute',true,public.compute_week_deadline(now(),pol),frm,pol,dep,'published');
+ insert into public.offerings values(course1,'rollback course1',dep,sem,teacher,true),(course2,'rollback course2',dep,sem,teacher2,true);
+ insert into public.event_offerings values(ev,course1),(ev,course2);
+ insert into public.enrollments values(student,course1,true),(student,course2,true);
+ execute 'set local role authenticated';
+ perform set_config('request.jwt.claim.sub',student::text,true);
+ denied:=false;begin perform public.begin_submission(ev);exception when others then denied:=true;end;if not denied then raise exception 'attendance restriction failed';end if;
+ denied:=false;begin insert into public.roles(user_id,role,approved) values(student,'superadmin',true);exception when others then denied:=true;end;if not denied then raise exception 'role escalation allowed';end if;
+ execute 'reset role';
+ insert into public.attendance values(ev,student,true,'rollback test',tech,now());
+ execute 'set local role authenticated';
+ sub:=public.begin_submission(ev);
+ if public.begin_submission(ev)<>sub then raise exception 'duplicate canonical submission';end if;
+ perform public.add_attachment(sub,attachment,'image/jpeg',100,repeat('a',64));
+ execute 'reset role';
+ update public.attachments set safety='clean' where id=attachment;
+ execute 'set local role authenticated';
+ referral:=public.submit_referral(sub,course1,attachment);
+ perform set_config('request.jwt.claim.sub',other_student::text,true);
+ if exists(select 1 from public.submissions where id=sub) or exists(select 1 from public.attachments where id=attachment) then raise exception 'cross-student disclosure';end if;
+ perform set_config('request.jwt.claim.sub',teacher2::text,true);
+ if exists(select 1 from public.attachments where id=attachment) then raise exception 'unrelated instructor disclosure';end if;
+ perform set_config('request.jwt.claim.sub',teacher::text,true);
+ perform public.assess(referral,attachment,'score',0,'rollback zero assessment',gen_random_uuid());
+ perform set_config('request.jwt.claim.sub',student::text,true);
+ new_referral:=public.submit_referral(sub,course2,attachment);
+ perform set_config('request.jwt.claim.sub',teacher2::text,true);
+ receipt:=public.assess(new_referral,attachment,'score',0.25,'rollback positive assessment',request_id);
+ duplicate_receipt:=public.assess(new_referral,attachment,'score',0.25,'rollback positive assessment',request_id);
+ if receipt<>duplicate_receipt then raise exception 'assessment retry duplicated';end if;
+ perform set_config('request.jwt.claim.sub',student::text,true);
+ denied:=false;begin perform public.submit_referral(sub,course1,attachment);exception when others then denied:=true;end;if not denied then raise exception 'positive referral lock failed';end if;
+ denied:=false;begin perform public.add_attachment(sub,gen_random_uuid(),'image/jpeg',100,repeat('b',64));exception when others then denied:=true;end;if not denied then raise exception 'positive file lock failed';end if;
+ perform set_config('request.jwt.claim.sub',tech::text,true);
+ denied:=false;begin perform public.admin_action('correction',jsonb_build_object('id',sub,'state','invalidated'),'rollback technical access test');exception when others then denied:=true;end;if not denied then raise exception 'technical academic separation failed';end if;
+ execute 'reset role';
+end $$;
+rollback;
+select 'passed: attendance, roles, canonical submission, cross-user isolation, instructor isolation, zero referral, positive lock, retry, technical/academic separation; fixtures rolled back' as result;
