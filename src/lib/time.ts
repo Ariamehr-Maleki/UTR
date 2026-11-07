@@ -1,7 +1,55 @@
-export const ZONE='Asia/Tehran';
-export const persianDate=(date:string|Date)=>new Intl.DateTimeFormat('fa-IR',{timeZone:ZONE,dateStyle:'full',timeStyle:'short'}).format(new Date(date));
-export function tehranParts(date:Date){return Object.fromEntries(new Intl.DateTimeFormat('en-CA',{timeZone:ZONE,year:'numeric',month:'2-digit',day:'2-digit',weekday:'short'}).formatToParts(date).map(p=>[p.type,p.value]));}
+export const ZONE = "Asia/Tehran";
+export const persianDate = (date: string | Date) =>
+  new Intl.DateTimeFormat("fa-IR", {
+    timeZone: ZONE,
+    dateStyle: "full",
+    timeStyle: "short",
+  }).format(new Date(date));
+export function tehranParts(date: Date) {
+  return Object.fromEntries(
+    new Intl.DateTimeFormat("en-CA", {
+      timeZone: ZONE,
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      weekday: "short",
+    })
+      .formatToParts(date)
+      .map((p) => [p.type, p.value]),
+  );
+}
 // Candidate policy only. Database publication requires explicit policy approval.
-export function weekBounds(date:Date){const p=tehranParts(date);const start=new Date(`${p.year}-${p.month}-${p.day}T00:00:00+03:30`);const weekday=['Sat','Sun','Mon','Tue','Wed','Thu','Fri'].indexOf(p.weekday);start.setUTCDate(start.getUTCDate()-weekday);return {start,end:new Date(start.getTime()+7*86400000)};}
-export function inWeek(date:string,now:Date){const {start,end}=weekBounds(now);return new Date(date)>=start&&new Date(date)<end;}
-export function jalaliMonthBounds(date:Date){const parts=new Intl.DateTimeFormat('en-US-u-ca-persian',{timeZone:ZONE,year:'numeric',month:'numeric',day:'numeric'}).formatToParts(date);const day=Number(parts.find(p=>p.type==='day')!.value);const p=tehranParts(date);const start=new Date(`${p.year}-${p.month}-${p.day}T00:00:00+03:30`);start.setUTCDate(start.getUTCDate()-day+1);let end=new Date(start.getTime()+29*86400000);while(new Intl.DateTimeFormat('en-US-u-ca-persian',{timeZone:ZONE,day:'numeric'}).format(end)!=='1')end=new Date(end.getTime()+86400000);return {start,end};}
+export function weekBounds(date: Date) {
+  const p = tehranParts(date);
+  const start = new Date(`${p.year}-${p.month}-${p.day}T00:00:00+03:30`);
+  const weekday = ["Sat", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri"].indexOf(
+    p.weekday,
+  );
+  start.setUTCDate(start.getUTCDate() - weekday);
+  return { start, end: new Date(start.getTime() + 7 * 86400000) };
+}
+export function inWeek(date: string, now: Date) {
+  const { start, end } = weekBounds(now);
+  return new Date(date) >= start && new Date(date) < end;
+}
+export function jalaliMonthBounds(date: Date) {
+  const parts = new Intl.DateTimeFormat("en-US-u-ca-persian", {
+    timeZone: ZONE,
+    year: "numeric",
+    month: "numeric",
+    day: "numeric",
+  }).formatToParts(date);
+  const day = Number(parts.find((p) => p.type === "day")!.value);
+  const p = tehranParts(date);
+  const start = new Date(`${p.year}-${p.month}-${p.day}T00:00:00+03:30`);
+  start.setUTCDate(start.getUTCDate() - day + 1);
+  let end = new Date(start.getTime() + 29 * 86400000);
+  while (
+    new Intl.DateTimeFormat("en-US-u-ca-persian", {
+      timeZone: ZONE,
+      day: "numeric",
+    }).format(end) !== "1"
+  )
+    end = new Date(end.getTime() + 86400000);
+  return { start, end };
+}

@@ -31,7 +31,7 @@ Obtain a replacement connection credential in Supabase dashboard, store `DATABAS
 1. Configure Auth redirects and custom SMTP, then create and verify the designated operator's own Auth account. Do not create a shared password.
 2. Set `BOOTSTRAP_USER_ID` to that verified account UUID in the secure shell, alongside `DATABASE_URL`.
 3. Run `node scripts/bootstrap-superadmin.mjs`. It refuses if a superadmin already exists, takes a database advisory lock and writes an audit reason. It grants technical superadmin only.
-4. An explicit institution-approved academic administrator must receive a separate `admin` role and approved membership through a documented, audited operator action. Superadmin does not implicitly gain academic authority.
+4. For the first institution-approved academic administrator, set `BOOTSTRAP_ACADEMIC_USER_ID` and `UTR_INSTITUTIONAL_APPROVAL_REASON` in the secure shell, then run `node scripts/bootstrap-academic-admin.mjs`. It verifies the Auth account, refuses a second global academic bootstrap and audits the explicit reason. Do not run it without institutional designation. Superadmin does not implicitly gain academic authority.
 
 ## Production email
 
@@ -55,3 +55,15 @@ Use a disposable database. Create the minimal Auth/Storage harness with `tests/d
 Hosted migrations/RLS/Storage and Auth must be verified; custom SMTP and sender are needed. Institutional decisions are in `DECISIONS.md`. Exact reference typography is unresolved; Vazirmatn is a disclosed fallback. PDF safety scanning is not configured; image uploads are supported, PDF activation remains blocked. No claim of production readiness is made.
 
 See `OPERATIONS.md`, `PRODUCT.md`, `DESIGN.md`, `ROADMAP.md` and `DECISIONS.md`.
+
+## Browser and CI verification
+
+`npm run build && npm run test:e2e` starts a local server automatically. Windows uses installed Edge; CI installs Chromium. Tests cover public navigation, safe activation gates, private endpoints, keyboard focus and responsive overflow. `node scripts/capture.mjs` captures six routes at three widths. Authenticated hosted flows remain a separate release gate. GitHub Actions applies migrations to disposable PostgreSQL and runs tests/build/browser checks.
+
+## Auth email templates
+
+Configure Supabase email templates to link to the exact application `/auth/callback?token_hash={{ .TokenHash }}&type=email` for verification and `/auth/callback?token_hash={{ .TokenHash }}&type=recovery` for recovery. The callback also supports PKCE code exchange. Use the environment’s approved HTTPS origin, enable email confirmation, and test expired/reused links before signup activation. Never put tokens in logs or analytics.
+
+## Hosting state
+
+The repository began empty; `codex/utr-platform` is its only/default branch. There is no separate base branch for a meaningful PR. Vercel project `utr-farabi` is linked to this repository. `https://utr-farabi.vercel.app` is a gated public preview on the production hostname, not a live academic service. Branch previews may require Vercel account access.

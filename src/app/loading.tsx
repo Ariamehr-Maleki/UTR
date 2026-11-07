@@ -1,1 +1,7 @@
-export default function Loading(){return <div className="container section" role="status">در حال دریافت اطلاعات…</div>}
+export default function Loading() {
+  return (
+    <section className="container section" role="status" aria-live="polite">
+      <p>در حال دریافت اطلاعات…</p>
+    </section>
+  );
+}

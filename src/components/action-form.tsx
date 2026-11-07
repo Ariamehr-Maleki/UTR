@@ -1,4 +1,94 @@
-'use client';
-import {useState} from 'react';
-export type Field={name:string;label:string;type?:string;options?:{value:string;label:string}[];required?:boolean;value?:string};
-export function ActionForm({action,fields,button='ذخیره',hidden={}}:{action:string;fields:Field[];button?:string;hidden?:Record<string,string>}){const [message,setMessage]=useState('');const [busy,setBusy]=useState(false);return <form className="form" onSubmit={async e=>{e.preventDefault();setBusy(true);setMessage('');const data={...hidden,...Object.fromEntries(new FormData(e.currentTarget))};try{const response=await fetch('/api/action',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action,data})});const result=await response.json();setMessage(result.message);if(result.redirect)location.assign(result.redirect);}catch{setMessage('اتصال برقرار نشد. داده‌های فرم حفظ شده‌اند؛ دوباره تلاش کنید.')}finally{setBusy(false)}}}>{fields.map(f=><label key={f.name}>{f.label}{f.options?<select name={f.name} required={f.required!==false} defaultValue={f.value}><option value="">انتخاب کنید</option>{f.options.map(o=><option key={o.value} value={o.value}>{o.label}</option>)}</select>:f.type==='textarea'?<textarea name={f.name} required={f.required!==false} defaultValue={f.value} maxLength={10000}/>:<input name={f.name} type={f.type||'text'} required={f.required!==false} defaultValue={f.value} maxLength={500} step={f.type==='number'?'0.01':undefined}/>}</label>)}<button disabled={busy}>{busy?'در حال ثبت…':button}</button><div role="status" aria-live="polite">{message}</div></form>}
+"use client";
+import { useState } from "react";
+export type Field = {
+  name: string;
+  label: string;
+  type?: string;
+  options?: { value: string; label: string }[];
+  required?: boolean;
+  value?: string;
+};
+export function ActionForm({
+  action,
+  fields,
+  button = "ذخیره",
+  hidden = {},
+}: {
+  action: string;
+  fields: Field[];
+  button?: string;
+  hidden?: Record<string, string>;
+}) {
+  const [message, setMessage] = useState("");
+  const [busy, setBusy] = useState(false);
+  return (
+    <form
+      className="form"
+      onSubmit={async (e) => {
+        e.preventDefault();
+        setBusy(true);
+        setMessage("");
+        const data = {
+          ...hidden,
+          ...Object.fromEntries(new FormData(e.currentTarget)),
+        };
+        try {
+          const response = await fetch("/api/action", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ action, data }),
+          });
+          const result = await response.json();
+          setMessage(result.message);
+          if (result.redirect) location.assign(result.redirect);
+        } catch {
+          setMessage(
+            "اتصال برقرار نشد. داده‌های فرم حفظ شده‌اند؛ دوباره تلاش کنید.",
+          );
+        } finally {
+          setBusy(false);
+        }
+      }}
+    >
+      {fields.map((f) => (
+        <label key={f.name}>
+          {f.label}
+          {f.options ? (
+            <select
+              name={f.name}
+              required={f.required !== false}
+              defaultValue={f.value}
+            >
+              <option value="">انتخاب کنید</option>
+              {f.options.map((o) => (
+                <option key={o.value} value={o.value}>
+                  {o.label}
+                </option>
+              ))}
+            </select>
+          ) : f.type === "textarea" ? (
+            <textarea
+              name={f.name}
+              required={f.required !== false}
+              defaultValue={f.value}
+              maxLength={10000}
+            />
+          ) : (
+            <input
+              name={f.name}
+              type={f.type || "text"}
+              required={f.required !== false}
+              defaultValue={f.value}
+              maxLength={500}
+              step={f.type === "number" ? "0.01" : undefined}
+            />
+          )}
+        </label>
+      ))}
+      <button disabled={busy}>{busy ? "در حال ثبت…" : button}</button>
+      <div role="status" aria-live="polite">
+        {message}
+      </div>
+    </form>
+  );
+}

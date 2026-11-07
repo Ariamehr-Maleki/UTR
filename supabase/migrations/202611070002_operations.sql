@@ -23,7 +23,10 @@ begin
   insert into public.policies(id,name,approved,revision_hours,referral_hours,max_alternatives,unlimited_alternatives,review_hours,attendance_exceptions,points_enabled,certificates_enabled) values(target,p_data->>'name',coalesce((p_data->>'approved')::boolean,false),nullif(p_data->>'revision_hours','')::integer,nullif(p_data->>'referral_hours','')::integer,nullif(p_data->>'max_alternatives','')::integer,coalesce((p_data->>'unlimited_alternatives')::boolean,false),nullif(p_data->>'review_hours','')::integer,coalesce((p_data->>'attendance_exceptions')::boolean,false),coalesce((p_data->>'points_enabled')::boolean,false),coalesce((p_data->>'certificates_enabled')::boolean,false));
  when 'instructor' then
   insert into public.roles(user_id,role,department_id,approved) values((p_data->>'user_id')::uuid,'instructor',scope,(p_data->>'approved')::boolean) on conflict(user_id,role,department_id) do update set approved=excluded.approved;
- when 'membership' then update public.profiles set membership=(p_data->>'membership')::public.membership_state where id=(p_data->>'user_id')::uuid;
+ when 'membership' then
+  if p_data->>'membership'='approved' and not exists(select 1 from public.profiles p where p.id=(p_data->>'user_id')::uuid and length(p.display_name)>1 and ((p.student_number is not null and p.student_number<>'' and p.degree is not null and p.department_id is not null) or exists(select 1 from public.roles r where r.user_id=p.id and r.role<>'student' and r.approved))) then raise exception 'complete verified academic profile or approved staff role required';end if;
+  update public.profiles set membership=(p_data->>'membership')::public.membership_state where id=(p_data->>'user_id')::uuid;
+  update public.roles set approved=exists(select 1 from public.profiles p where p.id=user_id and p.membership='approved' and p.student_number is not null and p.student_number<>'' and p.degree is not null and p.department_id is not null) where user_id=(p_data->>'user_id')::uuid and role='student';
  when 'semester' then insert into public.semesters(id,title,starts_on,ends_on) values(target,p_data->>'title',(p_data->>'starts_on')::date,(p_data->>'ends_on')::date);
  when 'offering' then
   select department_id into old_scope from public.offerings where id=target;
@@ -69,4 +72,5 @@ grant execute on function public.finalize_attachment(uuid,text,boolean) to servi
 revoke all on function public.admin_action(text,jsonb,text),public.open_appeal(uuid,text,text),public.read_notification(uuid) from public,anon;
 grant execute on function public.admin_action(text,jsonb,text),public.open_appeal(uuid,text,text),public.read_notification(uuid) to authenticated;
 commit;
+
 

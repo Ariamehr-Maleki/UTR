@@ -1,0 +1,17 @@
+begin;
+create table public.platform_settings(key text primary key,value jsonb not null);
+alter table public.platform_settings enable row level security;
+grant select on public.platform_settings to authenticated;
+create policy settings_read on public.platform_settings for select using(public.has_role('superadmin'));
+insert into public.platform_settings values('maintenance','false'::jsonb);
+create trigger settings_audit after insert or update on public.platform_settings for each row execute function public.audit_change();
+create function public.set_maintenance(p_enabled boolean,p_reason text) returns void language plpgsql security definer set search_path='' as $$ begin if not public.has_role('superadmin') or length(p_reason)<5 then raise exception 'superadmin and reason required';end if;perform set_config('utr.reason',p_reason,true);update public.platform_settings set value=to_jsonb(p_enabled) where key='maintenance';end; $$;
+create function public.check_maintenance() returns trigger language plpgsql security definer set search_path='' as $$ begin if exists(select 1 from public.platform_settings where key='maintenance' and value='true'::jsonb) then raise exception 'maintenance active';end if;return new;end; $$;
+create trigger maintenance_submission before insert or update on public.submissions for each row execute function public.check_maintenance();
+create trigger maintenance_registration before insert or update on public.registrations for each row execute function public.check_maintenance();
+create trigger maintenance_assessment before insert on public.assessments for each row execute function public.check_maintenance();
+create function public.notify_user(p_user uuid,p_title text,p_body text,p_reason text) returns void language plpgsql security definer set search_path='' as $$ declare dep uuid;begin select department_id into dep from public.profiles where id=p_user;if not public.is_admin(dep) or length(p_reason)<5 or length(p_title)>200 or length(p_body)>10000 then raise exception 'notification forbidden';end if;perform set_config('utr.reason',p_reason,true);insert into public.notifications(user_id,title,body) values(p_user,p_title,p_body);end; $$;
+create function public.adjust_points(p_user uuid,p_semester uuid,p_points integer,p_request uuid,p_reason text) returns void language plpgsql security definer set search_path='' as $$ declare dep uuid;begin select department_id into dep from public.profiles where id=p_user;if not public.is_admin(dep) or length(p_reason)<5 then raise exception 'adjustment forbidden';end if;perform set_config('utr.reason',p_reason,true);insert into public.points_ledger(student_id,semester_id,activity,source_id,points,reason) values(p_user,p_semester,'administrative_adjustment',p_request,p_points,p_reason) on conflict do nothing;end; $$;
+revoke all on function public.set_maintenance(boolean,text),public.check_maintenance(),public.notify_user(uuid,text,text,text),public.adjust_points(uuid,uuid,integer,uuid,text) from public,anon;
+grant execute on function public.set_maintenance(boolean,text),public.notify_user(uuid,text,text,text),public.adjust_points(uuid,uuid,integer,uuid,text) to authenticated;
+commit;

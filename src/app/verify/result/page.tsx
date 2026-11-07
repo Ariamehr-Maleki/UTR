@@ -1,5 +1,38 @@
-import {database} from '@/lib/supabase/server';
-import {liveEnabled} from '@/lib/config';
-import {z} from 'zod';
-import {persianDate} from '@/lib/time';
-export default async function Verification({searchParams}:{searchParams:Promise<{id?:string}>}){const {id}=await searchParams;let certificate;if(liveEnabled()&&z.uuid().safeParse(id).success){const db=await database();const {data}=await db.rpc('verify_certificate',{p_verification:id});certificate=data?.[0];}return <div className="container section prose"><h1>استعلام اعتبار گواهی</h1>{certificate?<div className="panel"><h2>{certificate.revoked?'این گواهی باطل شده است':'گواهی معتبر است'}</h2><p>{certificate.public_name}</p><p>نوع: {certificate.kind}</p><p>تاریخ صدور: {persianDate(certificate.issued_at)}</p><p>این گواهی بیانگر نمره رسمی دانشگاه نیست.</p></div>:<div className="empty">گواهی معتبری با این شناسه در دسترس نیست. شناسه را بررسی کنید یا با صادرکننده تماس بگیرید.</div>}</div>}
+import { database } from "@/lib/supabase/server";
+import { liveEnabled } from "@/lib/config";
+import { z } from "zod";
+import { persianDate } from "@/lib/time";
+export default async function Verification({
+  searchParams,
+}: {
+  searchParams: Promise<{ id?: string }>;
+}) {
+  const { id } = await searchParams;
+  let certificate;
+  if (liveEnabled() && z.uuid().safeParse(id).success) {
+    const db = await database();
+    const { data } = await db.rpc("verify_certificate", { p_verification: id });
+    certificate = data?.[0];
+  }
+  return (
+    <div className="container section prose">
+      <h1>استعلام اعتبار گواهی</h1>
+      {certificate ? (
+        <div className="panel">
+          <h2>
+            {certificate.revoked ? "این گواهی باطل شده است" : "گواهی معتبر است"}
+          </h2>
+          <p>{certificate.public_name}</p>
+          <p>نوع: {certificate.kind}</p>
+          <p>تاریخ صدور: {persianDate(certificate.issued_at)}</p>
+          <p>این گواهی بیانگر نمره رسمی دانشگاه نیست.</p>
+        </div>
+      ) : (
+        <div className="empty">
+          گواهی معتبری با این شناسه در دسترس نیست. شناسه را بررسی کنید یا با
+          صادرکننده تماس بگیرید.
+        </div>
+      )}
+    </div>
+  );
+}

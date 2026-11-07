@@ -81,8 +81,9 @@ insert into storage.buckets(id,name,public,file_size_limit,allowed_mime_types) v
 create policy summary_select on storage.objects for select to authenticated using(bucket_id='summaries' and exists(select 1 from public.attachments a where a.object_path=name and public.can_read_attachment(a.id)));
 create policy summary_insert on storage.objects for insert to authenticated with check(bucket_id='summaries' and exists(select 1 from public.attachments a join public.submissions s on s.id=a.submission_id where a.object_path=name and s.student_id=auth.uid() and not s.positive_locked and a.safety='pending'));
 create policy form_select on storage.objects for select to authenticated using(bucket_id='forms' and exists(select 1 from public.forms f where f.object_path=name and f.approved));
-revoke all on all functions in schema public from public,anon,authenticated;
+revoke all on function public.has_role(public.app_role,uuid),public.is_admin(uuid),public.can_read_submission(uuid),public.can_read_attachment(uuid),public.audit_change(),public.on_signup(),public.update_profile(text,text,text,uuid,boolean,boolean),public.register_event(uuid),public.begin_submission(uuid),public.add_attachment(uuid,uuid,text,integer,text),public.submit_referral(uuid,uuid,uuid),public.assess(uuid,uuid,text,numeric,text,uuid) from public,anon,authenticated;
 grant execute on function public.has_role(public.app_role,uuid),public.is_admin(uuid),public.can_read_submission(uuid),public.can_read_attachment(uuid),public.update_profile(text,text,text,uuid,boolean,boolean),public.register_event(uuid),public.begin_submission(uuid),public.add_attachment(uuid,uuid,text,integer,text),public.submit_referral(uuid,uuid,uuid),public.assess(uuid,uuid,text,numeric,text,uuid) to authenticated;
 -- Anonymous read policies call is_admin, which always returns false without identity.
 grant execute on function public.is_admin(uuid),public.has_role(public.app_role,uuid) to anon;
 commit;
+
