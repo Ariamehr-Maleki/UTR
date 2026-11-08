@@ -415,7 +415,7 @@ export function AdminConsole({
       )}
       <form
         key={`${op}:${selected}`}
-        className="form"
+        className={op === "event" ? "form admin-event-form" : "form"}
         onSubmit={async (e) => {
           e.preventDefault();
           setBusy(true);
