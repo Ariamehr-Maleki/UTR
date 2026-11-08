@@ -46,7 +46,7 @@ export function AdminTools({
       )}
       {academic && (
         <>
-          <OfficialFormUpload />
+          <OfficialFormUpload enabled={!!process.env.UTR_CLAMAV_HOST} />
           <details>
             <summary>اصلاح مستند امتیاز مشارکت</summary>
             <p>

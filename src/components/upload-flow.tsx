@@ -9,12 +9,14 @@ export function UploadFlow({
   relevance,
   resume,
   initialEvent,
+  pdfEnabled = false,
 }: {
   events: any[];
   enrollments: any[];
   relevance: any[];
   resume?: any;
   initialEvent?: string;
+  pdfEnabled?: boolean;
 }) {
   const [event, setEvent] = useState(
     resume?.event_id ||
@@ -213,10 +215,16 @@ export function UploadFlow({
               </div>
             )}
             <label>
-              تصویر JPEG، PNG، WebP یا PDF یک‌صفحه‌ای
+              {pdfEnabled
+                ? "تصویر JPEG، PNG، WebP یا PDF یک‌صفحه‌ای"
+                : "تصویر JPEG، PNG یا WebP"}
               <input
                 type="file"
-                accept="image/jpeg,image/png,image/webp,application/pdf"
+                accept={
+                  pdfEnabled
+                    ? "image/jpeg,image/png,image/webp,application/pdf"
+                    : "image/jpeg,image/png,image/webp"
+                }
                 onChange={(e) => {
                   const f = e.target.files?.[0];
                   if (!f) return;

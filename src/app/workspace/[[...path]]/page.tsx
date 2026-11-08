@@ -355,6 +355,7 @@ export default async function Workspace({
         relevance={relevance || []}
         resume={resume}
         initialEvent={query.event}
+        pdfEnabled={!!process.env.UTR_CLAMAV_HOST}
       />
     );
   } else if (view === "events") {
@@ -460,7 +461,7 @@ export default async function Workspace({
               <h3>{s.events?.title}</h3>
               <span className="badge">{statusLabel[s.state] || s.state}</span>
               <p>
-                شناسه پیگیری: <bdi>{s.id}</bdi>
+                شناسه پیگیری: <bdi dir="ltr">{s.id}</bdi>
               </p>
               <p>مهلت اولیه: {persianDate(s.deadline_snapshot)}</p>
               {s.referrals?.map((r: any) => (

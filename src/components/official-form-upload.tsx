@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-export function OfficialFormUpload() {
+export function OfficialFormUpload({ enabled = false }: { enabled?: boolean }) {
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState("");
   return (
@@ -10,6 +10,12 @@ export function OfficialFormUpload() {
         فایل مصوب مؤسسه را بارگذاری کنید. این بخش برای اداره پژوهشی با اختیار
         سراسری است.
       </p>
+      {!enabled && (
+        <p role="status">
+          بارگذاری PDF پس از اتصال سرویس بررسی امنیتی فایل فعال می‌شود. فرم
+          ثبت‌نشده را نمی‌توان به رویداد اختصاص داد.
+        </p>
+      )}
       <form
         className="form"
         onSubmit={async (e) => {
@@ -46,7 +52,7 @@ export function OfficialFormUpload() {
           دلیل و مرجع تصویب
           <textarea name="reason" required minLength={5} />
         </label>
-        <button disabled={busy}>
+        <button disabled={busy || !enabled}>
           {busy ? "در حال بررسی و ثبت…" : "بارگذاری و ثبت فرم مصوب"}
         </button>
         <p role="status">{message}</p>

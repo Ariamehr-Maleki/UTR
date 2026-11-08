@@ -103,3 +103,11 @@ UTR_AUTH_EMAIL_ENABLED controls email password recovery separately from UTR_SIGN
 The opt-in scripts/verify-hosted-auth.mjs uses secure environment credentials and UTR_AUTH_SMOKE_APPROVED=true to exercise temporary auth-only probes, removing them afterwards. It never creates academic fixtures. Latest run passed; full hosted upload/assessment verification remains a separate release gate.
 
 UTR_ACCOUNTS_ENABLED permits authentication, own-profile editing and logout independently of UTR_LIVE_ENABLED. With only accounts enabled, the workspace routes to profile completion and all academic action/file/report endpoints remain blocked. This supports onboarding without claiming the research workflow has passed operational acceptance.
+
+## Role workspaces and integration acceptance
+
+See [the Persian workspace administration guide](docs/WORKSPACES.md) for student, instructor and research administration workflows. Login role selection and the HttpOnly role switch use current approved membership and database roles; selection never grants a role. Technical and academic panels remain separate.
+
+`.github/workflows/integration.yml` starts an ephemeral real Supabase stack in CI, applies every migration, builds Next.js and exercises real Auth sessions, private Storage, attendance, revision versions, zero re-referral, positive locking, concurrent/idempotent requests, appeals, permission revocation and logout. It captures all four workspaces at 390/768/1440. Run 42478954369 passed; fixtures exist only inside the temporary runner. This is separate from actual production-environment acceptance. Local integration mode only accepts the exact loopback Supabase address and is rejected on Vercel.
+
+`node scripts/propose-club-form.mjs` generates a one-page draft form under ignored review artifacts. It is explicitly a proposal and is not uploaded or designated official without institutional approval.

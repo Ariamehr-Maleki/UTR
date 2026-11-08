@@ -65,8 +65,16 @@ export function SiteHeader() {
             </Link>
           ))}
         </nav>
-        <Link className="account-link" href="/auth/login">
-          ورود به سامانه <ArrowUpLeft size={18} />
+        <Link
+          className="account-link"
+          href={
+            pathname.startsWith("/workspace")
+              ? "/workspace/profile"
+              : "/auth/login"
+          }
+        >
+          {pathname.startsWith("/workspace") ? "حساب من" : "ورود به سامانه"}{" "}
+          <ArrowUpLeft size={18} />
         </Link>
         <button
           ref={toggle}
