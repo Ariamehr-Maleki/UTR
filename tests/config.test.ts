@@ -5,6 +5,22 @@ import {
   publicContentEnabled,
 } from "../src/lib/config";
 afterEach(() => vi.unstubAllEnvs());
+it("isolated integration mode accepts only the loopback stack and never a Vercel preview", () => {
+  vi.stubEnv("VERCEL_ENV", "");
+  vi.stubEnv("UTR_LOCAL_INTEGRATION", "true");
+  vi.stubEnv("UTR_LIVE_ENABLED", "true");
+  vi.stubEnv("NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY", "test");
+  vi.stubEnv("NEXT_PUBLIC_SUPABASE_URL", "http://127.0.0.1:54321");
+  expect(liveEnabled()).toBe(true);
+  vi.stubEnv("VERCEL_ENV", "preview");
+  expect(liveEnabled()).toBe(false);
+  vi.stubEnv("VERCEL_ENV", "");
+  vi.stubEnv(
+    "NEXT_PUBLIC_SUPABASE_URL",
+    "https://spqtwgyxzdythfmyzvyh.supabase.co",
+  );
+  expect(liveEnabled()).toBe(false);
+});
 it("account activation never activates academic operations", () => {
   vi.stubEnv("UTR_ACCOUNTS_ENABLED", "true");
   vi.stubEnv("UTR_LIVE_ENABLED", "false");

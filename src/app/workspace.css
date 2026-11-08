@@ -1,0 +1,212 @@
+.workspace-v2 {
+  gap: 36px;
+  padding-block: 36px 72px;
+  align-items: start;
+}
+.workspace-v2 > section {
+  min-width: 0;
+}
+.workspace-v2 > section > h1 {
+  font-size: clamp(26px, 3vw, 36px);
+  margin: 0 0 24px;
+}
+.workspace-v2 .sidebar {
+  background: #f2f7fa;
+  border: 1px solid #dce5ed;
+  padding: 20px 14px;
+  border-radius: 12px;
+  position: sticky;
+  top: 120px;
+}
+.workspace-v2 .sidebar h2 {
+  font-size: 18px;
+  margin: 0 10px 18px;
+}
+.workspace-v2 .sidebar > a {
+  display: block;
+  padding: 11px 14px;
+  margin-block: 3px;
+  border-radius: 8px;
+  text-decoration: none;
+  color: #304865;
+}
+.workspace-v2 .sidebar > a[aria-current="page"] {
+  background: #123f7b;
+  color: #fff;
+  font-weight: 700;
+}
+.workspace-v2 .sidebar > a:hover:not([aria-current="page"]) {
+  background: #e2edf4;
+}
+.workspace-v2 .sidebar > label {
+  display: block;
+  margin: 0 8px 14px;
+  font-size: 13px;
+}
+.workspace-v2 .sidebar select {
+  width: 100%;
+  margin-top: 6px;
+}
+.workspace-v2 .sidebar .form {
+  margin: 18px 8px 0;
+}
+.workspace-v2 .panel {
+  box-shadow: none;
+}
+.desk-intro {
+  color: #53657a;
+  font-size: 17px;
+  max-width: 65ch;
+  margin-bottom: 12px;
+}
+.desk-date {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: #53657a;
+  margin-bottom: 30px;
+}
+.desk-queue {
+  border-block: 1px solid #dce5ed;
+}
+.desk-task {
+  display: grid;
+  grid-template-columns: 28px 1fr auto 20px;
+  gap: 18px;
+  align-items: center;
+  padding: 24px 4px;
+  text-decoration: none;
+  color: #123f7b;
+}
+.desk-task + .desk-task {
+  border-top: 1px solid #dce5ed;
+}
+.desk-task:hover {
+  background: #f2f7fa;
+}
+.desk-task h2 {
+  font-size: 18px;
+  margin: 0 0 6px;
+}
+.desk-task p {
+  color: #53657a;
+  font-size: 14px;
+  margin: 0;
+}
+.desk-count {
+  font-weight: 700;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.desk-shortcuts,
+.desk-guidance {
+  margin-top: 36px;
+}
+.desk-shortcuts h2,
+.desk-guidance h2 {
+  font-size: 19px;
+}
+.desk-shortcuts nav {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 24px;
+}
+.desk-shortcuts a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 0;
+  border-bottom: 1px solid #dce5ed;
+  text-decoration: none;
+}
+.desk-guidance {
+  background: #f2f7fa;
+  padding: 22px 24px;
+  border-radius: 12px;
+}
+.desk-guidance p {
+  font-size: 14px;
+  margin: 0;
+  max-width: 75ch;
+}
+.login-role-options {
+  border: 0;
+  padding: 0;
+  margin: 0 0 8px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+.login-role-options legend {
+  font-weight: 700;
+  padding: 0 0 12px;
+}
+.login-role-options label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px;
+  border: 1px solid #8da8bd;
+  border-radius: 8px;
+  font-size: 13px;
+  cursor: pointer;
+}
+.login-role-options label:has(input:checked) {
+  background: #edf5fb;
+  border-color: #123f7b;
+}
+.login-role-options input {
+  width: 17px;
+  min-height: 17px;
+  margin: 0;
+  accent-color: #123f7b;
+}
+@media (max-width: 700px) {
+  .workspace-v2 {
+    gap: 24px;
+    padding-block: 20px 48px;
+  }
+  .workspace-v2 .sidebar {
+    position: static;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    padding: 16px 12px;
+  }
+  .workspace-v2 .sidebar h2,
+  .workspace-v2 .sidebar > label {
+    width: 100%;
+  }
+  .workspace-v2 .sidebar > a {
+    font-size: 13px;
+    padding: 8px 10px;
+  }
+  .workspace-v2 .sidebar .form {
+    margin: 3px 0;
+  }
+  .workspace-v2 .sidebar .form button {
+    padding: 8px 14px;
+  }
+  .desk-task {
+    grid-template-columns: 24px 1fr auto;
+    gap: 12px;
+    padding-block: 20px;
+  }
+  .desk-task > svg:last-child {
+    display: none;
+  }
+  .desk-task h2 {
+    font-size: 16px;
+  }
+  .desk-task p {
+    font-size: 13px;
+  }
+  .desk-count {
+    font-size: 13px;
+  }
+  .desk-shortcuts nav {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,6 +1,9 @@
 function configuredEnvironment() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   if (!url || !process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY) return false;
+  if (!process.env.VERCEL_ENV && process.env.UTR_LOCAL_INTEGRATION === "true") {
+    return url === "http://127.0.0.1:54321";
+  }
   if (process.env.VERCEL_ENV !== "production") {
     const ref = process.env.UTR_PREVIEW_PROJECT_REF;
     return (

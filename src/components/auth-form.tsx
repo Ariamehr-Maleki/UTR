@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import Link from "next/link";
+import { roleLabels, isWorkspaceRole } from "@/lib/workspace-roles";
 const titles: Record<string, string> = {
   login: "ورود به حساب",
   register: "درخواست عضویت",
@@ -11,13 +12,18 @@ export function AuthForm({
   mode,
   enabled,
   unavailableMessage,
+  initialRole,
 }: {
   mode: string;
   enabled: boolean;
   unavailableMessage?: string;
+  initialRole?: string;
 }) {
   const [message, setMessage] = useState("");
   const [busy, setBusy] = useState(false);
+  const [role, setRole] = useState(
+    isWorkspaceRole(initialRole) ? initialRole : "",
+  );
   return (
     <>
       <h1>{titles[mode]}</h1>
@@ -50,7 +56,21 @@ export function AuthForm({
               headers: { "Content-Type": "application/json" },
             });
             const data = await res.json();
-            if (data.redirect) location.assign(data.redirect);
+            if (data.redirect && mode === "login" && role) {
+              const selected = await fetch("/api/role", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ role }),
+              });
+              const result = await selected.json();
+              if (selected.ok && result.redirect)
+                location.assign(result.redirect);
+              else
+                setMessage(
+                  result.message ||
+                    "این نقش برای حساب شما تأیید نشده است. از بخش حساب کاربری وضعیت عضویت را بررسی کنید.",
+                );
+            } else if (data.redirect) location.assign(data.redirect);
             else setMessage(data.message);
           } catch {
             setMessage("ارتباط برقرار نشد. دوباره تلاش کنید.");
@@ -59,6 +79,33 @@ export function AuthForm({
           }
         }}
       >
+        {mode === "login" && (
+          <fieldset className="login-role-options">
+            <legend>ورود به فضای کاری</legend>
+            <label>
+              <input
+                type="radio"
+                name="workspace_role"
+                value=""
+                checked={!role}
+                onChange={() => setRole("")}
+              />
+              حساب من
+            </label>
+            {(["student", "instructor", "admin"] as const).map((item) => (
+              <label key={item}>
+                <input
+                  type="radio"
+                  name="workspace_role"
+                  value={item}
+                  checked={role === item}
+                  onChange={() => setRole(item)}
+                />
+                {roleLabels[item]}
+              </label>
+            ))}
+          </fieldset>
+        )}
         {mode !== "password" && (
           <label>
             ایمیل
@@ -96,6 +143,7 @@ export function AuthForm({
         </p>
       </form>
       <div className="actions">
+        <Link href="/workspace">حساب کاربری</Link>
         <Link href="/auth/login">ورود</Link>
         <Link href="/auth/register">عضویت</Link>
         <Link href="/auth/reset">فراموشی رمز</Link>

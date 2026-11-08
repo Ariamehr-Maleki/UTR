@@ -1,4 +1,14 @@
 import { RoleSwitch } from "@/components/role-switch";
+import { cookies } from "next/headers";
+import {
+  approvedRoles,
+  isWorkspaceRole,
+  roleForView,
+  roleHome,
+  roleLabels,
+  workspaceNavigation,
+} from "@/lib/workspace-roles";
+import { WorkspaceOverview } from "@/components/workspace-overview";
 import Link from "next/link";
 import { redirect, notFound } from "next/navigation";
 import { database } from "@/lib/supabase/server";
@@ -62,8 +72,29 @@ export default async function Workspace({
   const instructor = roles?.some((r) => r.role === "instructor");
   const admin = roles?.some((r) => r.role === "admin");
   const superadmin = roles?.some((r) => r.role === "superadmin");
+  const availableRoles = approvedRoles(
+    roles || [],
+    profile?.membership || "pending",
+  );
+  const savedRole = (await cookies()).get("utr_workspace_role")?.value;
+  const requestedRole = query.role || savedRole;
+  const explicitRole = roleForView(view);
+  if (explicitRole && !availableRoles.includes(explicitRole)) notFound();
+  const activeRole =
+    explicitRole ||
+    (isWorkspaceRole(requestedRole) && availableRoles.includes(requestedRole)
+      ? requestedRole
+      : availableRoles[0]);
+  if (view === "" && activeRole && activeRole !== "student")
+    redirect(roleHome[activeRole]);
+  const menu = workspaceNavigation(activeRole);
   let body: React.ReactNode;
-  if (view === "profile") {
+  if (
+    ["instructor", "administration", "technical"].includes(view) &&
+    activeRole
+  ) {
+    body = <WorkspaceOverview db={db} userId={user.id} role={activeRole} />;
+  } else if (view === "profile") {
     const { data: deps = [] } = await db.from("departments").select("*");
     body = (
       <ActionForm
@@ -173,13 +204,15 @@ export default async function Workspace({
     body = (
       <>
         <AdminConsole
-          superadmin={!!superadmin}
-          academic={!!admin}
+          key={`${activeRole}:${query.operation || ""}`}
+          superadmin={!!superadmin && activeRole === "superadmin"}
+          academic={!!admin && activeRole === "admin"}
           catalog={catalog}
+          initialOperation={query.operation}
         />
         <AdminTools
-          technical={!!superadmin}
-          academic={!!admin}
+          technical={!!superadmin && activeRole === "superadmin"}
+          academic={!!admin && activeRole === "admin"}
           catalog={catalog}
         />
       </>
@@ -488,35 +521,27 @@ export default async function Workspace({
     );
   } else notFound();
   return (
-    <div className="container workspace">
+    <div className="container workspace workspace-v2">
       <aside className="sidebar">
-        <h2>فضای کار پژوهشی</h2>
-        <RoleSwitch roles={(roles || []).map((r) => r.role)} />
-        {navigation
+        <h2>{activeRole ? roleLabels[activeRole] : "حساب پژوهشی"}</h2>
+        <RoleSwitch roles={availableRoles} current={activeRole} />
+        {menu
           .filter(([url]) => liveEnabled() || url === "profile")
           .map(([url, title]) => (
-            <Link href={`/workspace/${url}`} key={url}>
+            <Link
+              href={`/workspace/${url}${activeRole ? `?role=${activeRole}` : ""}`}
+              key={url}
+              aria-current={view === url ? "page" : undefined}
+            >
               {title}
             </Link>
           ))}
-        {instructor && (
-          <>
-            <Link href="/workspace/review">ارزیابی استاد</Link>
-            <Link href="/workspace/teaching">درس‌ها و رویدادهای استاد</Link>
-          </>
-        )}
-        {(admin || superadmin) && (
-          <>
-            <Link href="/workspace/admin">مدیریت سامانه</Link>
-            <Link href="/workspace/reports">گزارش‌ها</Link>
-          </>
-        )}
-        {superadmin && <Link href="/workspace/audit">ممیزی امنیت</Link>}
         <ActionForm action="logout" fields={[]} button="خروج" />
       </aside>
       <section>
         <h1>
-          {navigation.find((x) => x[0] === view)?.[1] ||
+          {menu.find((x) => x[0] === view)?.[1] ||
+            navigation.find((x) => x[0] === view)?.[1] ||
             (
               {
                 submit: "ارسال خلاصه",

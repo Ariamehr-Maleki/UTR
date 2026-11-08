@@ -202,15 +202,21 @@ export function AdminConsole({
   superadmin,
   academic,
   catalog = {},
+  initialOperation,
 }: {
   superadmin: boolean;
   academic: boolean;
   catalog?: Record<string, Item[]>;
+  initialOperation?: string;
 }) {
   const allowed = Object.keys(operations).filter((k) =>
     ["role", "department"].includes(k) ? superadmin : academic,
   );
-  const [op, setOp] = useState(allowed[0]);
+  const [op, setOp] = useState(
+    initialOperation && allowed.includes(initialOperation)
+      ? initialOperation
+      : allowed[0],
+  );
   const [selected, setSelected] = useState("");
   const [mutationId, setMutationId] = useState(() => crypto.randomUUID());
   const table = (

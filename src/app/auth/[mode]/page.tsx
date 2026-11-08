@@ -6,7 +6,7 @@ export default async function Auth({
   searchParams,
 }: {
   params: Promise<{ mode: string }>;
-  searchParams: Promise<{ error?: string }>;
+  searchParams: Promise<{ error?: string; role?: string }>;
 }) {
   const { mode } = await params;
   const query = await searchParams;
@@ -21,6 +21,7 @@ export default async function Auth({
       )}
       <AuthForm
         mode={mode}
+        initialRole={query.role}
         enabled={
           accountsEnabled() &&
           (mode !== "reset" || process.env.UTR_AUTH_EMAIL_ENABLED === "true") &&
