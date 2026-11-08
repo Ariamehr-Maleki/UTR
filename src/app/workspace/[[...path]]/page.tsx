@@ -535,7 +535,7 @@ export default async function Workspace({
         )}
         {body}
         <p className="muted">
-          شناسه حساب شما: <bdi>{user.id}</bdi>
+          شناسه حساب شما: <bdi dir="ltr">{user.id}</bdi>
         </p>
       </section>
     </div>

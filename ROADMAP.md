@@ -33,3 +33,6 @@
 - [x] Independent account activation gate: academic routes still require UTR_LIVE_ENABLED. 43 automated tests pass, including seven academic-action gate cases.
 - [ ] Complete private-upload/assessment hosted acceptance before enabling academic workflows.
 - [ ] Technical administrator email supplied; ownership verification and secure bootstrap remain pending.
+
+- [x] Account-only production deployment verified in a real browser: signup, saved profile, logout/login, unauthenticated redirect, blocked academic action, and no horizontal overflow at 390/768/1440. Temporary browser accounts removed after each run.
+- [x] Migration 17 initializes only the three user-supplied participating departments, with an audit reason.
