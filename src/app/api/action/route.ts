@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { identity } from "@/lib/supabase/server";
+import { liveEnabled } from "@/lib/config";
 const uuid = z.uuid();
 export async function POST(req: Request) {
   if (req.headers.get("origin") !== process.env.APP_ORIGIN)
@@ -9,10 +10,16 @@ export async function POST(req: Request) {
       { status: 403 },
     );
   try {
-    const { db } = await identity();
     const { action, data: d } = z
       .object({ action: z.string(), data: z.record(z.string(), z.string()) })
       .parse(await req.json());
+    const accountAction = ["profile", "logout"].includes(action);
+    if (!accountAction && !liveEnabled())
+      return NextResponse.json(
+        { message: "خدمات پژوهشی هنوز فعال نشده است." },
+        { status: 503 },
+      );
+    const { db } = await identity(accountAction ? "account" : "academic");
     let result;
     switch (action) {
       case "profile":

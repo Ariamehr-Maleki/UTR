@@ -1,9 +1,10 @@
 import "server-only";
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
-import { liveEnabled } from "@/lib/config";
-export async function database() {
-  if (!liveEnabled()) throw new Error("سامانه عملیاتی هنوز فعال نشده است.");
+import { accountsEnabled, liveEnabled } from "@/lib/config";
+export async function database(scope: "account" | "academic" = "academic") {
+  if (!(scope === "account" ? accountsEnabled() : liveEnabled()))
+    throw new Error("سامانه عملیاتی هنوز فعال نشده است.");
   const jar = await cookies();
   return createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -24,8 +25,8 @@ export async function database() {
     },
   );
 }
-export async function identity() {
-  const db = await database();
+export async function identity(scope: "account" | "academic" = "academic") {
+  const db = await database(scope);
   const { data, error } = await db.auth.getUser();
   if (error || !data.user) throw new Error("ابتدا وارد حساب خود شوید.");
   return { db, user: data.user };

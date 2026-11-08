@@ -10,7 +10,7 @@ const auth = vi.hoisted(() => ({
 vi.mock("../src/lib/supabase/server", () => ({
   database: async () => ({ auth }),
 }));
-vi.mock("../src/lib/config", () => ({ liveEnabled: () => true }));
+vi.mock("../src/lib/config", () => ({ accountsEnabled: () => true }));
 import { POST } from "../src/app/api/auth/route";
 const origin = "https://utr.example";
 function request(mode: string, suppliedOrigin = origin) {

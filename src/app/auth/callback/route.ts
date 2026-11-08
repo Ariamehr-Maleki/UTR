@@ -12,7 +12,7 @@ export async function GET(req: Request) {
   const type = url.searchParams.get("type");
   if (token && ["email", "recovery", "signup"].includes(type || "")) {
     try {
-      const db = await database();
+      const db = await database("account");
       const { error } = await db.auth.verifyOtp({
         token_hash: token,
         type: type as "email" | "recovery" | "signup",
@@ -26,7 +26,7 @@ export async function GET(req: Request) {
   const code = url.searchParams.get("code");
   if (code) {
     try {
-      const db = await database();
+      const db = await database("account");
       const { error } = await db.auth.exchangeCodeForSession(code);
       if (!error) return NextResponse.redirect(new URL(next, origin));
     } catch {}

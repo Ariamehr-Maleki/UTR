@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { database } from "@/lib/supabase/server";
-import { liveEnabled } from "@/lib/config";
+import { accountsEnabled } from "@/lib/config";
 export async function POST(req: Request) {
-  if (!liveEnabled())
+  if (!accountsEnabled())
     return NextResponse.json(
       { message: "سامانه عملیاتی فعال نیست." },
       { status: 503 },
@@ -26,7 +26,7 @@ export async function POST(req: Request) {
       z.string().min(12).parse(body.password);
     if (["login", "register", "reset"].includes(body.mode))
       z.email().parse(body.email);
-    const db = await database();
+    const db = await database("account");
     let error;
     if (body.mode === "logout") {
       ({ error } = await db.auth.signOut());

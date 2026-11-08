@@ -1,5 +1,5 @@
 import { AuthForm } from "@/components/auth-form";
-import { liveEnabled } from "@/lib/config";
+import { accountsEnabled } from "@/lib/config";
 import { notFound } from "next/navigation";
 export default async function Auth({
   params,
@@ -22,7 +22,7 @@ export default async function Auth({
       <AuthForm
         mode={mode}
         enabled={
-          liveEnabled() &&
+          accountsEnabled() &&
           (mode !== "reset" || process.env.UTR_AUTH_EMAIL_ENABLED === "true") &&
           (mode !== "register" || process.env.UTR_SIGNUP_ENABLED === "true")
         }

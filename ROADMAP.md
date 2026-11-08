@@ -26,3 +26,10 @@
 - [ ] Identify and securely bootstrap the first verified technical and institution-approved academic administrators.
 - [ ] Confirm exact font (unknown to user); current Vazirmatn remains a substitute.
 - [ ] Enable live/signup gates only after the above verification. No production-readiness claim.
+
+## Account launch increment — 2026-11-08
+
+- [x] Real hosted signup without email confirmation, sessions, login/logout, pending membership, role escalation denial and cross-profile isolation verified with temporary accounts then cleaned up.
+- [x] Independent account activation gate: academic routes still require UTR_LIVE_ENABLED. 43 automated tests pass, including seven academic-action gate cases.
+- [ ] Complete private-upload/assessment hosted acceptance before enabling academic workflows.
+- [ ] Technical administrator email supplied; ownership verification and secure bootstrap remain pending.

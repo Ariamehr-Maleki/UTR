@@ -2,7 +2,7 @@ import { RoleSwitch } from "@/components/role-switch";
 import Link from "next/link";
 import { redirect, notFound } from "next/navigation";
 import { database } from "@/lib/supabase/server";
-import { liveEnabled } from "@/lib/config";
+import { accountsEnabled, liveEnabled } from "@/lib/config";
 import { ActionForm } from "@/components/action-form";
 import { UploadFlow } from "@/components/upload-flow";
 import { Assessment } from "@/components/assessment";
@@ -32,7 +32,7 @@ export default async function Workspace({
   const { path = [] } = await params;
   const view = path[0] || "";
   const query = await searchParams;
-  if (!liveEnabled())
+  if (!accountsEnabled())
     return (
       <div className="container section">
         <h1>فضای کار پژوهشی</h1>
@@ -43,7 +43,8 @@ export default async function Workspace({
         <Link href="/preview/student">مشاهده نمای معرفی دانشجو</Link>
       </div>
     );
-  const db = await database();
+  if (!liveEnabled() && view !== "profile") redirect("/workspace/profile");
+  const db = await database(liveEnabled() ? "academic" : "account");
   const {
     data: { user },
   } = await db.auth.getUser();
@@ -491,11 +492,13 @@ export default async function Workspace({
       <aside className="sidebar">
         <h2>فضای کار پژوهشی</h2>
         <RoleSwitch roles={(roles || []).map((r) => r.role)} />
-        {navigation.map(([url, title]) => (
-          <Link href={`/workspace/${url}`} key={url}>
-            {title}
-          </Link>
-        ))}
+        {navigation
+          .filter(([url]) => liveEnabled() || url === "profile")
+          .map(([url, title]) => (
+            <Link href={`/workspace/${url}`} key={url}>
+              {title}
+            </Link>
+          ))}
         {instructor && (
           <>
             <Link href="/workspace/review">ارزیابی استاد</Link>
@@ -531,6 +534,9 @@ export default async function Workspace({
           </div>
         )}
         {body}
+        <p className="muted">
+          شناسه حساب شما: <bdi>{user.id}</bdi>
+        </p>
       </section>
     </div>
   );

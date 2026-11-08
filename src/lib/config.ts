@@ -14,6 +14,12 @@ function configuredEnvironment() {
 export function liveEnabled() {
   return process.env.UTR_LIVE_ENABLED === "true" && configuredEnvironment();
 }
+export function accountsEnabled() {
+  return (
+    (process.env.UTR_ACCOUNTS_ENABLED === "true" || liveEnabled()) &&
+    configuredEnvironment()
+  );
+}
 export function publicContentEnabled() {
   return (
     (process.env.UTR_PUBLIC_CONTENT_ENABLED === "true" ||

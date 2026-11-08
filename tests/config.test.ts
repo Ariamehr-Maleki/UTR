@@ -1,6 +1,24 @@
 import { it, expect, afterEach, vi } from "vitest";
-import { liveEnabled, publicContentEnabled } from "../src/lib/config";
+import {
+  accountsEnabled,
+  liveEnabled,
+  publicContentEnabled,
+} from "../src/lib/config";
 afterEach(() => vi.unstubAllEnvs());
+it("account activation never activates academic operations", () => {
+  vi.stubEnv("UTR_ACCOUNTS_ENABLED", "true");
+  vi.stubEnv("UTR_LIVE_ENABLED", "false");
+  vi.stubEnv("VERCEL_ENV", "production");
+  vi.stubEnv(
+    "NEXT_PUBLIC_SUPABASE_URL",
+    "https://spqtwgyxzdythfmyzvyh.supabase.co",
+  );
+  vi.stubEnv("NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY", "public");
+  expect(accountsEnabled()).toBe(true);
+  expect(liveEnabled()).toBe(false);
+  vi.stubEnv("VERCEL_ENV", "preview");
+  expect(accountsEnabled()).toBe(false);
+});
 it("fails closed without explicit activation", () => {
   vi.stubEnv("UTR_LIVE_ENABLED", "false");
   expect(liveEnabled()).toBe(false);
