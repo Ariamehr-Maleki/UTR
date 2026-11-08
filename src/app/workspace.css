@@ -53,6 +53,45 @@
 .workspace-v2 .panel {
   box-shadow: none;
 }
+.queue-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  border-bottom: 1px solid #dce5ed;
+  padding-bottom: 16px;
+  margin-bottom: 24px;
+}
+.queue-tabs a {
+  padding: 8px 14px;
+  text-decoration: none;
+  border-radius: 8px;
+  color: #123f7b;
+}
+.queue-tabs a[aria-current="page"] {
+  background: #123f7b;
+  color: #fff;
+}
+.profile-review {
+  background: #f2f7fa;
+  border-radius: 12px;
+  padding: 24px;
+  margin-block: 24px;
+}
+.profile-review h2 {
+  font-size: 19px;
+}
+.profile-review dl {
+  display: grid;
+  grid-template-columns: 130px 1fr;
+  gap: 10px 20px;
+}
+.profile-review dt {
+  color: #53657a;
+}
+.profile-review dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
 .desk-intro {
   color: #53657a;
   font-size: 17px;

@@ -2,7 +2,13 @@
 import { useState } from "react";
 import { statusLabel } from "@/lib/status";
 import { persianDate } from "@/lib/time";
-export function Assessment({ referral: r }: { referral: any }) {
+export function Assessment({
+  referral: r,
+  readOnly = false,
+}: {
+  referral: any;
+  readOnly?: boolean;
+}) {
   const [rotation, setRotation] = useState(0);
   const [zoom, setZoom] = useState(1);
   const [outcome, setOutcome] = useState("score");
@@ -80,103 +86,110 @@ export function Assessment({ referral: r }: { referral: any }) {
           />
         )}
       </div>
-      <form
-        className="form"
-        onSubmit={async (e) => {
-          e.preventDefault();
-          setBusy(true);
-          try {
-            const response = await fetch("/api/action", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({
-                action: "assess",
-                data: {
-                  referral_id: r.id,
-                  attachment_id: r.attachment_id,
-                  outcome,
-                  score,
-                  feedback,
-                  confirm: String(confirm),
-                  request_id: requestId,
-                },
-              }),
-            });
-            const data = await response.json();
-            setMessage(data.message);
-            if (response.ok) setDone(true);
-          } catch {
-            setMessage(
-              "ارتباط قطع شد. تلاش مجدد، نتیجه را دوباره ثبت نمی‌کند.",
-            );
-          } finally {
-            setBusy(false);
-          }
-        }}
-      >
-        <label>
-          نتیجه بررسی
-          <select
-            value={outcome}
-            onChange={(e) => {
-              setOutcome(e.target.value);
-              setConfirm(false);
-            }}
-          >
-            <option value="score">ثبت امتیاز</option>
-            <option value="revision">درخواست اصلاح با همین استاد</option>
-            <option value="wrong_course">
-              بازگشت به دلیل نامرتبط بودن درس
-            </option>
-            <option value="administrative_review">
-              ارجاع مسئله حضور یا تخلف به اداره
-            </option>
-          </select>
-        </label>
-        {outcome === "score" && (
+      {readOnly ? (
+        <div className="notice">
+          این ارجاع بسته شده است. سابقهٔ تصمیم‌ها در بالا حفظ شده؛ اصلاح نتیجه
+          فقط از مسیر درخواست بررسی اداری انجام می‌شود.
+        </div>
+      ) : (
+        <form
+          className="form"
+          onSubmit={async (e) => {
+            e.preventDefault();
+            setBusy(true);
+            try {
+              const response = await fetch("/api/action", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                  action: "assess",
+                  data: {
+                    referral_id: r.id,
+                    attachment_id: r.attachment_id,
+                    outcome,
+                    score,
+                    feedback,
+                    confirm: String(confirm),
+                    request_id: requestId,
+                  },
+                }),
+              });
+              const data = await response.json();
+              setMessage(data.message);
+              if (response.ok) setDone(true);
+            } catch {
+              setMessage(
+                "ارتباط قطع شد. تلاش مجدد، نتیجه را دوباره ثبت نمی‌کند.",
+              );
+            } finally {
+              setBusy(false);
+            }
+          }}
+        >
           <label>
-            امتیاز بین صفر و یک
-            <input
-              type="number"
-              min="0"
-              max="1"
-              step="0.01"
-              value={score}
+            نتیجه بررسی
+            <select
+              value={outcome}
               onChange={(e) => {
-                setScore(e.target.value);
+                setOutcome(e.target.value);
                 setConfirm(false);
               }}
+            >
+              <option value="score">ثبت امتیاز</option>
+              <option value="revision">درخواست اصلاح با همین استاد</option>
+              <option value="wrong_course">
+                بازگشت به دلیل نامرتبط بودن درس
+              </option>
+              <option value="administrative_review">
+                ارجاع مسئله حضور یا تخلف به اداره
+              </option>
+            </select>
+          </label>
+          {outcome === "score" && (
+            <label>
+              امتیاز بین صفر و یک
+              <input
+                type="number"
+                min="0"
+                max="1"
+                step="0.01"
+                value={score}
+                onChange={(e) => {
+                  setScore(e.target.value);
+                  setConfirm(false);
+                }}
+                required
+                dir="ltr"
+              />
+            </label>
+          )}
+          <label>
+            بازخورد کتبی
+            <textarea
               required
-              dir="ltr"
+              value={feedback}
+              onChange={(e) => setFeedback(e.target.value)}
             />
           </label>
-        )}
-        <label>
-          بازخورد کتبی
-          <textarea
-            required
-            value={feedback}
-            onChange={(e) => setFeedback(e.target.value)}
-          />
-        </label>
-        {outcome === "score" && Number(score) > 0 && (
-          <label style={{ display: "flex" }}>
-            <input
-              type="checkbox"
-              style={{ width: 20 }}
-              checked={confirm}
-              onChange={(e) => setConfirm(e.target.checked)}
-              required
-            />
-            تأیید می‌کنم: ثبت امتیاز مثبت، امکان ارجاع دانشجو به استاد دیگر را
-            قفل می‌کند.
-          </label>
-        )}
-        <button disabled={busy || done}>
-          {busy ? "در حال ثبت…" : "ثبت نتیجه بررسی"}
-        </button>
-        <p role="status">{message}</p>
-      </form>
+          {outcome === "score" && Number(score) > 0 && (
+            <label style={{ display: "flex" }}>
+              <input
+                type="checkbox"
+                style={{ width: 20 }}
+                checked={confirm}
+                onChange={(e) => setConfirm(e.target.checked)}
+                required
+              />
+              تأیید می‌کنم: ثبت امتیاز مثبت، امکان ارجاع دانشجو به استاد دیگر را
+              قفل می‌کند.
+            </label>
+          )}
+          <button disabled={busy || done}>
+            {busy ? "در حال ثبت…" : "ثبت نتیجه بررسی"}
+          </button>
+          <p role="status">{message}</p>
+        </form>
+      )}
       <p>
         <a href="/workspace/support">درخواست اصلاح کنترل‌شده یا بررسی اداری</a>
       </p>

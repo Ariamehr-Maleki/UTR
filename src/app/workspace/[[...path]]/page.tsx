@@ -184,7 +184,12 @@ export default async function Workspace({
       </>
     );
   } else if (view === "admin") {
-    if (!admin && !superadmin) notFound();
+    if (
+      !activeRole ||
+      !["admin", "superadmin"].includes(activeRole) ||
+      !availableRoles.includes(activeRole)
+    )
+      notFound();
     const catalog: Record<string, any[]> = {};
     for (const table of [
       "departments",
@@ -249,21 +254,68 @@ export default async function Workspace({
     );
   } else if (view === "review") {
     if (!instructor) notFound();
-    const { data: refs } = await db
+    const history = query.queue === "history";
+    const { data: refs, error: reviewError } = await db
       .from("referrals")
       .select(
         "*,offerings(title),submissions(event_id,state),attachments(version,mime)",
       )
       .eq("instructor_id", user.id)
-      .eq("active", true);
-    for (const r of refs || []) {
-      const { data } = await db.rpc("referral_context", { p_referral: r.id });
-      (r as any).context = data;
-    }
-    body = refs?.length ? (
-      refs.map((r) => <Assessment key={r.id} referral={r} />)
-    ) : (
-      <Empty text="خلاصه جدیدی برای ارزیابی ندارید." />
+      .eq("active", !history)
+      .order("created_at", { ascending: true });
+    await Promise.all(
+      (refs || []).map(async (r) => {
+        const { data } = await db.rpc("referral_context", { p_referral: r.id });
+        (r as any).context = data;
+      }),
+    );
+    const visible = (refs || []).filter(
+      (r: any) =>
+        query.queue !== "overdue" ||
+        (r.context?.review_hours &&
+          new Date(r.created_at).getTime() +
+            Number(r.context.review_hours) * 3600000 <
+            Date.now()),
+    );
+    body = (
+      <>
+        <nav className="queue-tabs" aria-label="صف‌های ارزیابی">
+          {[
+            ["active", "در انتظار ارزیابی"],
+            ["overdue", "گذشته از زمان پاسخ"],
+            ["history", "سابقهٔ ارزیابی"],
+          ].map(([queue, title]) => (
+            <Link
+              key={queue}
+              href={`/workspace/review?queue=${queue}&role=instructor`}
+              aria-current={
+                (query.queue || "active") === queue ? "page" : undefined
+              }
+            >
+              {title}
+            </Link>
+          ))}
+        </nav>
+        {reviewError ? (
+          <div className="notice error" role="alert">
+            دریافت صف ارزیابی انجام نشد. صفحه را دوباره بارگذاری کنید.
+          </div>
+        ) : visible.length ? (
+          visible.map((r) => (
+            <Assessment key={r.id} referral={r} readOnly={history} />
+          ))
+        ) : (
+          <Empty
+            text={
+              history
+                ? "هنوز ارجاع بسته‌شده‌ای ندارید."
+                : query.queue === "overdue"
+                  ? "پرونده‌ای با زمان پاسخ مصوبِ گذشته وجود ندارد."
+                  : "خلاصه جدیدی برای ارزیابی ندارید."
+            }
+          />
+        )}
+      </>
     );
   } else if (view === "submit") {
     const { data: events = [] } = await db

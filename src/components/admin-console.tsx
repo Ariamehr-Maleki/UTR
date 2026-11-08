@@ -226,11 +226,15 @@ export function AdminConsole({
       content: "content",
       appeal: "appeals",
       correction: "submissions",
+      membership: "profiles",
+      instructor: "profiles",
     } as Record<string, string>
   )[op];
   const records = catalog[table] || [];
   const record = records.find((r) => r.id === selected);
   function value(key: string) {
+    if (key === "user_id" && ["membership", "instructor"].includes(op))
+      return record?.id || "";
     const raw = record?.[key] ?? record?.editorial?.[key];
     if (raw == null) return "";
     if (
@@ -265,9 +269,11 @@ export function AdminConsole({
         قبلی را تغییر نمی‌دهند. مقدار خالی در تنظیمات مهلت به معنای سیاست
         تعیین‌نشده است.
       </div>
-      <p>
-        <a href="/api/reports">دریافت گزارش مجاز CSV</a>
-      </p>
+      {academic && (
+        <p>
+          <a href="/api/reports">دریافت گزارش مجاز CSV</a>
+        </p>
+      )}
       <div className="panel">
         <label>
           بخش مدیریت
@@ -301,7 +307,8 @@ export function AdminConsole({
             <option value="">رکورد جدید / انتخاب کنید</option>
             {records.map((r) => (
               <option key={r.id} value={r.id}>
-                {r.title || r.subject || r.id} — {r.status || r.state || ""}
+                {r.title || r.subject || r.display_name || r.id} —{" "}
+                {r.status || r.state || r.membership || ""}
               </option>
             ))}
           </select>
@@ -311,6 +318,38 @@ export function AdminConsole({
         <div className="notice">
           <p>{record.body}</p>
         </div>
+      )}
+      {record && table === "profiles" && (
+        <section className="profile-review">
+          <h2>مشخصات برای بررسی عضویت</h2>
+          <dl>
+            <dt>نام</dt>
+            <dd>{record.display_name || "تکمیل نشده"}</dd>
+            <dt>شماره دانشجویی</dt>
+            <dd>
+              <bdi>{record.student_number || "ثبت نشده"}</bdi>
+            </dd>
+            <dt>مقطع</dt>
+            <dd>
+              {(
+                {
+                  bachelor: "کارشناسی",
+                  master: "کارشناسی ارشد",
+                  doctorate: "دکتری",
+                } as Record<string, string>
+              )[record.degree] || "ثبت نشده"}
+            </dd>
+            <dt>گروه آموزشی</dt>
+            <dd>
+              {catalog.departments?.find((d) => d.id === record.department_id)
+                ?.name || "ثبت نشده"}
+            </dd>
+          </dl>
+          <p>
+            تأیید عضویت را پس از تطبیق این مشخصات با مدارک یا مرجع دانشگاهی ثبت
+            کنید.
+          </p>
+        </section>
       )}
       <form
         key={`${op}:${selected}`}

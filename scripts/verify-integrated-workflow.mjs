@@ -272,7 +272,9 @@ try {
     }
     if (role === "admin") {
       await page.goto(origin + "/workspace/admin?operation=attendance");
-      await expect(page.locator("form").last()).toBeVisible();
+      await expect(
+        page.getByRole("button", { name: "ثبت تغییر", exact: true }),
+      ).toBeVisible();
     }
     await context.close();
   }
