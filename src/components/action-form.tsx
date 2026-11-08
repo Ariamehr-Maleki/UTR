@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 export type Field = {
   name: string;
   label: string;
@@ -13,12 +14,15 @@ export function ActionForm({
   fields,
   button = "ذخیره",
   hidden = {},
+  refreshOnSuccess = false,
 }: {
   action: string;
   fields: Field[];
   button?: string;
   hidden?: Record<string, string>;
+  refreshOnSuccess?: boolean;
 }) {
+  const router = useRouter();
   const [message, setMessage] = useState("");
   const [busy, setBusy] = useState(false);
   return (
@@ -40,6 +44,7 @@ export function ActionForm({
           });
           const result = await response.json();
           setMessage(result.message);
+          if (response.ok && refreshOnSuccess) router.refresh();
           if (result.redirect) location.assign(result.redirect);
         } catch {
           setMessage(

@@ -13,8 +13,7 @@ it.each([
   "assess",
   "admin",
   "extend_deadline",
-  "certificate",
-  "adjust_points",
+  "issue_certificate_for",
 ])(
   "account-only activation blocks %s before accessing the database",
   async (action) => {

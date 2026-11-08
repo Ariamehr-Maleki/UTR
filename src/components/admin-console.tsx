@@ -147,12 +147,8 @@ const operations: Record<string, [string, string[]]> = {
       "max_alternatives",
       "unlimited_alternatives",
       "review_hours",
-      "points_enabled",
-      "certificates_enabled",
     ],
   ],
-  points_rule: ["قاعده مشارکت", ["activity", "points", "approved"]],
-  badge: ["نشان مشارکت", ["title", "minimum_points", "approved"]],
 };
 const selects: Record<string, string[][]> = {
   membership: [

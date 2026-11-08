@@ -18,6 +18,8 @@ Persian-speaking students, approved instructors, Farabi research administrators,
 
 An approved, attended event leads to one canonical handwritten summary and one active course/instructor referral. Each event earns 0–1 academic credit. Any positive score permanently locks student referral; zero permits another eligible instructor subject to configured deadlines. No aggregate semester or course cap. Actual grade entry remains governed by institutional policy.
 
+The optional public leaderboard uses three distinct, semester-scoped measures: confirmed event attendance, submitted summaries, and the sum of assessed club credit. Attendance alone earns no academic score. Display requires student opt-in; individual assessments remain private. Research administration alone issues certificates manually with a documented reason. No numerical points or badge rewards have been approved.
+
 ## Brand commitments
 
 Primary Persian RTL. Reference 1 controls blue/cyan/white identity. Supplied reference 2 is the authentic emblem; reference 3 is wing artwork. Exact font unidentified; Vazirmatn is explicitly temporary.

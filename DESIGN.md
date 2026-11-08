@@ -21,18 +21,18 @@ colors:
   error-surface: "#fff2f4"
 typography:
   display:
-    fontFamily: "Vazirmatn, sans-serif"
+    fontFamily: "UTR Damavand, Vazirmatn, sans-serif"
     fontSize: "clamp(46px, 5.1vw, 74px)"
     fontWeight: 800
     lineHeight: 1.5
     letterSpacing: "0"
   headline:
-    fontFamily: "Vazirmatn, sans-serif"
+    fontFamily: "UTR Damavand, Vazirmatn, sans-serif"
     fontSize: "clamp(32px, 3.3vw, 46px)"
     lineHeight: 1.65
     letterSpacing: "0"
   title:
-    fontFamily: "Vazirmatn, sans-serif"
+    fontFamily: "UTR Damavand, Vazirmatn, sans-serif"
     fontSize: "19px"
     lineHeight: 1.8
   body:
@@ -128,7 +128,7 @@ University blue anchors the entrance and primary actions. Medium blue marks link
 
 ## Typography
 
-All interface roles use self-hosted `Vazirmatn, sans-serif`; weights 400, 500, 700 and 800 are imported. This is a temporary substitute, not reference-font fidelity. Headings have zero letter spacing. Body text is 16px/1.9; supporting copy generally ranges from 12px to 18px.
+On 2026-11-09 the owner selected Damavand for headings. Heading CSS now requests locally installed Damavand through the `--heading-font` token, with Vazirmatn as the fallback. No licensed Damavand webfont file is currently present in the project or installed font directories. The [publisher's font listing](https://noonfont.com/fonts/damavand) distinguishes free desktop use from a paid website/app license; third-party free downloads do not establish permission to self-host it. The deployed experience therefore still renders the fallback until a licensed WOFF2/WOFF file and web-use terms are supplied. Body text, forms and supporting labels use self-hosted Vazirmatn. This is not yet full Damavand typography fidelity. Headings have zero letter spacing. Body text is 16px/1.9; supporting copy generally ranges from 12px to 18px.
 
 The home display is `clamp(46px, 5.1vw, 74px)`/1.5 at weight 800, overridden to 54px at 950px and to 39px/1.6 at 600px. Its introduction is 18px/1.9, then 14px on mobile. Editorial and library titles are `clamp(32px, 3.3vw, 46px)`/1.65, then 31px on mobile. Discovery headings are 39px/1.65, 32px at 950px and 29px at 600px. Archive titles are 19px/1.8, then 15px on mobile. Journal titles are 20px, then 18px at 950px. The club slogan uses `clamp(40px, 4.5vw, 60px)` and 40px on mobile. Workspace titles are 32px, then 27px on mobile.
 

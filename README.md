@@ -106,6 +106,10 @@ UTR_ACCOUNTS_ENABLED permits authentication, own-profile editing and logout inde
 
 ## Role workspaces and integration acceptance
 
+The club participation screen now shows three semester-specific facts: confirmed event attendance, canonical summaries actually submitted, and the sum of instructor-awarded club credit (0–1 per event). A student may opt in to a public name-only leaderboard and choose which of the three measures determines rank. Attendance alone carries no academic score; the displayed credit is not a university grade entry. The former unapproved integer-points leaderboard is not shown. Numerical badge rules remain inactive.
+
+Research administration issues certificates manually in **میز معاونت → مدیریت پژوهشی → صدور دستی گواهی**. Choose an approved student, kind, and for attendance only the attended event; record a reason. The database confirms scope and attendance, records an audit entry, and returns the existing certificate on retry. Revocation uses a labeled certificate selector and reason. Students see issued certificates in **گواهی‌ها** but cannot issue their own. Verification displays only the recipient name, kind, date and validity.
+
 See [the Persian workspace administration guide](docs/WORKSPACES.md) for student, instructor and research administration workflows. Login role selection and the HttpOnly role switch use current approved membership and database roles; selection never grants a role. Technical and academic panels remain separate.
 
 `.github/workflows/integration.yml` starts an ephemeral real Supabase stack in CI, applies every migration, builds Next.js and exercises real Auth sessions, private Storage, attendance, revision versions, zero re-referral, positive locking, concurrent/idempotent requests, appeals, permission revocation and logout. It captures all four workspaces at 390/768/1440. Run 42478954369 passed; fixtures exist only inside the temporary runner. This is separate from actual production-environment acceptance. Local integration mode only accepts the exact loopback Supabase address and is rejected on Vercel.

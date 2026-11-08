@@ -29,7 +29,7 @@ const navigation = [
   ["courses", "درس‌های نیمسال"],
   ["notifications", "اعلان‌ها"],
   ["support", "اعتراض و پشتیبانی"],
-  ["engagement", "مشارکت و نشان‌ها"],
+  ["engagement", "مشارکت باشگاه"],
   ["certificates", "گواهی‌ها"],
   ["profile", "پروفایل"],
 ];
@@ -203,6 +203,7 @@ export default async function Workspace({
       "content",
       "appeals",
       "submissions",
+      "certificates",
     ]) {
       const { data } = await db.from(table).select("*");
       catalog[table] = data || [];
@@ -404,20 +405,11 @@ export default async function Workspace({
             />
           )}
           {attendance?.some((a) => a.event_id === e.id && a.confirmed) && (
-            <>
-              <ActionForm
-                action="sync_points"
-                hidden={{ event_id: e.id }}
-                fields={[]}
-                button="بررسی امتیاز مشارکت طبق قواعد مصوب"
-              />
-              <ActionForm
-                action="certificate"
-                hidden={{ event_id: e.id, kind: "attendance" }}
-                fields={[]}
-                button="بررسی شرایط گواهی حضور"
-              />
-            </>
+            <p>
+              حضور شما تأیید شده است. برای دریافت اعتبار باشگاه، خلاصهٔ دست‌نویس
+              را در مهلت رویداد ارسال کنید. صدور گواهی با تصمیم معاونت پژوهشی
+              است.
+            </p>
           )}
         </article>
       ))
@@ -565,7 +557,15 @@ export default async function Workspace({
     body = rows?.length ? (
       rows.map((c) => (
         <article className="panel" key={c.id}>
-          <h2>{c.kind}</h2>
+          <h2>
+            {(
+              {
+                membership: "گواهی عضویت",
+                attendance: "گواهی حضور",
+                participation: "گواهی مشارکت",
+              } as Record<string, string>
+            )[c.kind] || "گواهی"}
+          </h2>
           <p>{c.revoked_at ? "باطل‌شده" : "صادرشده"}</p>
           <Link href={`/workspace/certificate/${c.id}`}>
             مشاهده و چاپ گواهی
@@ -573,7 +573,7 @@ export default async function Workspace({
         </article>
       ))
     ) : (
-      <Empty text="گواهی پس از تصویب شرایط و احراز صلاحیت صادر می‌شود." />
+      <Empty text="هنوز گواهی‌ای برای شما صادر نشده است. صدور گواهی با تصمیم معاونت پژوهشی انجام می‌شود." />
     );
   } else notFound();
   return (

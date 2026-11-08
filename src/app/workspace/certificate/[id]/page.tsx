@@ -42,7 +42,7 @@ export default async function Certificate({
           <>
             <p>این گواهی برای</p>
             <h2>{c.public_name}</h2>
-            <p>بر اساس شرایط مصوب باشگاه پژوهشیاران صادر شده است.</p>
+            <p>با بررسی و تصمیم معاونت پژوهشی صادر شده است.</p>
           </>
         )}
         <p>تاریخ صدور: {persianDate(c.issued_at)}</p>
@@ -56,7 +56,7 @@ export default async function Certificate({
         </p>
         <small>این گواهی به معنای ثبت نمره در سامانه رسمی دانشگاه نیست.</small>
       </article>
-      <PrintButton />
+      {!c.revoked_at && <PrintButton />}
     </div>
   );
 }

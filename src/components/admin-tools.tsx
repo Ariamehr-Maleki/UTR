@@ -48,41 +48,6 @@ export function AdminTools({
         <>
           <OfficialFormUpload enabled={!!process.env.UTR_CLAMAV_HOST} />
           <details>
-            <summary>اصلاح مستند امتیاز مشارکت</summary>
-            <p>
-              این تغییر به نمره آموزشی ارتباطی ندارد و تنها پس از تصویب قواعد
-              مشارکت مجاز است.
-            </p>
-            <ActionForm
-              action="adjust_points"
-              hidden={{ request_id: crypto.randomUUID() }}
-              fields={[
-                {
-                  name: "user_id",
-                  label: "دانشجو",
-                  options: (catalog.profiles || []).map((p) => ({
-                    value: p.id,
-                    label: p.display_name || p.id,
-                  })),
-                },
-                {
-                  name: "semester_id",
-                  label: "نیمسال",
-                  options: (catalog.semesters || []).map((p) => ({
-                    value: p.id,
-                    label: p.title,
-                  })),
-                },
-                {
-                  name: "points",
-                  label: "مقدار تغییر؛ عدد صحیح مثبت یا منفی",
-                  type: "number",
-                },
-                reason,
-              ]}
-            />
-          </details>
-          <details>
             <summary>تمدید استثنایی مهلت یک پرونده</summary>
             <p>
               تاریخ جدید به وقت تهران است. این تصمیم قفل امتیاز مثبت یا سیاست
@@ -138,10 +103,23 @@ export function AdminTools({
             />
           </details>
           <details>
-            <summary>شرایط مصوب صدور گواهی</summary>
+            <summary>صدور دستی گواهی</summary>
+            <p>
+              معاونت پژوهشی پس از بررسی پرونده، نوع گواهی و دلیل تصمیم را ثبت
+              می‌کند. حضور باید در سامانه تأیید شده باشد؛ این گواهی نمرهٔ رسمی
+              دانشگاه را تغییر نمی‌دهد.
+            </p>
             <ActionForm
-              action="certificate_rule"
+              action="issue_certificate_for"
               fields={[
+                {
+                  name: "student_id",
+                  label: "دانشجو",
+                  options: (catalog.profiles || []).map((p) => ({
+                    value: p.id,
+                    label: p.display_name || p.id,
+                  })),
+                },
                 {
                   name: "kind",
                   label: "نوع گواهی",
@@ -151,30 +129,57 @@ export function AdminTools({
                     { value: "participation", label: "مشارکت" },
                   ],
                 },
-                policy,
                 {
-                  name: "minimum",
-                  label: "حداقل رویداد برای گواهی مشارکت",
-                  type: "number",
+                  name: "event_id",
+                  label: "رویداد؛ فقط برای گواهی حضور",
+                  options: (catalog.events || []).map((e) => ({
+                    value: e.id,
+                    label: e.title,
+                  })),
                   required: false,
-                },
-                {
-                  name: "approved",
-                  label: "وضعیت تصویب",
-                  options: [
-                    { value: "false", label: "غیرفعال" },
-                    { value: "true", label: "مصوب" },
-                  ],
                 },
                 reason,
               ]}
+              button="صدور گواهی"
+              refreshOnSuccess
             />
           </details>
           <details>
             <summary>ابطال گواهی</summary>
+            <p>گواهی‌های صادرشده در دامنهٔ دسترسی شما:</p>
+            <ul>
+              {(catalog.certificates || []).map((c) => (
+                <li key={c.id}>
+                  {c.public_name} —{" "}
+                  {c.kind === "attendance"
+                    ? "حضور"
+                    : c.kind === "membership"
+                      ? "عضویت"
+                      : "مشارکت"}{" "}
+                  — {c.revoked_at ? "باطل‌شده" : "معتبر"}
+                </li>
+              ))}
+            </ul>
+            {!catalog.certificates?.length && (
+              <p>هنوز گواهی‌ای صادر نشده است.</p>
+            )}
             <ActionForm
               action="revoke_certificate"
-              fields={[{ name: "id", label: "شناسه گواهی" }, reason]}
+              fields={[
+                {
+                  name: "id",
+                  label: "گواهی معتبر",
+                  options: (catalog.certificates || [])
+                    .filter((c) => !c.revoked_at)
+                    .map((c) => ({
+                      value: c.id,
+                      label: `${c.public_name} — ${c.kind === "attendance" ? "حضور" : c.kind === "membership" ? "عضویت" : "مشارکت"}`,
+                    })),
+                },
+                reason,
+              ]}
+              button="ابطال با ثبت دلیل"
+              refreshOnSuccess
             />
           </details>
           <details>

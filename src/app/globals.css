@@ -1,3 +1,8 @@
+@font-face {
+  font-family: "UTR Damavand";
+  src: local("Damavand"), local("Damavand 2"), local("Damavand-Regular");
+  font-display: swap;
+}
 :root {
   --blue: #153f7d;
   --medium: #086dc1;
@@ -8,6 +13,7 @@
   --line: #d7e5ef;
   --error: #a22336;
   --radius: 14px;
+  --heading-font: "UTR Damavand", Vazirmatn, sans-serif;
 }
 * {
   box-sizing: border-box;
@@ -22,6 +28,12 @@ body {
   font-family: Vazirmatn, sans-serif;
   font-size: 16px;
   line-height: 1.9;
+}
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--heading-font);
 }
 ::selection {
   background: #bceef3;
@@ -2942,6 +2954,34 @@ td {
   }
 }
 /* Independent finish-review corrections. */
+.activity-summary {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1px;
+  margin: 28px 0 36px;
+  border-block: 1px solid var(--line, #d6e3ec);
+  background: var(--line, #d6e3ec);
+}
+.activity-summary p {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 22px;
+  background: #fff;
+}
+.activity-summary strong {
+  color: var(--blue, #11569b);
+  font-size: clamp(26px, 4vw, 42px);
+  font-variant-numeric: tabular-nums;
+}
+.activity-summary span {
+  color: var(--navy, #071632);
+}
+@media (max-width: 600px) {
+  .activity-summary {
+    grid-template-columns: 1fr;
+  }
+}
 body {
   min-height: 100vh;
   display: flex;

@@ -75,7 +75,7 @@ export function workspaceNavigation(role: WorkspaceRole | undefined) {
                 ["events", "رویدادها و حضور"],
                 ["submissions", "خلاصه‌ها و نتایج"],
                 ["courses", "درس‌های نیمسال"],
-                ["engagement", "مشارکت و نشان‌ها"],
+                ["engagement", "مشارکت باشگاه"],
                 ["certificates", "گواهی‌ها"],
               ]
             : [];

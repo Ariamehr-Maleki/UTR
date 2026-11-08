@@ -23,7 +23,16 @@ export default async function Verification({
             {certificate.revoked ? "این گواهی باطل شده است" : "گواهی معتبر است"}
           </h2>
           <p>{certificate.public_name}</p>
-          <p>نوع: {certificate.kind}</p>
+          <p>
+            نوع:{" "}
+            {(
+              {
+                membership: "عضویت",
+                attendance: "حضور",
+                participation: "مشارکت",
+              } as Record<string, string>
+            )[certificate.kind] || "گواهی"}
+          </p>
           <p>تاریخ صدور: {persianDate(certificate.issued_at)}</p>
           <p>این گواهی بیانگر نمره رسمی دانشگاه نیست.</p>
         </div>

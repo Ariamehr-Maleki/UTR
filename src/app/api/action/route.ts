@@ -59,32 +59,26 @@ export async function POST(req: Request) {
           p_reason: d.reason,
         });
         break;
-      case "certificate":
-        result = await db.rpc("issue_certificate", {
+      case "issue_certificate_for":
+        if (d.kind === "attendance" && !d.event_id)
+          return NextResponse.json(
+            {
+              message: "برای گواهی حضور، رویدادی با حضور تأییدشده انتخاب کنید.",
+            },
+            { status: 400 },
+          );
+        if (d.kind !== "attendance" && d.event_id)
+          return NextResponse.json(
+            { message: "رویداد فقط برای گواهی حضور انتخاب می‌شود." },
+            { status: 400 },
+          );
+        result = await db.rpc("issue_certificate_for", {
+          p_student: uuid.parse(d.student_id),
           p_kind: z
             .enum(["membership", "attendance", "participation"])
             .parse(d.kind),
           p_event: d.event_id ? uuid.parse(d.event_id) : null,
-        });
-        break;
-      case "adjust_points":
-        result = await db.rpc("adjust_points", {
-          p_user: uuid.parse(d.user_id),
-          p_semester: uuid.parse(d.semester_id),
-          p_points: z.coerce
-            .number()
-            .int()
-            .min(-100000)
-            .max(100000)
-            .parse(d.points),
-          p_request: uuid.parse(d.request_id),
-          p_reason: z.string().min(5).parse(d.reason),
-        });
-        break;
-      case "sync_points":
-        result = await db.rpc("sync_points", {
-          p_event: uuid.parse(d.event_id),
-          p_student: (await db.auth.getUser()).data.user!.id,
+          p_reason: z.string().min(5).max(2000).parse(d.reason),
         });
         break;
       case "cancel_registration":
@@ -97,15 +91,6 @@ export async function POST(req: Request) {
           p_policy: uuid.parse(d.policy_id),
           p_start: Number(d.week_start),
           p_cutoff: d.cutoff,
-          p_reason: d.reason,
-        });
-        break;
-      case "certificate_rule":
-        result = await db.rpc("configure_certificate", {
-          p_kind: d.kind,
-          p_policy: uuid.parse(d.policy_id),
-          p_minimum: d.minimum ? Number(d.minimum) : null,
-          p_approved: d.approved === "true",
           p_reason: d.reason,
         });
         break;
@@ -213,7 +198,9 @@ export async function POST(req: Request) {
       return NextResponse.json(
         {
           message:
-            "ثبت انجام نشد: دسترسی، مهلت یا وضعیت پرونده را بررسی کنید. اگر مشکل ادامه داشت، درخواست پشتیبانی ثبت کنید.",
+            action === "issue_certificate_for"
+              ? "گواهی صادر نشد. عضویت دانشجو، دامنهٔ اختیار معاونت و برای گواهی حضور، ثبت حضور تأییدشده را بررسی کنید."
+              : "ثبت انجام نشد: دسترسی، مهلت یا وضعیت پرونده را بررسی کنید. اگر مشکل ادامه داشت، درخواست پشتیبانی ثبت کنید.",
         },
         { status: 409 },
       );

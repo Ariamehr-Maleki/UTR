@@ -542,6 +542,119 @@ describe.skipIf(!url)("Postgres RLS and transactional workflow", () => {
     ).toBe(1);
   });
 
+  it("club rankings use verified activity, submitted summaries and earned credit with consent", async () => {
+    const { ev, a, r } = await referred();
+    await as(teacher, "select assess($1,$2,'score',0.5,'accepted',$3)", [
+      r,
+      a,
+      id(),
+    ]);
+    await pool.query(
+      "insert into attendance(event_id,student_id,confirmed,reason,recorded_by) values($1,$2,true,'Test attendance',$3)",
+      [ev, other, admin],
+    );
+    await pool.query(
+      "update profiles set leaderboard_consent=true,display_name='Leaderboard student' where id=$1",
+      [student],
+    );
+    await pool.query(
+      "update profiles set display_name='Private student' where id=$1",
+      [other],
+    );
+    const mine = (await as(student, "select * from my_club_metrics($1)", [sem]))
+      .rows[0];
+    expect(Number(mine.attended_events)).toBeGreaterThan(0);
+    expect(Number(mine.submitted_summaries)).toBeGreaterThan(0);
+    expect(Number(mine.club_credit)).toBeGreaterThanOrEqual(0.5);
+    const rows = (
+      await as(student, "select * from leaderboard($1,'attendance')", [sem])
+    ).rows;
+    expect(rows.some((row) => row.display_name === "Leaderboard student")).toBe(
+      true,
+    );
+    expect(rows.some((row) => row.display_name === "Private student")).toBe(
+      false,
+    );
+    expect(rows.every((row) => Number(row.attended_events) >= 0)).toBe(true);
+    expect(
+      (await as(student, "select * from leaderboard($1,'credit')", [sem])).rows
+        .length,
+    ).toBeGreaterThan(0);
+    await expect(
+      as(student, "select * from leaderboard($1,'invalid')", [sem]),
+    ).rejects.toThrow();
+    await pool.query(
+      "update profiles set leaderboard_consent=false where id=$1",
+      [student],
+    );
+    const after = (
+      await as(other, "select * from leaderboard($1,'summaries')", [sem])
+    ).rows;
+    expect(
+      after.some((row) => row.display_name === "Leaderboard student"),
+    ).toBe(false);
+    await pool.query(
+      "update attendance set confirmed=false where event_id=$1 and student_id=$2",
+      [ev, student],
+    );
+    const reduced = (
+      await as(student, "select * from my_club_metrics($1)", [sem])
+    ).rows[0];
+    expect(Number(reduced.attended_events)).toBe(
+      Number(mine.attended_events) - 1,
+    );
+    expect(Number(reduced.submitted_summaries)).toBe(
+      Number(mine.submitted_summaries) - 1,
+    );
+    expect(Number(reduced.club_credit)).toBe(Number(mine.club_credit) - 0.5);
+  });
+
+  it("only scoped research administration can manually issue a certificate", async () => {
+    const { ev } = await summary();
+    await expect(
+      as(student, "select issue_certificate('membership',null)"),
+    ).rejects.toThrow();
+    await expect(
+      as(student, "select issue_certificate_for($1,'membership',null,$2)", [
+        student,
+        "Student self issue",
+      ]),
+    ).rejects.toThrow();
+    await expect(
+      as(tech, "select issue_certificate_for($1,'membership',null,$2)", [
+        student,
+        "Technical request",
+      ]),
+    ).rejects.toThrow();
+    await expect(
+      as(admin, "select issue_certificate_for($1,'attendance',$2,$3)", [
+        other,
+        ev,
+        "No confirmed attendance",
+      ]),
+    ).rejects.toThrow();
+    const first = (
+      await as(
+        admin,
+        "select issue_certificate_for($1,'attendance',$2,$3) id",
+        [student, ev, "Attendance evidence verified"],
+      )
+    ).rows[0].id;
+    const retry = (
+      await as(
+        admin,
+        "select issue_certificate_for($1,'attendance',$2,$3) id",
+        [student, ev, "Attendance evidence verified"],
+      )
+    ).rows[0].id;
+    expect(retry).toBe(first);
+    const audit = await pool.query(
+      "select reason from audit where entity='certificates' and entity_id=$1 and action='INSERT'",
+      [first],
+    );
+    expect(audit.rows[0].reason).toBe("Attendance evidence verified");
+  });
+
   it("editorial metadata is scoped, auditable and unpublished records stay private", async () => {
     const contentId = id();
     const payload = {
