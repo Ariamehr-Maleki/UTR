@@ -283,7 +283,7 @@ try {
       await expect(
         page.getByRole("heading", { name: "۴ · بازبینی و انتشار" }),
       ).toBeVisible();
-      await expect(page.locator('input[name="id"]')).toHaveAttribute(
+      await expect(page.locator('.admin-event-form input[name="id"]')).toHaveAttribute(
         "type",
         "hidden",
       );
