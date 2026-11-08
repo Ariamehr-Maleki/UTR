@@ -423,6 +423,102 @@ describe.skipIf(!url)("Postgres RLS and transactional workflow", () => {
     expect(next).toBeTruthy();
     await as(student, "select submit_referral($1,$2,$3)", [s, offering2, next]);
   });
+  it.each(["revision", "score"])(
+    "enforces approved 72-hour grace after %s",
+    async (outcome) => {
+      const { s, a, r } = await referred();
+      await as(teacher, "select assess($1,$2,$3,$4,'boundary test',$5)", [
+        r,
+        a,
+        outcome,
+        outcome === "score" ? 0 : null,
+        id(),
+      ]);
+      await pool.query(
+        "update submissions set deadline_snapshot=now()-interval '5 days', policy_snapshot=policy_snapshot || '{\"revision_hours\":72,\"referral_hours\":72}'::jsonb where id=$1",
+        [s],
+      );
+      await pool.query(
+        "update assessments set created_at=now()-interval '71 hours 59 minutes' where referral_id=$1",
+        [r],
+      );
+      expect(await attachment(s)).toBeTruthy();
+      await pool.query(
+        "update assessments set created_at=now()-interval '72 hours 1 minute' where referral_id=$1",
+        [r],
+      );
+      await expect(attachment(s)).rejects.toThrow("deadline closed");
+      await expect(
+        as(student, "select submit_referral($1,$2,$3)", [
+          s,
+          outcome === "score" ? offering2 : offering,
+          a,
+        ]),
+      ).rejects.toThrow("deadline closed");
+    },
+  );
+  it("allows two alternative instructors and refuses a third after zero", async () => {
+    const { s, ev, a, r } = await referred();
+    await as(teacher, "select assess($1,$2,'score',0,'zero test',$3)", [
+      r,
+      a,
+      id(),
+    ]);
+    for (let index = 0; index < 3; index++) {
+      const instructor = id(),
+        course = id();
+      await pool.query("insert into auth.users(id,email) values($1,$2)", [
+        instructor,
+        instructor + "@example.test",
+      ]);
+      await pool.query(
+        "update profiles set membership='approved',department_id=$2 where id=$1",
+        [instructor, dep],
+      );
+      await pool.query(
+        "insert into roles(user_id,role,department_id,approved) values($1,'instructor',$2,true)",
+        [instructor, dep],
+      );
+      await pool.query(
+        "insert into offerings values($1,'alternative test',$2,$3,$4,true)",
+        [course, dep, sem, instructor],
+      );
+      await pool.query("insert into enrollments values($1,$2,true)", [
+        student,
+        course,
+      ]);
+      await pool.query("insert into event_offerings values($1,$2)", [
+        ev,
+        course,
+      ]);
+      if (index === 2) {
+        await expect(
+          as(student, "select submit_referral($1,$2,$3)", [s, course, a]),
+        ).rejects.toThrow("alternative referral limit");
+      } else {
+        const next = (
+          await as(student, "select submit_referral($1,$2,$3) id", [
+            s,
+            course,
+            a,
+          ])
+        ).rows[0].id;
+        await as(instructor, "select assess($1,$2,'score',0,'zero test',$3)", [
+          next,
+          a,
+          id(),
+        ]);
+      }
+    }
+    expect(
+      (
+        await pool.query(
+          "select count(*)::int n from referrals where submission_id=$1",
+          [s],
+        )
+      ).rows[0].n,
+    ).toBe(3);
+  });
   it("manual participation adjustment is audited and deduplicated", async () => {
     const request = id();
     await as(admin, "select adjust_points($1,$2,2,$3,$4)", [

@@ -1,5 +1,7 @@
 # Decisions and release gates
 
+Latest decision 2026-11-08: user explicitly approved production activation, the v1 official form, 72-hour revision/zero-referral grace and two alternative referrals. Applied as new configuration records with audit reasons; see [launch approval](docs/LAUNCH-APPROVAL.md). Earlier pending-status entries below are historical. Remaining unresolved features are still gated.
+
 - Exact Persian font: user replied “IDK”; not identifiable with confidence. Temporary Vazirmatn.
 - Weekly deadline: explicitly approved by the user: Saturday–Friday, Friday 23:59:59 Asia/Tehran. Store explicit event deadline and policy snapshot; production event publication requires approval.
 - Revision grace, late-zero referral grace, alternative-referral maximum, review SLA, reversal unlock and attendance exceptions: unresolved. Null configuration blocks exceptional paths; no guessed institutional policy.

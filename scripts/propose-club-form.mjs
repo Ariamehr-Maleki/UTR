@@ -1,6 +1,7 @@
 import fs from "node:fs/promises";
 import { chromium } from "@playwright/test";
-const directory = ".impeccable/review/form-proposal";
+const approved = process.argv.includes("--approved-v1");
+const directory = approved ? "docs/forms" : ".impeccable/review/form-proposal";
 await fs.mkdir(directory, { recursive: true });
 const font = (
   await fs.readFile(
@@ -16,7 +17,15 @@ const html = `<!doctype html><html lang="fa" dir="rtl"><meta charset="utf-8"><st
 <section class="fields"><div class="field">نام و نام خانوادگی:</div><div class="field">شماره دانشجویی:</div><div class="field">گروه آموزشی و مقطع:</div><div class="field">تاریخ برگزاری نشست:</div><div class="field wide">عنوان نشست:</div><div class="field">درس مرتبط در نیمسال جاری:</div><div class="field">نام استاد درس:</div></section>
 <p class="instructions">خلاصه را با خط خوانا، در همین یک صفحه بنویسید. نکات اصلی نشست و ارتباط آن با درس انتخابی را توضیح دهید. تصویر کامل و واضح صفحه را در سامانه بارگذاری کنید؛ تحویل کاغذی لازم نیست.</p>
 <div class="writing">${Array.from({ length: 22 }, () => "<div></div>").join("")}</div><footer><span>هر نشست فقط به یک درس و استاد تخصیص می‌یابد. میزان امتیاز را استاد تعیین می‌کند.</span><span>نسخهٔ پیشنهادی؛ تا تصویب معاونت، فرم رسمی نیست.</span></footer></body></html>`;
-await fs.writeFile(`${directory}/proposal.html`, html);
+const output = approved
+  ? html
+      .replace("پیشنهاد برای تصویب", "نسخهٔ مصوب ۱")
+      .replace(
+        "نسخهٔ پیشنهادی؛ تا تصویب معاونت، فرم رسمی نیست.",
+        "فرم مصوب باشگاه پژوهشیاران · نسخهٔ ۱",
+      )
+  : html;
+if (!approved) await fs.writeFile(`${directory}/proposal.html`, output);
 const browser = await chromium.launch({
   channel: process.platform === "win32" ? "msedge" : undefined,
 });
@@ -24,18 +33,23 @@ try {
   const page = await browser.newPage({
     viewport: { width: 794, height: 1123 },
   });
-  await page.setContent(html);
+  await page.setContent(output);
   await page.evaluate(() => document.fonts.ready);
   await page.pdf({
-    path: `${directory}/UTR-club-form-proposal.pdf`,
+    path: `${directory}/${approved ? "UTR-RFC-01.pdf" : "UTR-club-form-proposal.pdf"}`,
     format: "A4",
     printBackground: true,
     preferCSSPageSize: true,
   });
-  await page.screenshot({ path: `${directory}/proposal.png`, fullPage: true });
+  await page.screenshot({
+    path: `.impeccable/review/form-proposal/${approved ? "approved" : "proposal"}.png`,
+    fullPage: true,
+  });
 } finally {
   await browser.close();
 }
 console.log(
-  "Created a draft only; no publication or institutional approval inferred.",
+  approved
+    ? "Generated v1 approved explicitly by research administration on 2026-11-08."
+    : "Created a draft only; no publication or institutional approval inferred.",
 );
