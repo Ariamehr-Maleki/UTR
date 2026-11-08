@@ -32,3 +32,7 @@ Account-only activation is now deployed: UTR_ACCOUNTS_ENABLED=true and UTR_SIGNU
 ## Administrator bootstrap — 2026-11-08
 
 The requester returned the UUID visible inside their authenticated profile; the hosted Auth account matched their previously designated email. They separately confirmed personal responsibility for academic administration. The first technical superadmin and first academic admin were initialized in one guarded transaction with independent audit reasons and advisory locks. Readback under the authenticated database role confirmed technical_admin=true, academic_admin=true and student=false. No student status was inferred and no other accounts were modified. Academic runtime activation remains gated pending end-to-end acceptance.
+
+## Vercel setup verified — 2026-11-08
+
+The official get-started guide was fetched and followed using the existing Vercel plugin rather than installing duplicate guidance or connectors. Global CLI 65.12.1 is authenticated as the project owner. The workspace is explicitly linked to the existing utr-farabi project and owner, and authenticated MCP team lookup and documentation search succeeded. The existing Supabase server credential was transferred directly through process stdin into a production-only sensitive Vercel environment variable; no credential value was logged or committed. Prior CLI authentication blockers are resolved. The broad academic live gate remains off pending hosted end-to-end acceptance; storing the server credential alone does not certify successful uploads or grading.
