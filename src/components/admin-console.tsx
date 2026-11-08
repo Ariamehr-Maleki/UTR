@@ -498,6 +498,21 @@ export function AdminConsole({
         }}
       >
         {operations[op]?.[1].map((key) => {
+          if (
+            key === "id" &&
+            ["event", "offering", "content", "appeal", "correction"].includes(
+              op,
+            )
+          )
+            return (
+              <input
+                key={key}
+                type="hidden"
+                name="id"
+                value={selected || ""}
+                readOnly
+              />
+            );
           let options = selects[key];
           if (
             [
@@ -665,7 +680,16 @@ export function AdminConsole({
           دلیل تغییر
           <textarea name="reason" minLength={5} maxLength={2000} required />
         </label>
-        <button disabled={busy}>{busy ? "در حال ثبت…" : "ثبت تغییر"}</button>
+        {["appeal", "correction"].includes(op) && !selected && (
+          <p role="status">ابتدا پروندهٔ موجود را از فهرست بالا انتخاب کنید.</p>
+        )}
+        <button
+          disabled={
+            busy || (["appeal", "correction"].includes(op) && !selected)
+          }
+        >
+          {busy ? "در حال ثبت…" : "ثبت تغییر"}
+        </button>
         <p role="status">{message}</p>
         {nextAction && (
           <a className="button secondary" href={nextAction.href}>

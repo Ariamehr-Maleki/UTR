@@ -277,9 +277,20 @@ try {
         page.getByRole("button", { name: "ثبت تغییر", exact: true }),
       ).toBeVisible();
       await page.goto(origin + "/workspace/admin?operation=event");
-      await expect(page.getByRole("heading", {name:"مسیر انتشار نخستین رویداد"})).toBeVisible();
-      await expect(page.getByRole("heading", {name:"۴ · بازبینی و انتشار"})).toBeVisible();
-      await page.screenshot({path: ".impeccable/review/integration/admin-event-setup-1440.png",fullPage:true});
+      await expect(
+        page.getByRole("heading", { name: "مسیر انتشار نخستین رویداد" }),
+      ).toBeVisible();
+      await expect(
+        page.getByRole("heading", { name: "۴ · بازبینی و انتشار" }),
+      ).toBeVisible();
+      await expect(page.locator('input[name="id"]')).toHaveAttribute(
+        "type",
+        "hidden",
+      );
+      await page.screenshot({
+        path: ".impeccable/review/integration/admin-event-setup-1440.png",
+        fullPage: true,
+      });
     }
     await context.close();
   }
