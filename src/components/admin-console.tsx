@@ -1,5 +1,6 @@
 "use client";
-import { useState } from "react";
+import { Fragment, useState } from "react";
+import { weekBounds } from "@/lib/time";
 type Item = {
   [key: string]: any;
   id: string;
@@ -294,6 +295,62 @@ export function AdminConsole({
           </select>
         </label>
       </div>
+      {op === "event" && (
+        <section className="event-setup" aria-label="آماده‌سازی رویداد">
+          <h2>مسیر انتشار نخستین رویداد</h2>
+          <p>
+            هر مرحله را کامل کنید؛ سپس رویداد را منتشر و درس‌های مرتبط را به آن
+            وصل کنید. تنها ثبت‌نام دانشجو تأیید حضور نیست.
+          </p>
+          <ol>
+            <li>
+              {catalog.semesters?.length ? "✓" : "۱"} <span>نیمسال جاری</span>{" "}
+              {!catalog.semesters?.length && (
+                <button type="button" onClick={() => setOp("semester")}>
+                  ثبت نیمسال
+                </button>
+              )}
+            </li>
+            <li>
+              {catalog.offerings?.some((x) => x.approved) ? "✓" : "۲"}{" "}
+              <span>درس و استاد تأییدشده</span>{" "}
+              {!catalog.offerings?.some((x) => x.approved) && (
+                <button type="button" onClick={() => setOp("offering")}>
+                  مدیریت درس
+                </button>
+              )}
+            </li>
+            <li>
+              {catalog.policies?.some(
+                (x) =>
+                  x.approved &&
+                  x.revision_hours === 72 &&
+                  x.max_alternatives === 2,
+              )
+                ? "✓"
+                : "۳"}{" "}
+              <span>سیاست مصوب ۷۲ ساعته</span>
+            </li>
+            <li>
+              {catalog.forms?.some(
+                (x) => x.approved && x.version === "UTR-RFC-01",
+              )
+                ? "✓"
+                : "۴"}{" "}
+              <span>فرم رسمی UTR-RFC-01</span>
+            </li>
+            <li>
+              ۵ <span>پیش‌نویس رویداد، سپس ارتباط با درس</span>{" "}
+              <button type="button" onClick={() => setOp("relevance")}>
+                ارتباط درس
+              </button>
+            </li>
+            <li>
+              ۶ <span>انتشار، ثبت حضور واقعی و باز شدن مسیر ارسال خلاصه</span>
+            </li>
+          </ol>
+        </section>
+      )}
       {table && (
         <label>
           انتخاب رکورد موجود برای بررسی یا ویرایش
@@ -365,6 +422,24 @@ export function AdminConsole({
           const data = Object.fromEntries(
             Object.entries(all).filter(([, v]) => v !== ""),
           );
+          if (op === "event" && data.ends_at && !data.summary_deadline) {
+            const end = new Date(
+              weekBounds(new Date(data.ends_at + "+03:30")).end.getTime() -
+                1000,
+            );
+            data.summary_deadline = new Intl.DateTimeFormat("sv-SE", {
+              timeZone: "Asia/Tehran",
+              year: "numeric",
+              month: "2-digit",
+              day: "2-digit",
+              hour: "2-digit",
+              minute: "2-digit",
+              second: "2-digit",
+              hourCycle: "h23",
+            })
+              .format(end)
+              .replace(" ", "T");
+          }
           if (
             !data.id &&
             ["event", "content", "offering", "department"].includes(op)
@@ -459,69 +534,107 @@ export function AdminConsole({
             "order",
           ].includes(key);
           return (
-            <label key={key}>
-              {labels[key]}
-              {options ? (
-                <select
-                  name={key}
-                  required={!optional}
-                  defaultValue={value(key)}
-                >
-                  <option value="">انتخاب کنید</option>
-                  {options.map(([v, t]) => (
-                    <option key={v} value={v}>
-                      {t}
-                    </option>
-                  ))}
-                </select>
-              ) : ["description", "resolution"].includes(key) ? (
-                <textarea name={key} required defaultValue={value(key)} />
-              ) : (
-                <input
-                  name={key}
-                  defaultValue={value(key)}
-                  required={
-                    !optional ||
-                    (["appeal", "correction"].includes(op) && key === "id")
-                  }
-                  type={
-                    key.endsWith("_at") ||
-                    [
-                      "registration_opens",
-                      "registration_closes",
-                      "summary_deadline",
-                    ].includes(key)
-                      ? "datetime-local"
-                      : key.endsWith("_on")
-                        ? "date"
-                        : [
-                              "capacity",
-                              "revision_hours",
-                              "referral_hours",
-                              "max_alternatives",
-                              "review_hours",
-                              "points",
-                              "minimum_points",
-                            ].includes(key)
-                          ? "number"
-                          : key === "external_url"
-                            ? "url"
-                            : "text"
-                  }
-                  min="0"
-                  step={
-                    key.endsWith("_at") ||
-                    [
-                      "registration_opens",
-                      "registration_closes",
-                      "summary_deadline",
-                    ].includes(key)
-                      ? "1"
-                      : undefined
-                  }
-                />
-              )}
-            </label>
+            <Fragment key={key}>
+              {op === "event" &&
+                (
+                  {
+                    title: "۱ · معرفی رویداد",
+                    starts_at: "۲ · زمان و مکان",
+                    club_approved: "۳ · شرایط باشگاه",
+                    status: "۴ · بازبینی و انتشار",
+                  } as Record<string, string>
+                )[key] && (
+                  <h3 className="event-form-heading">
+                    {
+                      (
+                        {
+                          title: "۱ · معرفی رویداد",
+                          starts_at: "۲ · زمان و مکان",
+                          club_approved: "۳ · شرایط باشگاه",
+                          status: "۴ · بازبینی و انتشار",
+                        } as Record<string, string>
+                      )[key]
+                    }
+                  </h3>
+                )}
+              <label>
+                {labels[key]}
+                {options ? (
+                  <select
+                    name={key}
+                    required={!optional}
+                    defaultValue={
+                      value(key) ||
+                      (op === "event" && key === "policy_id"
+                        ? catalog.policies?.find(
+                            (p) =>
+                              p.approved &&
+                              p.revision_hours === 72 &&
+                              p.max_alternatives === 2,
+                          )?.id || ""
+                        : op === "event" && key === "form_id"
+                          ? catalog.forms?.find(
+                              (p) => p.approved && p.version === "UTR-RFC-01",
+                            )?.id || ""
+                          : "")
+                    }
+                  >
+                    <option value="">انتخاب کنید</option>
+                    {options.map(([v, t]) => (
+                      <option key={v} value={v}>
+                        {t}
+                      </option>
+                    ))}
+                  </select>
+                ) : ["description", "resolution"].includes(key) ? (
+                  <textarea name={key} required defaultValue={value(key)} />
+                ) : (
+                  <input
+                    name={key}
+                    defaultValue={value(key)}
+                    required={
+                      !optional ||
+                      (["appeal", "correction"].includes(op) && key === "id")
+                    }
+                    type={
+                      key.endsWith("_at") ||
+                      [
+                        "registration_opens",
+                        "registration_closes",
+                        "summary_deadline",
+                      ].includes(key)
+                        ? "datetime-local"
+                        : key.endsWith("_on")
+                          ? "date"
+                          : [
+                                "capacity",
+                                "revision_hours",
+                                "referral_hours",
+                                "max_alternatives",
+                                "review_hours",
+                                "points",
+                                "minimum_points",
+                              ].includes(key)
+                            ? "number"
+                            : key === "external_url"
+                              ? "url"
+                              : "text"
+                    }
+                    min="0"
+                    step={
+                      key.endsWith("_at") ||
+                      [
+                        "registration_opens",
+                        "registration_closes",
+                        "summary_deadline",
+                      ].includes(key)
+                        ? "1"
+                        : undefined
+                    }
+                  />
+                )}
+              </label>
+            </Fragment>
           );
         })}
         <label>

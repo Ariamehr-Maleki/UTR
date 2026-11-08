@@ -151,6 +151,17 @@ export function UploadFlow({
       <div className="form">
         {step === 1 && (
           <>
+            {!events.length && (
+              <div className="notice" role="status">
+                <strong>هنوز رویداد آمادهٔ ارسال ندارید.</strong>
+                <p>
+                  برای ارسال، باید در یک رویداد مصوب باشگاه شرکت کرده باشید و
+                  مسئول، حضور شما را تأیید کرده باشد. مهلت همان رویداد نیز باید
+                  باز باشد.
+                </p>
+                <Link href="/workspace/events">وضعیت رویدادها و حضور من</Link>
+              </div>
+            )}
             <label>
               رویداد با حضور تأییدشده
               <select
@@ -191,7 +202,20 @@ export function UploadFlow({
                 </p>
               </div>
             )}
-            <button disabled={!event} onClick={() => setStep(2)}>
+            {current && !options.length && (
+              <div className="notice" role="status">
+                <strong>درس مرتبط تأییدشده‌ای برای این رویداد پیدا نشد.</strong>
+                <p>
+                  درس باید در نیمسال جاری شما باشد و ارتباط آن با رویداد و
+                  استادش به تأیید معاونت رسیده باشد.
+                </p>
+                <Link href="/workspace/courses">بررسی درس‌های من</Link>
+              </div>
+            )}
+            <button
+              disabled={!event || !options.length}
+              onClick={() => setStep(2)}
+            >
               ادامه؛ انتخاب فایل
             </button>
           </>

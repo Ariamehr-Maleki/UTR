@@ -1,4 +1,23 @@
 import { test, expect } from "@playwright/test";
+test("research entrance routes each audience and journal to a useful destination", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await expect(
+    page.getByRole("heading", { name: /پژوهش، از یک پرسش/ }),
+  ).toBeVisible();
+  for (const role of ["student", "instructor", "admin"])
+    await expect(
+      page.locator(`.role-entrances a[href="/auth/login?role=${role}"]`),
+    ).toBeVisible();
+  const journal = page.locator(".publication-strip a").first();
+  await expect(journal).toBeVisible();
+  expect(await journal.getAttribute("href")).not.toBe("/journals");
+  await page.goto("/preview/administration");
+  await expect(
+    page.getByRole("heading", { name: "این صفحه پیدا نشد" }),
+  ).toBeVisible();
+});
 test("public navigation, disabled activation, private route and calendar", async ({
   page,
 }) => {

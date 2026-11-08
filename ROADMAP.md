@@ -1,5 +1,7 @@
 # Implementation tracker
 
+Current status (2026-11-08): production authentication and academic routes are enabled with approved membership checks. Official form UTR-RFC-01 and the 72-hour/two-alternative policy are configured. The checklists below contain historical milestones; [ACCEPTANCE.md](ACCEPTANCE.md) tracks current product journeys. Hosted full grading acceptance, SMTP, arbitrary PDF scanning, and institutional engagement values still need attention.
+
 ## Implemented and locally verified
 
 - [x] Empty-repository inspection, supplied references, Farabi identity, design system.

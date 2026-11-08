@@ -21,13 +21,14 @@ export function AuthForm({
 }) {
   const [message, setMessage] = useState("");
   const [busy, setBusy] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const [role, setRole] = useState(
     isWorkspaceRole(initialRole) ? initialRole : "",
   );
   return (
     <>
       <h1>{titles[mode]}</h1>
-      <p>باشگاه پژوهشیاران دانشکدگان فارابی</p>
+      <p>پلتفرم پژوهش و فناوری دانشکدگان فارابی</p>
       {!enabled && (
         <div className="notice">
           {unavailableMessage ||
@@ -38,6 +39,12 @@ export function AuthForm({
         <p className="notice">
           پس از ساخت حساب، مشخصات تحصیلی خود را تکمیل کنید. استفاده از خدمات
           باشگاه پس از تأیید عضویت توسط مسئول پژوهشی امکان‌پذیر است.
+        </p>
+      )}
+      {mode === "reset" && !enabled && (
+        <p className="notice">
+          بازیابی رمز از راه ایمیل هنوز فعال نیست. برای بازگرداندن دسترسی، از
+          صفحهٔ <Link href="/about">ارتباط با معاونت پژوهشی</Link> پیگیری کنید.
         </p>
       )}
       <form
@@ -81,17 +88,7 @@ export function AuthForm({
       >
         {mode === "login" && (
           <fieldset className="login-role-options">
-            <legend>ورود به فضای کاری</legend>
-            <label>
-              <input
-                type="radio"
-                name="workspace_role"
-                value=""
-                checked={!role}
-                onChange={() => setRole("")}
-              />
-              حساب من
-            </label>
+            <legend>فضای کاری شما</legend>
             {(["student", "instructor", "admin"] as const).map((item) => (
               <label key={item}>
                 <input
@@ -104,6 +101,11 @@ export function AuthForm({
                 {roleLabels[item]}
               </label>
             ))}
+            <p className="role-help">
+              اگر چند نقش تأییدشده دارید، فضای کاری را انتخاب کنید. این انتخاب
+              مجوز تازه‌ای ایجاد نمی‌کند؛ پس از ورود هم می‌توانید نقش را عوض
+              کنید. اگر نقشی ندارید، پروفایل خود را تکمیل کنید.
+            </p>
           </fieldset>
         )}
         {mode !== "password" && (
@@ -123,7 +125,7 @@ export function AuthForm({
           <label>
             رمز عبور
             <input
-              type="password"
+              type={showPassword ? "text" : "password"}
               name="password"
               required
               minLength={mode === "login" ? 1 : 12}
@@ -135,6 +137,16 @@ export function AuthForm({
             />
           </label>
         )}
+        {mode !== "reset" && (
+          <button
+            type="button"
+            className="password-visibility"
+            aria-pressed={showPassword}
+            onClick={() => setShowPassword(!showPassword)}
+          >
+            {showPassword ? "پنهان کردن رمز" : "نمایش رمز"}
+          </button>
+        )}
         <button disabled={!enabled || busy}>
           {busy ? "در حال انجام…" : titles[mode]}
         </button>
@@ -143,10 +155,9 @@ export function AuthForm({
         </p>
       </form>
       <div className="actions">
-        <Link href="/workspace">حساب کاربری</Link>
-        <Link href="/auth/login">ورود</Link>
-        <Link href="/auth/register">عضویت</Link>
-        <Link href="/auth/reset">فراموشی رمز</Link>
+        {mode !== "login" && <Link href="/auth/login">ورود</Link>}
+        {mode !== "register" && <Link href="/auth/register">عضویت</Link>}
+        {mode !== "reset" && <Link href="/auth/reset">فراموشی رمز</Link>}
       </div>
     </>
   );

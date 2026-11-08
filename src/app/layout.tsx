@@ -7,6 +7,7 @@ import "@fontsource/vazirmatn/800.css";
 import "./globals.css";
 import "./experience.css";
 import "./workspace.css";
+import "./refinement.css";
 import { SiteHeader } from "@/components/site-header";
 export const metadata: Metadata = {
   title: {

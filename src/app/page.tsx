@@ -1,5 +1,12 @@
 import Link from "next/link";
-import { ArrowUpLeft, CalendarDays, ArrowLeft, BookOpen } from "lucide-react";
+import {
+  ArrowUpLeft,
+  CalendarDays,
+  ArrowLeft,
+  BookOpen,
+  GraduationCap,
+  ClipboardCheck,
+} from "lucide-react";
 import { publicRecords } from "@/lib/data";
 import { inWeek, persianDate } from "@/lib/time";
 import { GroupRibbon } from "@/components/group-ribbon";
@@ -34,17 +41,35 @@ export default async function Home() {
           aria-hidden="true"
         />
         <div className="container entry-content">
+          <div className="entry-kicker">
+            <span className="entry-kicker-line" /> پژوهش و فناوری دانشکدگان
+            فارابی دانشگاه تهران
+          </div>
           <h1>
-            خانهٔ پژوهش
+            پژوهش، از یک پرسش
             <br />
-            در دانشکدگان فارابی.
+            تا یک دستاورد.
           </h1>
           <p>
-            رویدادهای علمی، نشریات و منابع پژوهش دانشگاه تهران؛
+            UTR مسیر پژوهش در دانشکدگان فارابی است؛ از رویداد و فرصت علمی تا
+            نشریه، کتابخانه و باشگاه پژوهشیاران.
             <br />
-            مسیر موردنیازتان را پیدا کنید.
+            هر مسیر را از همین‌جا آغاز کنید.
           </p>
+          <div className="entry-actions">
+            <Link className="button" href="/events">
+              دیدن رویدادها <ArrowUpLeft size={18} />
+            </Link>
+            <Link className="entry-secondary" href="/club">
+              باشگاه پژوهشیاران <ArrowUpLeft size={18} />
+            </Link>
+          </div>
           <ResearchFinder records={content} />
+        </div>
+        <div className="entry-symbol" aria-hidden="true">
+          <img src="/assets/ut-emblem.png" alt="" width="220" height="220" />
+          <span>UTR</span>
+          <small>University of Tehran Research</small>
         </div>
         <div className="entry-bottom container">
           <span dir="ltr">University of Tehran Research Hub</span>
@@ -54,6 +79,32 @@ export default async function Home() {
         </div>
       </section>
       <div className="container">
+        <nav className="role-entrances" aria-label="ورود به فضای کاری">
+          <Link href="/auth/login?role=student">
+            <GraduationCap size={23} />{" "}
+            <span>
+              <strong>برای دانشجویان</strong>
+              <small>رویداد، خلاصه و نتیجهٔ ارزیابی</small>
+            </span>
+            <ArrowUpLeft size={18} />
+          </Link>
+          <Link href="/auth/login?role=instructor">
+            <BookOpen size={23} />{" "}
+            <span>
+              <strong>برای استادان</strong>
+              <small>درس‌ها و بررسی خلاصه‌ها</small>
+            </span>
+            <ArrowUpLeft size={18} />
+          </Link>
+          <Link href="/auth/login?role=admin">
+            <ClipboardCheck size={23} />{" "}
+            <span>
+              <strong>برای معاونت پژوهشی</strong>
+              <small>رویدادها، تأییدها و گزارش‌ها</small>
+            </span>
+            <ArrowUpLeft size={18} />
+          </Link>
+        </nav>
         <nav className="explore-nav" aria-label="خدمات پژوهشی">
           <Link href="/events">
             رویدادها <ArrowUpLeft />
@@ -192,7 +243,12 @@ export default async function Home() {
         </div>
         <div className="publication-strip">
           {journals.slice(0, 5).map((j) => (
-            <Link href="/journals" key={j.id}>
+            <Link
+              href={j.external_url || `/journals/${j.id}`}
+              key={j.id}
+              target={j.external_url ? "_blank" : undefined}
+              rel={j.external_url ? "noopener noreferrer" : undefined}
+            >
               <img
                 src={j.editorial?.image}
                 width="240"

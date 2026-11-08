@@ -1,10 +1,12 @@
 import Link from "next/link";
+import { notFound } from "next/navigation";
 export default async function Preview({
   params,
 }: {
   params: Promise<{ role: string }>;
 }) {
   const { role } = await params;
+  if (!["student", "instructor"].includes(role)) notFound();
   return (
     <div className="container workspace">
       <aside className="sidebar">

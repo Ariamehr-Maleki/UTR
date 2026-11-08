@@ -1,6 +1,6 @@
 # UTR — University of Tehran Research Hub
 
-Persian/RTL research platform for the **Farabi campus** of the University of Tehran. The Research Fellows Club is the first operational module. This repository is under implementation; do not enable production until the release gates below are verified.
+Persian/RTL research platform for the **Farabi campus** of the University of Tehran. The Research Fellows Club is the first operational module. Production academic workflows are active with approved roles, the v2 policy and official form; see [launch record](docs/LAUNCH-APPROVAL.md). The product remains under development against the [journey acceptance matrix](ACCEPTANCE.md), especially administrator usability and hosted grading acceptance.
 
 ## Run locally
 

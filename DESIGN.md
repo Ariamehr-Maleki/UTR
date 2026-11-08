@@ -3,12 +3,12 @@ name: UTR
 description: Persian university research entrance with a working public finder and readable scholarly directories
 colors:
   blue: "#123f7b"
-  medium: "#086dc1"
-  cyan: "#00b8cc"
-  ink: "#101e36"
-  muted: "#53657a"
-  pale: "#f2f7fa"
-  line: "#dce5ed"
+  medium: "#0876be"
+  cyan: "#00bacb"
+  ink: "#101b36"
+  muted: "#455d74"
+  pale: "#f3f9fb"
+  line: "#d5e5ee"
   white: "#ffffff"
   blue-hover: "#0b3061"
   entry-copy: "#d6e9f6"
