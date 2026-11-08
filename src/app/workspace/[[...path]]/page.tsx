@@ -9,6 +9,7 @@ import {
   workspaceNavigation,
 } from "@/lib/workspace-roles";
 import { WorkspaceOverview } from "@/components/workspace-overview";
+import { StudentWeek } from "@/components/student-week";
 import Link from "next/link";
 import { redirect, notFound } from "next/navigation";
 import { database } from "@/lib/supabase/server";
@@ -353,6 +354,7 @@ export default async function Workspace({
         }))}
         relevance={relevance || []}
         resume={resume}
+        initialEvent={query.event}
       />
     );
   } else if (view === "events") {
@@ -450,6 +452,7 @@ export default async function Workspace({
           </Link>
         </div>
         <CreditTable submissions={subs || []} />
+        {view === "" && <StudentWeek db={db} userId={user.id} />}
         <h2>پرونده‌های پژوهشی</h2>
         {subs?.length ? (
           subs.map((s) => (

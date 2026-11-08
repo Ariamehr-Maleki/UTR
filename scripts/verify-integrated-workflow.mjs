@@ -252,6 +252,7 @@ try {
       await page.setViewportSize({ width, height: 950 });
       const response = await page.goto(origin + path);
       assert.equal(response.status(), 200);
+      await expect(page.locator(".workspace-v2 > section > h1")).toBeVisible();
       await page.evaluate(() => document.fonts.ready);
       assert.ok(
         await page.evaluate(
@@ -374,10 +375,13 @@ try {
   );
   await action(student, "logout", {});
   assert.equal((await student.api.get(`/api/file/${second}`)).status(), 401);
-  const loggedOut = await student.api.get("/workspace/profile", {
-    maxRedirects: 0,
+  const loggedOutContext = await browser.newContext({
+    storageState: await student.api.storageState(),
   });
-  assert.ok([303, 307, 308].includes(loggedOut.status()));
+  const loggedOutPage = await loggedOutContext.newPage();
+  await loggedOutPage.goto(origin + "/workspace/profile");
+  await expect(loggedOutPage).toHaveURL(origin + "/auth/login");
+  await loggedOutContext.close();
   console.log(
     "PASS: isolated real Auth + SSR + private Storage + staff attendance + canonical/concurrent retries + revision versions + zero referral + positive lock + appeal lock + revoked permissions + logout + four responsive workspaces",
   );

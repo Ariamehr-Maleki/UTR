@@ -8,13 +8,19 @@ export function UploadFlow({
   enrollments,
   relevance,
   resume,
+  initialEvent,
 }: {
   events: any[];
   enrollments: any[];
   relevance: any[];
   resume?: any;
+  initialEvent?: string;
 }) {
-  const [event, setEvent] = useState(resume?.event_id || "");
+  const [event, setEvent] = useState(
+    resume?.event_id ||
+      (events.some((e) => e.id === initialEvent) ? initialEvent : "") ||
+      "",
+  );
   const [step, setStep] = useState(resume ? 2 : 1);
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState("");

@@ -249,3 +249,53 @@
     grid-template-columns: 1fr;
   }
 }
+.student-week {
+  margin-block: 32px;
+}
+.desk-section-heading {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.desk-section-heading h2 {
+  margin: 0;
+  font-size: 21px;
+}
+.desk-section-heading > a {
+  font-size: 13px;
+}
+.student-event-list article {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  padding: 20px 0;
+  border-top: 1px solid #dce5ed;
+}
+.student-event-list h3 {
+  font-size: 17px;
+  margin: 0 0 8px;
+}
+.student-event-list p {
+  font-size: 13px;
+  margin-block: 6px;
+  color: #53657a;
+}
+@media (max-width: 700px) {
+  .student-event-list article {
+    display: block;
+  }
+  .student-event-list .button {
+    margin-top: 12px;
+  }
+  .profile-review dl {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+  .profile-review dd {
+    margin-bottom: 12px;
+  }
+}
