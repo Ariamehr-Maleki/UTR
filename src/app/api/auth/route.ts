@@ -81,7 +81,10 @@ export async function POST(req: Request) {
         ? { redirect: body.mode === "logout" ? "/" : "/workspace" }
         : {
             message:
-              "اگر درخواست معتبر باشد، راهنمای ادامه به ایمیل شما ارسال می‌شود.",
+              body.mode === "register" &&
+              process.env.UTR_AUTH_EMAIL_ENABLED !== "true"
+                ? "اگر قبلاً با این ایمیل عضو شده‌اید، از بخش ورود استفاده کنید. در غیر این صورت برای بررسی ثبت‌نام با پشتیبانی تماس بگیرید."
+                : "اگر درخواست معتبر باشد، راهنمای ادامه به ایمیل شما ارسال می‌شود.",
           },
     );
   } catch {
