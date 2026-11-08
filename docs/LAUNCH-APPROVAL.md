@@ -26,3 +26,11 @@ Recorded through guarded `admin_action` and `set_week_policy` operations on beha
 The administrator approved the reviewed structure explicitly; draft labels were removed. This is an authored trusted release asset uploaded by an operator, not an arbitrary student PDF accepted without scanning. Future arbitrary PDFs still require the scanner. Image submissions retain decoding/re-encoding validation.
 
 The generator supports `--approved-v1`. PDF metadata may change on regeneration; never overwrite the registered immutable version. The committed asset is the exact uploaded version. Create a newly approved version for changes.
+
+## Deployment and verification
+
+Runtime commit `13d5f8bf60cba2332d78a2dfa88ab83143de4769` deployed READY as `dpl_Gso8jrTRbHnWrepAxEw1R4EgiP7W`, aliased to https://utr-farabi.vercel.app. Verification CI `42513272680` and complete isolated workflow CI `42513272697` passed. Fifty unit/database tests include 72-hour inside/outside boundaries for revision and zero, and acceptance of two alternatives with rejection of a third.
+
+Hosted HTTP/browser acceptance passed SSR login, pending-account administration denial, reaching the live academic authorization gate, exact approved-form byte hash through authenticated private Storage, profile rendering and private-form denial after logout. The unprivileged temporary probe has no academic fixtures. Cleanup initially encountered the intentional restrictive profile foreign key; the probe was removed in a guarded transaction and the script corrected to remove only its own roles/profile before its Auth user. The full academic grading workflow remains tested on isolated real Supabase, not by inserting fictional grades into production.
+
+The first administrator's existing academic and technical role grants remain unchanged. No SMTP, PDF scanner, paid service or new institutional engagement/certificate rules were activated by this release.
