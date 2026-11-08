@@ -24,18 +24,18 @@ Set `APP_ORIGIN` to the exact HTTPS origin. `UTR_LIVE_ENABLED=true` enables data
 
 ## Apply schema securely
 
-Obtain a replacement connection credential in Supabase dashboard, store `DATABASE_URL` in a secure local/CI environment, and run `node scripts/migrate.mjs`. The runner uses a migration ledger and SHA-256 checksums. Do not edit applied migrations. The initial migrations have been tested against an isolated local PostgreSQL harness; hosted Supabase Auth/Storage verification is still required. `tests/db-bootstrap.sql` is **only** a local harness and must never run on Supabase.
+Obtain a replacement connection credential in Supabase dashboard, store `DATABASE_URL` in a secure local/CI environment, and run `node scripts/migrate.mjs`. The runner uses a migration ledger and SHA-256 checksums. Do not edit applied migrations. The current migrations have been applied to hosted Supabase and also tested from scratch against an isolated PostgreSQL harness; a complete hosted student-to-instructor grading journey remains unverified. `tests/db-bootstrap.sql` is **only** a local harness and must never run on Supabase.
 
 ## Secure superadmin bootstrap
 
-1. Configure Auth redirects and custom SMTP, then create and verify the designated operator's own Auth account. Do not create a shared password.
+1. Configure Auth redirects and create the designated operator's own Auth account. Independently verify account ownership; an auto-confirmed email is insufficient. Do not create a shared password. Configure SMTP before enabling email verification or recovery.
 2. Set `BOOTSTRAP_USER_ID` to that verified account UUID in the secure shell, alongside `DATABASE_URL`.
 3. Run `node scripts/bootstrap-superadmin.mjs`. It refuses if a superadmin already exists, takes a database advisory lock and writes an audit reason. It grants technical superadmin only.
 4. For the first institution-approved academic administrator, set `BOOTSTRAP_ACADEMIC_USER_ID` and `UTR_INSTITUTIONAL_APPROVAL_REASON` in the secure shell, then run `node scripts/bootstrap-academic-admin.mjs`. It verifies the Auth account, refuses a second global academic bootstrap and audits the explicit reason. Do not run it without institutional designation. Superadmin does not implicitly gain academic authority.
 
 ## Production email
 
-Configure a verified institutional sender and custom SMTP in Supabase Authentication. Add the exact production and staging callback URLs, password recovery URLs, and Site URL. Test signup, verification, reset, recovery link expiry and logout with real test mailboxes. Supabase's restricted default mail service is insufficient for public signup. The app intentionally leaves signup disabled until these checks pass.
+Signup currently works without email confirmation at the owner's request, but it does not establish email ownership or institutional membership. A new member remains pending until research administration verifies them. Password recovery by email is disabled. Before enabling email confirmation or recovery, configure a verified institutional sender and custom SMTP in Supabase Authentication, add exact callback and Site URLs, and test delivery, expiry, reuse and logout with real test mailboxes. Supabase's restricted default mail service is insufficient for dependable public email delivery.
 
 ## Database tests
 
@@ -62,7 +62,7 @@ See `OPERATIONS.md`, `PRODUCT.md`, `DESIGN.md`, `ROADMAP.md` and `DECISIONS.md`.
 
 ## Auth email templates
 
-Configure Supabase email templates to link to the exact application `/auth/callback?token_hash={{ .TokenHash }}&type=email` for verification and `/auth/callback?token_hash={{ .TokenHash }}&type=recovery` for recovery. The callback also supports PKCE code exchange. Use the environment’s approved HTTPS origin, enable email confirmation, and test expired/reused links before signup activation. Never put tokens in logs or analytics.
+When institutional SMTP is configured and email confirmation/recovery is deliberately enabled, configure Supabase email templates to link to the exact application `/auth/callback?token_hash={{ .TokenHash }}&type=email` for verification and `/auth/callback?token_hash={{ .TokenHash }}&type=recovery` for recovery. The callback also supports PKCE code exchange. Use the environment’s approved HTTPS origin and test expired/reused links before activating email-dependent flows. Never put tokens in logs or analytics.
 
 ## Hosting state
 
