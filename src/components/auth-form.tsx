@@ -10,9 +10,11 @@ const titles: Record<string, string> = {
 export function AuthForm({
   mode,
   enabled,
+  unavailableMessage,
 }: {
   mode: string;
   enabled: boolean;
+  unavailableMessage?: string;
 }) {
   const [message, setMessage] = useState("");
   const [busy, setBusy] = useState(false);
@@ -22,9 +24,15 @@ export function AuthForm({
       <p>باشگاه پژوهشیاران دانشکدگان فارابی</p>
       {!enabled && (
         <div className="notice">
-          پذیرش عمومی هنوز فعال نشده است. پس از تکمیل راه‌اندازی و تأیید خدمات
-          ایمیل، امکان استفاده فراهم می‌شود.
+          {unavailableMessage ||
+            "این بخش در حال آماده‌سازی است. لطفاً کمی بعد دوباره مراجعه کنید."}
         </div>
+      )}
+      {mode === "register" && enabled && (
+        <p className="notice">
+          پس از ساخت حساب، مشخصات تحصیلی خود را تکمیل کنید. استفاده از خدمات
+          باشگاه پس از تأیید عضویت توسط مسئول پژوهشی امکان‌پذیر است.
+        </p>
       )}
       <form
         className="form"

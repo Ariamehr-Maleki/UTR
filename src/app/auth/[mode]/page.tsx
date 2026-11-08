@@ -23,7 +23,13 @@ export default async function Auth({
         mode={mode}
         enabled={
           liveEnabled() &&
+          (mode !== "reset" || process.env.UTR_AUTH_EMAIL_ENABLED === "true") &&
           (mode !== "register" || process.env.UTR_SIGNUP_ENABLED === "true")
+        }
+        unavailableMessage={
+          mode === "reset"
+            ? "بازیابی رمز از طریق ایمیل هنوز فعال نیست. برای راهنمایی با مسئول سامانه تماس بگیرید."
+            : undefined
         }
       />
     </div>

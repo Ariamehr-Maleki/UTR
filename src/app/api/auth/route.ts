@@ -41,12 +41,23 @@ export async function POST(req: Request) {
           { message: "عضویت هنوز فعال نیست." },
           { status: 403 },
         );
-      ({ error } = await db.auth.signUp({
+      const result = await db.auth.signUp({
         email: body.email!,
         password: body.password!,
         options: { emailRedirectTo: `${origin}/auth/callback` },
-      }));
+      });
+      error = result.error;
+      if (!error && result.data.session)
+        return NextResponse.json({ redirect: "/workspace/profile" });
     } else if (body.mode === "reset") {
+      if (process.env.UTR_AUTH_EMAIL_ENABLED !== "true")
+        return NextResponse.json(
+          {
+            message:
+              "بازیابی رمز از طریق ایمیل هنوز فعال نیست. برای راهنمایی با مسئول سامانه تماس بگیرید.",
+          },
+          { status: 503 },
+        );
       await db.auth.resetPasswordForEmail(body.email!, {
         redirectTo: `${origin}/auth/callback?next=/auth/password`,
       });

@@ -95,3 +95,9 @@ The mobile header is an accessible disclosure with Escape dismissal and focus re
 Visual research considered the 2026 TCU redevelopment case (https://www.case.org/awards/circle-excellence/2026/core-website-redevelopment) and the Discovery Building agency case (https://www.couleecreative.com/news/discovery-building-website-wins-sotd-awwwards). The applied principles are a working finder, direct navigation, distinct content hierarchy and authentic institutional imagery; no claimed conversion improvements or copied institution-specific assets.
 
 The public browser suite now has 13 tests, including the finder, mobile menu and reload/shareable archive state. `scripts/review-experience-states.mjs` adds 17 hero/search/empty/menu/expanded-result captures to the existing 39-route-size review set. `REVIEW_OUTPUT` and `TEST_BASE_URL` configure the main capture script. New shared presentation is in `src/app/experience.css`; no UI-only change grants additional permissions.
+
+## Signup without activation email
+
+UTR_AUTH_EMAIL_ENABLED controls email password recovery separately from UTR_SIGNUP_ENABLED. A successful signup with a returned session goes directly to profile completion. Membership remains pending until institutional verification. Configure SMTP and test delivery before enabling recovery. The versioned supabase/config.toml declares only reviewed Auth settings; use config diff before config push. The bootstrap script additionally requires BOOTSTRAP_IDENTITY_VERIFICATION documenting independently checked account ownership. Never treat an auto-confirmed email as identity proof.
+
+The opt-in scripts/verify-hosted-auth.mjs uses secure environment credentials and UTR_AUTH_SMOKE_APPROVED=true to exercise temporary auth-only probes, removing them afterwards. It never creates academic fixtures. Latest run passed; full hosted upload/assessment verification remains a separate release gate.

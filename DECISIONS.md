@@ -5,7 +5,7 @@
 - Revision grace, late-zero referral grace, alternative-referral maximum, review SLA, reversal unlock and attendance exceptions: unresolved. Null configuration blocks exceptional paths; no guessed institutional policy.
 - Positive credit remains locked even after reversal until an explicit approved policy and audited correction; appeals never unlock automatically.
 - Points and public leaderboards disabled until approved values and consent rules. Certificates disabled until eligibility rules approved.
-- Production signup disabled until custom SMTP and redirect/email verification tests pass.
+- User deferred activation email: signup may use Supabase email auto-confirmation, but membership stays pending. Email ownership is NOT established by auto-confirmation. Recovery email remains separately disabled until delivery is verified.
 - Supabase management credentials unavailable at initial inspection. Public key is not schema authority. Never reuse earlier conversation passwords.
 - Previews fail closed against production Supabase; a distinct staging project is required for interactive authenticated previews.
 - Supplied emblem used unchanged; no fabricated official logo.
@@ -22,3 +22,7 @@
 - User deferred activation-email setup on 2026-11-08. SMTP is no longer a blocker for completing non-email implementation/testing. No student status or privileged role is auto-approved by this deferral; public signup and password recovery remain disabled until an explicit supported account-provisioning path is configured.
 
 - 2026-11-08: User requested a full visual redesign and authorized importing official Farabi event archives, journals and library content. 1405–1406 remains coming soon. Historical editorial records are separate from operational academic events; importing them never asserts attendance, club eligibility or credit. Public previews may use the reviewed public-content snapshot while production remains database-managed. Authentic poster colors are retained; the interface keeps the blue/cyan institutional palette.
+
+## Account activation verification — 2026-11-08
+
+Authenticated CLI access was available. Applied only four reviewed Auth settings: production site URL, exact callback URL, minimum password length 12, and email confirmations disabled per user direction. Real hosted auth-only smoke passed signup/session, pending membership, login/logout, self-escalation denial, other-profile isolation and private-storage denial. Temporary labeled accounts were removed; no academic records were created. This does not verify successful private uploads or the complete hosted grading flow. Designated first technical administrator: aiariamehr@gmail.com; role bootstrap still requires independent ownership verification, not an auto-confirmed email. No academic authority is implied.

@@ -1,8 +1,14 @@
 import pg from "pg";
 const uid = process.env.BOOTSTRAP_USER_ID;
-if (!/^[a-f0-9-]{36}$/i.test(uid || "") || !process.env.DATABASE_URL)
+const verification = process.env.BOOTSTRAP_IDENTITY_VERIFICATION?.trim();
+if (
+  !/^[a-f0-9-]{36}$/i.test(uid || "") ||
+  !process.env.DATABASE_URL ||
+  !verification ||
+  verification.length < 20
+)
   throw Error(
-    "Secure DATABASE_URL and verified BOOTSTRAP_USER_ID are required.",
+    "Secure DATABASE_URL, BOOTSTRAP_USER_ID and documented independent account ownership verification are required. Auto-confirmed email is not ownership proof.",
   );
 const c = new pg.Client({ connectionString: process.env.DATABASE_URL });
 await c.connect();
@@ -22,9 +28,9 @@ try {
     [uid],
   );
   if (!user.rowCount) throw Error("Verified Auth account required.");
-  await c.query(
-    "select set_config('utr.reason','Explicit first technical superadmin bootstrap',true)",
-  );
+  await c.query("select set_config('utr.reason',$1,true)", [
+    `Explicit first technical superadmin bootstrap; ownership verification: ${verification}`,
+  ]);
   await c.query(
     "update public.profiles set membership='approved' where id=$1",
     [uid],
