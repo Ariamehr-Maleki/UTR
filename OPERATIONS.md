@@ -8,7 +8,7 @@ The admin UI provides labelled forms and scoped selectors. Instructor approval, 
 
 ## Pending policy behavior
 
-Null revision/referral grace blocks that exceptional route rather than guessing a deadline. Unset alternative limits block alternatives unless explicitly approved as unlimited. Positive locks never automatically reopen. An appeal does not unlock a submission. Grading policy for final official grades is external to UTR. Points values, badges, certificate criteria and public participation require separate approval; the installation starts with no active rules.
+The approved v2 policy allows 72 hours after an instructor correction/zero decision (retaining the later original deadline), with at most two alternative referrals. Positive locks never automatically reopen; an appeal does not unlock a submission. Grading policy for final official grades is external to UTR. Attendance alone has no academic score. The opt-in leaderboard uses separate confirmed-attendance, submitted-summary and accumulated-credit measures. Unapproved integer points and badge values remain inactive. Research administration manually issues certificates with a reason and may revoke them; no student self-issue or automatic threshold is active.
 
 ## File safety and retention
 

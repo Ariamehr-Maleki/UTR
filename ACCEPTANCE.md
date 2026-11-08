@@ -6,7 +6,7 @@
 | Student summary         | Canonical submission, private images, version history                         | Prerequisite messages and mobile flow need refinement                     | Actionable eligibility states and upload feedback                             | Full stack integration and mobile captures          |
 | Instructor review       | Referral queue, exact file, decimal score                                     | Review clarity and historical context                                     | Improve inbox and correction path                                             | Full stack integration                              |
 | Engagement              | Confirmed attendance, submitted summaries and actual 0–1 assessments; consent | Real production participation remains empty until institution runs events | Three-metric ranking, opt-in privacy, manual scoped certificate issuance      | SQL workflow, RLS and audit tests pass locally      |
-| Production acceptance   | Live gate, protected storage, role checks                                     | Full grading has only isolated acceptance; SMTP and scanner absent        | Hosted safe probes and explicit operational limits                            | Deployment and temporary account cleanup            |
+| Production acceptance   | Live gate, protected storage, role checks, ready deployment at `fd75978`      | Full grading has only isolated acceptance; SMTP and scanner absent        | Hosted safe probes and explicit operational limits                            | Public routes and private endpoint denials checked  |
 
 This matrix tracks user journeys. A route or table alone is not acceptance evidence.
 

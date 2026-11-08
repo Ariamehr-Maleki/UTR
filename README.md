@@ -52,7 +52,7 @@ Use a disposable database. Create the minimal Auth/Storage harness with `tests/d
 
 ## Current release gates
 
-Hosted migrations/RLS/Storage and Auth must be verified; custom SMTP and sender are needed. Institutional decisions are in `DECISIONS.md`. Exact reference typography is unresolved; Vazirmatn is a disclosed fallback. PDF safety scanning is not configured; image uploads are supported, PDF activation remains blocked. No claim of production readiness is made.
+Production Auth, RLS, private Storage configuration, the approved club form/policy and academic route activation have been verified as described in `DECISIONS.md`. The complete grading journey was tested in an isolated Supabase stack and database rollback smoke, but not yet with real hosted student/instructor submissions. Custom SMTP and recovery delivery remain deferred by the owner. Damavand webfont licensing/file is outstanding; headings currently fall back to Vazirmatn. PDF safety scanning is absent, so the operational upload accepts images only. Do not describe the hosted academic journey as fully production-verified yet.
 
 See `OPERATIONS.md`, `PRODUCT.md`, `DESIGN.md`, `ROADMAP.md` and `DECISIONS.md`.
 

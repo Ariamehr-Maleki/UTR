@@ -1,6 +1,6 @@
 # Decisions and release gates
 
-Latest decision 2026-11-08: user explicitly approved production activation, the v1 official form, 72-hour revision/zero-referral grace and two alternative referrals. Applied as new configuration records with audit reasons; see [launch approval](docs/LAUNCH-APPROVAL.md). Earlier pending-status entries below are historical. Remaining unresolved features are still gated.
+Current state 2026-11-09: the owner approved production activation, the v1 official form, the 72-hour revision/zero-referral allowance and two alternative referrals. Those are active configuration records with audit reasons; see [launch approval](docs/LAUNCH-APPROVAL.md). Signup is active without email ownership confirmation, while institutional membership remains pending until administrator approval. The separate technical and academic administrator roles are bootstrapped. Production public routes and private endpoint denials were checked after deployment `fd75978`; full hosted grading with real student/instructor submissions is still unverified. Legacy launch notes below record the path to this state and are superseded where they describe gates as disabled.
 
 - Typography: user chose Damavand for headings on 2026-11-09. The available Damavand listings require a separate paid website license; no licensed webfont file is present and no paid purchase was authorized. Heading styles request an installed local Damavand and fall back to Vazirmatn until a licensed webfont is supplied. The exact font used in the original reference remains unidentified.
 - Weekly deadline: explicitly approved by the user: Saturday–Friday, Friday 23:59:59 Asia/Tehran. Store explicit event deadline and policy snapshot; production event publication requires approval.
@@ -11,6 +11,10 @@ Latest decision 2026-11-08: user explicitly approved production activation, the 
 - Supabase management credentials unavailable at initial inspection. Public key is not schema authority. Never reuse earlier conversation passwords.
 - Previews fail closed against production Supabase; a distinct staging project is required for interactive authenticated previews.
 - Supplied emblem used unchanged; no fabricated official logo.
+
+## Superseded launch notes
+
+The entries below are historical evidence from earlier release stages. They do not describe the current activation state; use the current-state paragraph and release matrix above for operational decisions.
 
 - Hosted public schema was inspected and empty. The prepared SQL editor draft was NOT run; browser tooling later timed out. On 2026-11-08 the connected Supabase management plugin applied the tested fourteen-migration release successfully; the earlier editor draft remains obsolete.
 - Local test evidence does not certify hosted Auth, Storage or SMTP. Both live/signup flags remain false in Vercel.

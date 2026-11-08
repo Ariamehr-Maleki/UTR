@@ -11,23 +11,23 @@ Current status (2026-11-08): production authentication and academic routes are e
 - [x] Events, current-semester offerings, relevance, registration, staff attendance and cancellation history.
 - [x] Canonical submissions, private versioned uploads, retained originals, file checks, exact-version assessments, zero referral and positive lock.
 - [x] Academic/technical administration, record editing, appeals, notifications, reports, audited exceptions.
-- [x] Configurable points/badges/opt-in rankings, certificates and revocation. No production values invented.
-- [x] Sixteen versioned migrations; isolated PostgreSQL RLS/concurrency tests.
-- [x] 29 automated unit/database tests; 13 public browser tests plus 9 operational-component browser tests; 39 public/representative screenshot captures plus 17 discovery/navigation state captures at 390/768/1440.
+- [x] Opt-in ranking by confirmed attendance, submitted summaries or accumulated club credit; manual scoped certificate issuance and revocation. Unapproved numerical point/badge values remain disabled.
+- [x] Eighteen versioned migrations; isolated PostgreSQL RLS/concurrency tests.
+- [x] 51 automated unit/database tests; 14 public browser tests and isolated operational integration tests; captures at 390/768/1440.
 - [x] Further user-requested discovery/navigation redesign captured at 390/768/1440; independent visual review completed; all three material fixes scored resolved after recapture.
 - [x] Operational, bootstrap, retention, deployment and backup instructions.
 
 ## Release gates still open
 
-- [x] Apply 16 hosted migrations; verify 27 RLS-enabled tables, private buckets, approved weekly deadline, and rollback-only hosted workflow smoke tests. Auth/Storage end-to-end checks remain below.
-- [ ] Configure isolated staging Supabase, server-only finalizer key and exact environment origins.
+- [x] Apply hosted schema including the latest club-activity migration; verify RLS, private buckets, approved weekly deadline, rollback-only hosted workflow smoke and Auth. Real hosted Storage/assessment checks remain below.
+- [ ] Configure isolated staging Supabase. The free account already has two active projects; no paid upgrade or project pause was authorized.
 - [ ] Deferred by user: configure institutional SMTP and test verification/recovery/delivery with real mailboxes.
 - [ ] Exercise real hosted Storage/RLS and authenticated mobile upload/assessment across test roles, including revoked sessions and network retries.
-- [ ] Supply approved official form; configure trusted PDF scanner if PDFs are enabled.
-- [ ] Approve revision/referral rules, institutional identity checks and retention policy. Weekly boundary is approved.
+- [x] Supply and activate approved official form UTR-RFC-01. Configure a trusted PDF scanner only if PDFs are later enabled.
+- [ ] Specify instructor response expectations, attendance exceptions, reversal unlocking and academic-record retention; weekly boundary, 72-hour allowance and two alternative referrals are approved.
 - [x] Identify and securely bootstrap the first verified technical and institution-approved academic administrators.
-- [ ] Confirm exact font (unknown to user); current Vazirmatn remains a substitute.
-- [ ] Enable live/signup gates only after the above verification. No production-readiness claim.
+- [ ] Obtain a licensed Damavand webfont for headings; current Vazirmatn is a documented fallback.
+- [x] Enable live/signup gates with membership and role checks after explicit owner approval. Full hosted grading acceptance remains open.
 
 ## Account launch increment — 2026-11-08
 
