@@ -81,13 +81,17 @@ test("academic archive preserves year, poster and historical context", async ({
     "هوش مصنوعی",
   );
   await expect(page.locator(".archive-detail .notice")).toContainText("آرشیوی");
-  expect(
-    await page
-      .locator(".archive-detail img")
-      .evaluate(
-        (img: HTMLImageElement) => img.complete && img.naturalWidth > 0,
-      ),
-  ).toBe(true);
+  await expect
+    .poll(
+      () =>
+        page
+          .locator(".archive-detail img")
+          .evaluate(
+            (img: HTMLImageElement) => img.complete && img.naturalWidth > 0,
+          ),
+      { timeout: 15000, message: "Official poster must finish loading" },
+    )
+    .toBe(true);
   await page.goto("/events");
   await page.getByRole("button", { name: /۱۴۰۵–۱۴۰۶/ }).click();
   await expect(
