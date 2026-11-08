@@ -262,6 +262,10 @@ export function AdminConsole({
     return String(raw);
   }
   const [message, setMessage] = useState("");
+  const [nextAction, setNextAction] = useState<{
+    href: string;
+    label: string;
+  } | null>(null);
   const [busy, setBusy] = useState(false);
   return (
     <>
@@ -285,6 +289,7 @@ export function AdminConsole({
               setMutationId(crypto.randomUUID());
               setSelected("");
               setMessage("");
+              setNextAction(null);
             }}
           >
             {allowed.map((k) => (
@@ -466,6 +471,25 @@ export function AdminConsole({
             setMessage(
               result.message + (result.id ? ` شناسه پیگیری: ${result.id}` : ""),
             );
+            if (res.ok && result.id)
+              setNextAction(
+                op === "event"
+                  ? {
+                      href: "/workspace/admin?operation=relevance",
+                      label: "ادامه: ارتباط رویداد با درس‌های تأییدشده",
+                    }
+                  : op === "semester"
+                    ? {
+                        href: "/workspace/admin?operation=offering",
+                        label: "ادامه: تعریف درس و استاد",
+                      }
+                    : op === "offering"
+                      ? {
+                          href: "/workspace/admin?operation=enrollment",
+                          label: "ادامه: تأیید انتخاب درس دانشجو",
+                        }
+                      : null,
+              );
           } catch {
             setMessage("ارتباط برقرار نشد. اطلاعات فرم حفظ شده است.");
           } finally {
@@ -643,6 +667,11 @@ export function AdminConsole({
         </label>
         <button disabled={busy}>{busy ? "در حال ثبت…" : "ثبت تغییر"}</button>
         <p role="status">{message}</p>
+        {nextAction && (
+          <a className="button secondary" href={nextAction.href}>
+            {nextAction.label}
+          </a>
+        )}
       </form>
     </>
   );
