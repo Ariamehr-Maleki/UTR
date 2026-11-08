@@ -36,3 +36,5 @@
 
 - [x] Account-only production deployment verified in a real browser: signup, saved profile, logout/login, unauthenticated redirect, blocked academic action, and no horizontal overflow at 390/768/1440. Temporary browser accounts removed after each run.
 - [x] Migration 17 initializes only the three user-supplied participating departments, with an audit reason.
+
+- [x] Secure first administrator bootstrap: supplied authenticated profile UUID matched the designated account; technical and explicitly authorized academic roles assigned separately and verified through role predicates. Student status remains unapproved.
