@@ -6,11 +6,7 @@ export default async function Journals() {
     <div className="container content">
       <header className="page-head editorial-head">
         <div>
-          <h1>
-            پژوهش،
-            <br />
-            در صفحه‌های بعد.
-          </h1>
+          <h1>نشریات علمی</h1>
           <p>
             نشریات علمی دانشکدگان فارابی دانشگاه تهران؛ از یافتن مجله مرتبط تا
             دسترسی به مقاله و راهنمای نویسندگان.

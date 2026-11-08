@@ -1,158 +1,103 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-11-07T22:37:47.4484453Z",
+  "generatedAt": "2026-11-08T08:24:16.1456622Z",
   "title": "Design System: UTR",
   "extensions": {
     "colorMeta": {
-      "blue": {
-        "role": "primary",
-        "displayName": "blue",
-        "canonical": "#123f7b"
-      },
-      "medium": {
-        "role": "primary",
-        "displayName": "medium",
-        "canonical": "#0675c9"
-      },
-      "cyan": {
-        "role": "secondary",
-        "displayName": "cyan",
-        "canonical": "#00b8cc"
-      },
-      "ink": {
+      "club-surface": {
+        "displayName": "club surface",
         "role": "neutral",
-        "displayName": "ink",
-        "canonical": "#091735"
+        "canonical": "#ecf7fa"
       },
       "muted": {
-        "role": "neutral",
         "displayName": "muted",
-        "canonical": "#50637b"
-      },
-      "pale": {
         "role": "neutral",
-        "displayName": "pale",
-        "canonical": "#eff7fb"
+        "canonical": "#53657a"
       },
-      "line": {
+      "entry-copy": {
+        "displayName": "entry copy",
         "role": "neutral",
-        "displayName": "line",
-        "canonical": "#dce7ee"
-      },
-      "error": {
-        "role": "neutral",
-        "displayName": "error",
-        "tonalRamp": [
-          "oklch(0.1500 0.0735 18.38)",
-          "oklch(0.2643 0.1194 18.38)",
-          "oklch(0.3786 0.1502 18.38)",
-          "oklch(0.4929 0.1618 18.38)",
-          "oklch(0.6071 0.1527 18.38)",
-          "oklch(0.7214 0.1242 18.38)",
-          "oklch(0.8357 0.0799 18.38)",
-          "oklch(0.9500 0.0253 18.38)"
-        ]
-      },
-      "white": {
-        "role": "neutral",
-        "displayName": "white",
-        "tonalRamp": [
-          "oklch(0.1500 0.0000 89.88)",
-          "oklch(0.2643 0.0000 89.88)",
-          "oklch(0.3786 0.0000 89.88)",
-          "oklch(0.4929 0.0000 89.88)",
-          "oklch(0.6071 0.0000 89.88)",
-          "oklch(0.7214 0.0000 89.88)",
-          "oklch(0.8357 0.0000 89.88)",
-          "oklch(0.9500 0.0000 89.88)"
-        ]
-      },
-      "blue-hover": {
-        "role": "primary",
-        "displayName": "blue hover",
-        "tonalRamp": [
-          "oklch(0.1500 0.0456 258.42)",
-          "oklch(0.2643 0.0742 258.42)",
-          "oklch(0.3786 0.0933 258.42)",
-          "oklch(0.4929 0.1005 258.42)",
-          "oklch(0.6071 0.0949 258.42)",
-          "oklch(0.7214 0.0772 258.42)",
-          "oklch(0.8357 0.0496 258.42)",
-          "oklch(0.9500 0.0157 258.42)"
-        ]
-      },
-      "field-border": {
-        "role": "neutral",
-        "displayName": "field border",
-        "tonalRamp": [
-          "oklch(0.1500 0.0195 241.63)",
-          "oklch(0.2643 0.0317 241.63)",
-          "oklch(0.3786 0.0398 241.63)",
-          "oklch(0.4929 0.0429 241.63)",
-          "oklch(0.6071 0.0405 241.63)",
-          "oklch(0.7214 0.0329 241.63)",
-          "oklch(0.8357 0.0212 241.63)",
-          "oklch(0.9500 0.0067 241.63)"
-        ]
-      },
-      "error-surface": {
-        "role": "neutral",
-        "displayName": "error surface",
-        "tonalRamp": [
-          "oklch(0.1500 0.0065 6.70)",
-          "oklch(0.2643 0.0105 6.70)",
-          "oklch(0.3786 0.0132 6.70)",
-          "oklch(0.4929 0.0142 6.70)",
-          "oklch(0.6071 0.0134 6.70)",
-          "oklch(0.7214 0.0109 6.70)",
-          "oklch(0.8357 0.0070 6.70)",
-          "oklch(0.9500 0.0022 6.70)"
-        ]
-      },
-      "hero-surface": {
-        "role": "neutral",
-        "displayName": "hero surface",
-        "canonical": "#f4f9fc"
-      },
-      "poster-surface": {
-        "role": "neutral",
-        "displayName": "poster surface",
-        "canonical": "#eef4f8"
-      },
-      "poster-board": {
-        "role": "neutral",
-        "displayName": "poster board",
-        "canonical": "#dceef6"
-      },
-      "cover-surface": {
-        "role": "neutral",
-        "displayName": "cover surface",
-        "canonical": "#eaf1f6"
-      },
-      "journal-surface": {
-        "role": "neutral",
-        "displayName": "journal surface",
-        "canonical": "#f5f8fb"
-      },
-      "form-surface": {
-        "role": "neutral",
-        "displayName": "form surface",
-        "canonical": "#fbfdff"
+        "canonical": "#d6e9f6"
       },
       "footer": {
-        "role": "neutral",
         "displayName": "footer",
-        "canonical": "#0c274c"
+        "role": "neutral",
+        "canonical": "#103260"
+      },
+      "medium": {
+        "displayName": "medium",
+        "role": "primary",
+        "canonical": "#086dc1"
+      },
+      "white": {
+        "displayName": "white",
+        "role": "neutral",
+        "canonical": "#ffffff"
+      },
+      "error": {
+        "displayName": "error",
+        "role": "neutral",
+        "canonical": "#a22336"
+      },
+      "ink": {
+        "displayName": "ink",
+        "role": "neutral",
+        "canonical": "#101e36"
+      },
+      "blue": {
+        "displayName": "blue",
+        "role": "primary",
+        "canonical": "#123f7b"
+      },
+      "error-surface": {
+        "displayName": "error surface",
+        "role": "neutral",
+        "canonical": "#fff2f4"
+      },
+      "sidebar": {
+        "displayName": "sidebar",
+        "role": "neutral",
+        "canonical": "#f2f6fa"
+      },
+      "field-border": {
+        "displayName": "field border",
+        "role": "neutral",
+        "canonical": "#8da8bd"
+      },
+      "cyan": {
+        "displayName": "cyan",
+        "role": "secondary",
+        "canonical": "#00b8cc"
+      },
+      "poster-surface": {
+        "displayName": "poster surface",
+        "role": "neutral",
+        "canonical": "#f3f5f7"
+      },
+      "blue-hover": {
+        "displayName": "blue hover",
+        "role": "primary",
+        "canonical": "#0b3061"
+      },
+      "line": {
+        "displayName": "line",
+        "role": "neutral",
+        "canonical": "#dce5ed"
+      },
+      "pale": {
+        "displayName": "pale",
+        "role": "neutral",
+        "canonical": "#f2f7fa"
       }
     },
     "typographyMeta": {
       "display": {
         "displayName": "Hero display",
-        "purpose": "Public hero headline; temporary Vazirmatn."
+        "purpose": "Research entrance; temporary Vazirmatn; clamp(46px, 5.1vw, 74px)/1.5, 54px at 950px, 39px/1.6 at 600px."
       },
       "headline": {
         "displayName": "Section headline",
-        "purpose": "Section headings, with mobile override."
+        "purpose": "Editorial and library titles: clamp(32px, 3.3vw, 46px)/1.65, 31px at 600px."
       },
       "title": {
         "displayName": "Resource title",
@@ -169,50 +114,53 @@
     },
     "shadows": [
       {
-        "value": "0 18px 45px -24px #133d7150",
-        "name": "shared",
-        "purpose": "Selected media and supported elevated surfaces"
+        "value": "0 7px 16px -9px #172c5040",
+        "purpose": "Upright archive posters; removed on mobile.",
+        "name": "archive-poster"
       },
       {
         "value": "0 5px 14px -8px #123f7b80",
-        "name": "button-hover",
-        "purpose": "Button hover response"
+        "purpose": "Some native buttons retain this; standard .button hover overrides to none.",
+        "name": "inherited-native-button-hover"
       }
     ],
     "motion": [
       {
-        "value": "smooth",
-        "name": "scroll",
-        "purpose": "Auto under reduced motion"
+        "value": "background 0.18s, color 0.18s, box-shadow 0.18s",
+        "purpose": "Inherited control feedback.",
+        "name": "control-state"
       },
       {
         "value": "ribbon-travel 36s linear infinite",
-        "name": "ribbon",
-        "purpose": "Explicit pause/resume, hover/focus pause; static single scrollable copy under reduced motion"
+        "purpose": "Explicit pause, hover/focus pause; static single scrollable copy under reduced motion.",
+        "name": "ribbon"
       },
       {
-        "value": "background 0.18s, color 0.18s, box-shadow 0.18s",
-        "name": "button-state",
-        "purpose": "Control feedback"
-      },
-      {
-        "value": "transform 0.3s ease",
-        "name": "poster-board",
-        "purpose": "Hover/focus lift; transition and interaction transform removed under reduced motion"
+        "value": "transition-duration: 0.01ms !important",
+        "purpose": "Final cascade also changes smooth scrolling to auto. No automatic hero motion.",
+        "name": "reduced-motion"
       }
     ],
     "breakpoints": [
       {
+        "value": "1150px",
+        "name": "header-density"
+      },
+      {
         "value": "1100px",
-        "name": "header"
+        "name": "secondary-inherited"
       },
       {
         "value": "1000px",
         "name": "workspace-inherited"
       },
       {
+        "value": "950px",
+        "name": "navigation-and-tablet"
+      },
+      {
         "value": "800px",
-        "name": "tablet"
+        "name": "archive-grid-inherited"
       },
       {
         "value": "600px",
@@ -225,17 +173,30 @@
     },
     "provenance": {
       "journalPage": "https://farabi.ut.ac.ir/fa/page/4231",
-      "source": "src/app/globals.css final cascade, public pages and shared archive/directory/ribbon components",
+      "source": "src/app/globals.css then src/app/experience.css; layout.tsx; page.tsx; site-header.tsx; research-finder.tsx; academic-archive.tsx",
       "assets": "public/assets/official/provenance.json",
-      "reviewScope": "Reported pre-correction 39 screenshots at 390/768/1440 with no detected overflow or broken images. Independent review corrections resolved and recaptured; final visual disposition SHIP. No production-readiness or authenticated-flow certification.",
+      "reviewScope": "Independent review inspected 50 captures; three requested corrections are implemented: finder load-more, toggle contrast, and mobile club pledge. Valid recaptures scored all three fixes resolved, disposition SHIP for the fix list. All 13 public tests passed; 56 unique captures in the full evidence set. No production-readiness or authenticated-flow certification.",
       "font": "Self-hosted Vazirmatn 400/500/700/800 is temporary; exact reference font unknown.",
-      "tonalRamps": "Retained unchanged-color ramps are synthesized display metadata only, not application tokens. Changed colors record canonical CSS values without invented ramps.",
       "libraryPage": "https://farabi.ut.ac.ir/fa/page/4230",
       "assetRetrieved": "2026-11-08",
       "posterPages": [
         "https://farabi.ut.ac.ir/fa/news/43935",
         "https://farabi.ut.ac.ir/fa/news/50799"
       ]
+    },
+    "layout": {
+      "finderMaxWidth": "940px",
+      "mobileContainer": "calc(100% - 36px)",
+      "tabletContainer": "calc(100% - 48px)",
+      "container": "min(1280px, calc(100% - 96px))",
+      "mobileFinder": "Two-row grid: input above; category and submit below.",
+      "mobileArchive": "One column of image/text rows, 115px images in grid view, 75px in list view.",
+      "mastheadMinHeights": ["94px", "82px", "76px"],
+      "mobileClubManifest": "55px emblem/identity grid; pledge spans full width, 26px/1.8, intended line break restored."
+    },
+    "finder": {
+      "results": "Initially 8; load more reveals 8 at a time until all matches are available.",
+      "state": "Local homepage state. Archive and directory filters have URL persistence."
     }
   },
   "components": [
@@ -245,15 +206,7 @@
       "refersTo": "button-primary",
       "description": "Main institutional action.",
       "html": "<button class=\"ds-primary\" dir=\"rtl\">ادامه</button>",
-      "css": ".ds-primary{font-family:Vazirmatn,sans-serif;font-size:16px;line-height:1.9;display:inline-flex;align-items:center;justify-content:center;gap:9px;border:1px solid var(--blue,#123f7b);background:var(--blue,#123f7b);color:white;border-radius:10px;min-height:48px;padding:10px 22px;font-weight:500;cursor:pointer;text-decoration:none;}.ds-primary:hover{background:#0c3064}.ds-primary:focus-visible{outline:3px solid var(--medium,#0675c9);outline-offset:5px}.ds-primary:disabled{opacity:.55;cursor:not-allowed} .ds-primary:hover,.ds-secondary:hover{box-shadow:0 5px 14px -8px #123f7b80}"
-    },
-    {
-      "name": "Secondary button",
-      "kind": "button",
-      "refersTo": "button-secondary",
-      "description": "Outlined secondary action.",
-      "html": "<button class=\"ds-secondary\" dir=\"rtl\">بازگشت</button>",
-      "css": ".ds-secondary{font-family:Vazirmatn,sans-serif;font-size:16px;line-height:1.9;display:inline-flex;align-items:center;justify-content:center;gap:9px;border:1px solid var(--blue,#123f7b);background:var(--blue,#123f7b);color:white;border-radius:10px;min-height:48px;padding:10px 22px;font-weight:500;cursor:pointer;text-decoration:none;background:white;color:var(--blue,#123f7b)}.ds-secondary:hover{background:white}.ds-secondary:focus-visible{outline:3px solid var(--medium,#0675c9);outline-offset:5px}.ds-secondary:disabled{opacity:.55;cursor:not-allowed} .ds-primary:hover,.ds-secondary:hover{box-shadow:0 5px 14px -8px #123f7b80}"
+      "css": ".ds-primary{font-family:Vazirmatn,sans-serif;font-size:16px;line-height:1.9;display:inline-flex;align-items:center;justify-content:center;gap:9px;border:1px solid var(--blue,#123f7b);background:var(--blue,#123f7b);color:white;border-radius:8px;min-height:48px;padding:10px 22px;font-weight:500;cursor:pointer;text-decoration:none;}.ds-primary:hover{background:#0b3061}.ds-primary:focus-visible{outline:3px solid var(--medium,#086dc1);outline-offset:5px}.ds-primary:disabled{opacity:.55;cursor:not-allowed} .ds-primary:hover,.ds-secondary:hover{box-shadow:0 5px 14px -8px #123f7b80} .ds-primary:hover,.ds-secondary:hover{background:#0b3061;color:white;box-shadow:none}"
     },
     {
       "name": "Text field",
@@ -261,14 +214,14 @@
       "refersTo": "input",
       "description": "Labeled native Persian text field.",
       "html": "<label class=\"ds-label\" dir=\"rtl\">عنوان<input class=\"ds-input\" type=\"text\"></label>",
-      "css": ".ds-label{font-family:Vazirmatn,sans-serif;font-size:16px;line-height:1.9;display:grid;gap:6px;font-weight:500}.ds-input{font-family:Vazirmatn,sans-serif;font-size:16px;line-height:1.9;min-width:0;width:100%;border:1px solid #8da8bd;background:white;border-radius:8px;padding:11px 14px;color:var(--ink,#091735);min-height:48px;caret-color:var(--medium,#0675c9)}.ds-input:focus-visible{outline:3px solid var(--medium,#0675c9);outline-offset:5px}"
+      "css": ".ds-label{font-family:Vazirmatn,sans-serif;font-size:16px;line-height:1.9;display:grid;gap:6px;font-weight:500}.ds-input{font-family:Vazirmatn,sans-serif;font-size:16px;line-height:1.9;min-width:0;width:100%;border:1px solid #8da8bd;background:white;border-radius:8px;padding:11px 14px;color:var(--ink,#101e36);min-height:48px;caret-color:var(--medium,#086dc1)}.ds-input:focus-visible{outline:3px solid var(--medium,#086dc1);outline-offset:5px}"
     },
     {
       "name": "Public navigation",
       "kind": "nav",
-      "description": "Public blue links with an underline hover state.",
-      "html": "<nav class=\"ds-nav\" dir=\"rtl\"><a href=\"#events\">رویدادها</a><a href=\"#resources\">منابع</a></nav>",
-      "css": ".ds-nav{display:flex;gap:25px;font-family:Vazirmatn,sans-serif}.ds-nav a{color:var(--blue,#123f7b);font-size:14px;font-weight:500;text-decoration:none;text-underline-offset:5px}.ds-nav a:hover{text-decoration:underline}.ds-nav a:focus-visible{outline:3px solid var(--medium,#0675c9);outline-offset:5px}"
+      "description": "Desktop links with medium-blue current destination and 2px underline; mobile disclosure handled by SiteHeader.",
+      "html": "<nav class=\"ds-nav\" dir=\"rtl\"><a href=\"#events\" aria-current=\"page\">رویدادها</a><a href=\"#resources\">منابع</a></nav>",
+      "css": ".ds-nav{display:flex;gap:25px;font-family:Vazirmatn,sans-serif}.ds-nav a{color:var(--blue,#123f7b);font-size:14px;font-weight:500;text-decoration:none;text-underline-offset:5px}.ds-nav a:hover{text-decoration:underline}.ds-nav a:focus-visible{outline:3px solid var(--medium,#086dc1);outline-offset:5px} .ds-nav a{position:relative;padding-block:10px}.ds-nav a[aria-current]{color:var(--medium,#086dc1)}.ds-nav a[aria-current]:after{content:\"\";position:absolute;bottom:0;inset-inline:0;height:2px;background:var(--medium,#086dc1)}"
     },
     {
       "name": "Status badge",
@@ -276,33 +229,33 @@
       "refersTo": "badge",
       "description": "Textual status with a pale background.",
       "html": "<span class=\"ds-badge\" dir=\"rtl\">در انتظار بررسی</span>",
-      "css": ".ds-badge{font-family:Vazirmatn,sans-serif;font-size:16px;line-height:1.9;display:inline-block;padding:3px 12px;border-radius:20px;background:var(--pale,#eff7fb);color:var(--blue,#123f7b);font-size:12px;font-weight:500}"
+      "css": ".ds-badge{font-family:Vazirmatn,sans-serif;font-size:16px;line-height:1.9;display:inline-block;padding:3px 12px;border-radius:20px;background:var(--pale,#f2f7fa);color:var(--blue,#123f7b);font-size:12px;font-weight:500}"
     },
     {
-      "name": "Task panel",
+      "name": "Workspace panel",
       "kind": "card",
-      "refersTo": "panel",
+      "refersTo": "workspace-panel",
       "description": "Flat bordered task container.",
       "html": "<section class=\"ds-panel\" dir=\"rtl\"><h2>درخواست‌ها</h2><p>درخواستی برای نمایش وجود ندارد.</p></section>",
-      "css": ".ds-panel{font-family:Vazirmatn,sans-serif;font-size:16px;line-height:1.9;padding:28px;border:1px solid var(--line,#dce7ee);border-radius:var(--radius,14px);color:var(--ink,#091735)}.ds-panel h2{font-size:22px;line-height:1.7;margin:0 0 12px}.ds-panel p{margin:0;color:var(--muted,#50637b)}"
+      "css": ".ds-panel{font-family:Vazirmatn,sans-serif;font-size:16px;line-height:1.9;padding:26px;border:1px solid var(--line,#dce5ed);border-radius:12px;color:var(--ink,#101e36)}.ds-panel h2{font-size:22px;line-height:1.7;margin:0 0 12px}.ds-panel p{margin:0;color:var(--muted,#53657a)}"
     },
     {
       "description": "Selected editorial topic",
       "refersTo": "topic-filter-selected",
-      "css": ".ds-topic{font-family:Vazirmatn,sans-serif;background:var(--blue,#123f7b);color:white;border:1px solid var(--blue,#123f7b);border-radius:30px;font-size:12px;min-height:42px;padding:6px 18px;cursor:pointer}.ds-topic:hover{box-shadow:0 5px 14px -8px #123f7b80}.ds-topic:focus-visible{outline:3px solid var(--medium,#0675c9);outline-offset:5px}",
+      "css": ".ds-topic{font-family:Vazirmatn,sans-serif;background:var(--blue,#123f7b);color:white;border:1px solid var(--blue,#123f7b);border-radius:6px;font-size:13px;min-height:42px;padding:7px 14px;cursor:pointer}.ds-topic:hover{box-shadow:0 5px 14px -8px #123f7b80}.ds-topic:focus-visible{outline:3px solid var(--medium,#086dc1);outline-offset:5px}",
       "html": "<button class=\"ds-topic\" aria-pressed=\"true\" dir=\"rtl\">همه</button>",
       "name": "Topic filter",
       "kind": "chip"
     }
   ],
   "narrative": {
-    "northStar": "A public programme poster display",
-    "overview": "An institutional research portal whose public identity comes from authentic event posters, scholarly covers and a clear Persian editorial hierarchy. White and pale blue frame real content; university blue anchors navigation and participation. Private workspaces remain denser, task-focused surfaces.\n\nThe original blue/cyan/white identity remains binding. The supplied university emblem remains prominent; the authentic wing artwork remains an available identity asset, not the redesigned homepage's main illustration. Vazirmatn is temporary: the exact reference font is unidentified. The rejected plain static group list is superseded by a controlled moving ribbon.",
+    "northStar": "Campus wayfinding and research index",
+    "overview": "White institutional masthead, one full-width blue research entrance, authentic wing watermark and immediate working public finder. Upright source imagery and quiet white reading rows lead to scholarly directories; private workspaces remain task-focused. Persian RTL and blue/cyan/white identity remain binding. Vazirmatn is temporary.",
     "keyCharacteristics": [
-      "Persian-first RTL with isolated mixed-direction content.",
-      "Real posters and journal covers with institutional provenance.",
-      "White and blue editorial hierarchy with restrained depth around physical media.",
-      "Distinct public exploration and private academic operation."
+      "Immediate public search and direct destinations.",
+      "Upright authentic imagery and thin dividers.",
+      "Persian RTL and isolated mixed-direction content.",
+      "Historical archives remain separate from academic operations."
     ],
     "rules": [
       {
@@ -328,7 +281,8 @@
       "Don't use decorative cyan for primary text or action labels.",
       "Don't invent activity counts, endorsements, achievements or testimonials.",
       "Don't infer permissions from visual role switching or historical archive membership.",
-      "Don't treat screenshot checks or this document as production-readiness approval."
+      "Don't treat screenshot checks or this document as production-readiness approval.",
+      "Do not restore the rejected split hero or tilted poster collage."
     ]
   }
 }

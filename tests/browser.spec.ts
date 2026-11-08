@@ -136,3 +136,76 @@ test("club ribbon can be paused and respects reduced motion", async ({
     page.getByRole("button", { name: "توقف حرکت گروه‌ها" }),
   ).toBeHidden();
 });
+
+test("research finder searches public content and recovers from empty results", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page.getByLabel("جست‌وجو در UTR", { exact: true }).fill("هوش مصنوعی");
+  await expect(page.locator(".finder-result").first()).toBeVisible();
+  await expect(page.locator(".finder-result").first()).toHaveAttribute(
+    "href",
+    /events\/archive\//,
+  );
+  await page.getByLabel("نوع محتوا").selectOption("journals");
+  await expect(page.locator(".finder-no-results")).toBeVisible();
+  await page.getByLabel("جست‌وجو در UTR", { exact: true }).fill("حقوق");
+  await expect(page.locator(".finder-result")).toHaveCount(1);
+  await expect(page.locator(".finder-result")).toHaveAttribute(
+    "target",
+    "_blank",
+  );
+  await page.getByLabel("جست‌وجو در UTR", { exact: true }).press("Escape");
+  await expect(page.locator(".finder-results")).toHaveCount(0);
+});
+test("mobile navigation opens, closes with Escape and follows destinations", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/");
+  await page.getByRole("button", { name: "باز کردن فهرست" }).click();
+  await expect(
+    page.getByRole("navigation", { name: "ناوبری اصلی" }),
+  ).toBeVisible();
+  await page.keyboard.press("Escape");
+  await expect(
+    page.getByRole("button", { name: "باز کردن فهرست" }),
+  ).toBeFocused();
+  await page.getByRole("button", { name: "باز کردن فهرست" }).click();
+  await page
+    .getByRole("navigation", { name: "ناوبری اصلی" })
+    .getByRole("link", { name: "کتابخانه", exact: true })
+    .click();
+  await expect(page).toHaveURL(/resources/);
+  await expect(
+    page.getByRole("navigation", { name: "ناوبری اصلی" }),
+  ).toBeHidden();
+});
+test("archive filter and view survive reload and can be shared", async ({
+  page,
+}) => {
+  await page.goto("/events");
+  await page.getByRole("button", { name: /۱۴۰۳–۱۴۰۴/ }).click();
+  await page.getByLabel("جست‌وجو در آرشیو").fill("هوش مصنوعی");
+  await page.getByRole("button", { name: "نمای فهرستی", exact: true }).click();
+  await page.reload();
+  await expect(page.locator(".poster-card")).toHaveCount(2);
+  await expect(
+    page.getByRole("button", { name: "نمای فهرستی", exact: true }),
+  ).toHaveAttribute("aria-pressed", "true");
+  await expect(page.getByLabel("جست‌وجو در آرشیو")).toHaveValue("هوش مصنوعی");
+  await page.getByLabel("جست‌وجو در آرشیو").fill("zzzz");
+  await page.getByRole("button", { name: "پاک‌کردن فیلترها" }).click();
+  await expect(page.locator(".poster-card")).toHaveCount(9);
+});
+
+test("finder makes every category result reachable", async ({ page }) => {
+  await page.goto("/");
+  await page.getByLabel("نوع محتوا").selectOption("resources");
+  await expect(page.locator(".finder-result")).toHaveCount(8);
+  await page.getByRole("button", { name: "نمایش نتایج بیشتر" }).click();
+  await expect(page.locator(".finder-result")).toHaveCount(14);
+  await expect(
+    page.getByRole("button", { name: "نمایش نتایج بیشتر" }),
+  ).toHaveCount(0);
+});

@@ -85,3 +85,13 @@ Production reads published `content` records through anonymous RLS. Administrato
 Isolated previews use the reviewed public snapshot in src/content/official.json; they never query production. This snapshot is real public-source material, not fabricated demonstration data. `scripts/build-official-content.mjs` reproduces that snapshot only. To change production content, use authorized administration or a new reviewed migration; never rewrite the applied import migration. `scripts/import-official-assets.mjs` can re-download provenance-listed official assets. It does not access private files or identities.
 
 The paused/reduced-motion-aware participating-group ribbon is on the club and home pages. `node scripts/review-redesign.mjs` captures 13 routes at 390/768/1440 against a local production server on port 3110; artifacts are ignored by Git. Browser tests cover archive year/filter/detail behavior, official directory links and ribbon controls. Hosted account/file workflows remain subject to the existing release gates.
+
+## Research discovery and navigation refresh (2026-11-08)
+
+The public entry now searches published event archives, journals and resources directly. Search is client-side over the same public/RLS-filtered content already rendered by the site; it does not query or expose academic records. Empty results offer recovery, Escape clears the query and closes results, and external destinations are explicit links.
+
+The mobile header is an accessible disclosure with Escape dismissal and focus return. Active navigation is marked with aria-current. Archive year, query, subject and grid/list preference are stored in URL parameters, so refresh and shared URLs preserve the selection. Existing historical/academic boundaries and account activation gates are unchanged.
+
+Visual research considered the 2026 TCU redevelopment case (https://www.case.org/awards/circle-excellence/2026/core-website-redevelopment) and the Discovery Building agency case (https://www.couleecreative.com/news/discovery-building-website-wins-sotd-awwwards). The applied principles are a working finder, direct navigation, distinct content hierarchy and authentic institutional imagery; no claimed conversion improvements or copied institution-specific assets.
+
+The public browser suite now has 13 tests, including the finder, mobile menu and reload/shareable archive state. `scripts/review-experience-states.mjs` adds 17 hero/search/empty/menu/expanded-result captures to the existing 39-route-size review set. `REVIEW_OUTPUT` and `TEST_BASE_URL` configure the main capture script. New shared presentation is in `src/app/experience.css`; no UI-only change grants additional permissions.

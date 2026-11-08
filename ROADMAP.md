@@ -11,8 +11,8 @@
 - [x] Academic/technical administration, record editing, appeals, notifications, reports, audited exceptions.
 - [x] Configurable points/badges/opt-in rankings, certificates and revocation. No production values invented.
 - [x] Sixteen versioned migrations; isolated PostgreSQL RLS/concurrency tests.
-- [x] 29 automated unit/database tests; 9 public browser tests plus 9 operational-component browser tests; 39 public/representative screenshot captures at 390/768/1440.
-- [x] Requested redesign independently reviewed across 39 captures; all reported issues corrected and affected screens recaptured. Final visual disposition: SHIP (visual scope only).
+- [x] 29 automated unit/database tests; 13 public browser tests plus 9 operational-component browser tests; 39 public/representative screenshot captures plus 17 discovery/navigation state captures at 390/768/1440.
+- [x] Further user-requested discovery/navigation redesign captured at 390/768/1440; independent visual review completed; all three material fixes scored resolved after recapture.
 - [x] Operational, bootstrap, retention, deployment and backup instructions.
 
 ## Release gates still open

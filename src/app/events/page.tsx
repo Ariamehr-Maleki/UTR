@@ -10,11 +10,7 @@ export default async function Events() {
     <div className="container content">
       <header className="page-head editorial-head">
         <div>
-          <h1>
-            قرارهای علمی،
-            <br />
-            مسیرهای تازه.
-          </h1>
+          <h1>رویدادهای علمی فارابی</h1>
           <p>
             کارگاه‌ها و نشست‌های پژوهشی دانشکدگان فارابی؛ یک آرشیو برای مرور،
             یادگیری و پیدا کردن مسیر بعدی.

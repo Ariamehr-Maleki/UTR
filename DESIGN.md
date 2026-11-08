@@ -1,36 +1,36 @@
 ---
 name: UTR
-description: Persian institutional research portal built around authentic posters and scholarly covers
+description: Persian university research entrance with a working public finder and readable scholarly directories
 colors:
   blue: "#123f7b"
-  medium: "#0675c9"
+  medium: "#086dc1"
   cyan: "#00b8cc"
-  ink: "#091735"
-  muted: "#50637b"
-  pale: "#eff7fb"
-  line: "#dce7ee"
-  error: "#a22336"
+  ink: "#101e36"
+  muted: "#53657a"
+  pale: "#f2f7fa"
+  line: "#dce5ed"
   white: "#ffffff"
-  blue-hover: "#0c3064"
+  blue-hover: "#0b3061"
+  entry-copy: "#d6e9f6"
+  club-surface: "#ecf7fa"
+  poster-surface: "#f3f5f7"
+  footer: "#103260"
+  sidebar: "#f2f6fa"
   field-border: "#8da8bd"
+  error: "#a22336"
   error-surface: "#fff2f4"
-  hero-surface: "#f4f9fc"
-  poster-board: "#dceef6"
-  poster-surface: "#eef4f8"
-  journal-surface: "#f5f8fb"
-  cover-surface: "#eaf1f6"
-  footer: "#0c274c"
-  form-surface: "#fbfdff"
 typography:
   display:
     fontFamily: "Vazirmatn, sans-serif"
-    fontSize: "clamp(44px, 4.7vw, 68px)"
+    fontSize: "clamp(46px, 5.1vw, 74px)"
     fontWeight: 800
-    lineHeight: 1.42
+    lineHeight: 1.5
+    letterSpacing: "0"
   headline:
     fontFamily: "Vazirmatn, sans-serif"
-    fontSize: "32px"
-    lineHeight: 1.6
+    fontSize: "clamp(32px, 3.3vw, 46px)"
+    lineHeight: 1.65
+    letterSpacing: "0"
   title:
     fontFamily: "Vazirmatn, sans-serif"
     fontSize: "19px"
@@ -45,22 +45,24 @@ typography:
     fontSize: "14px"
     fontWeight: 500
 rounded:
-  control: "10px"
-  field: "8px"
+  square: "0"
+  filter: "6px"
+  control: "8px"
   form-field: "9px"
+  surface: "12px"
   panel: "14px"
   feature: "16px"
+  suggestion: "18px"
   badge: "20px"
-  filter: "30px"
 spacing:
   compact: "8px"
   small: "12px"
-  mobile-gutter: "16px"
-  tablet-gutter: "20px"
-  gutter: "32px"
-  section-desktop: "76px"
-  section-tablet: "50px"
-  section-mobile: "40px"
+  mobile-gutter: "18px"
+  tablet-gutter: "24px"
+  desktop-gutter: "48px"
+  discovery-desktop: "90px"
+  discovery-tablet: "60px"
+  discovery-mobile: "40px"
 components:
   button-primary:
     backgroundColor: "{colors.blue}"
@@ -69,135 +71,136 @@ components:
     padding: "10px 22px"
   button-primary-hover:
     backgroundColor: "{colors.blue-hover}"
-  button-secondary:
-    backgroundColor: "{colors.white}"
-    textColor: "{colors.blue}"
-    rounded: "{rounded.control}"
-    padding: "10px 22px"
+    textColor: "{colors.white}"
   input:
     backgroundColor: "{colors.white}"
     textColor: "{colors.ink}"
-    rounded: "{rounded.field}"
+    rounded: "{rounded.control}"
     padding: "11px 14px"
-  panel:
-    rounded: "{rounded.panel}"
-    padding: "28px"
+  finder:
+    backgroundColor: "{colors.white}"
+    textColor: "{colors.ink}"
+    rounded: "{rounded.surface}"
+    padding: "10px 18px 10px 10px"
+  workspace-panel:
+    rounded: "{rounded.surface}"
+    padding: "26px"
   badge:
     backgroundColor: "{colors.pale}"
     textColor: "{colors.blue}"
     rounded: "{rounded.badge}"
     padding: "3px 12px"
   journal-card:
-    backgroundColor: "{colors.journal-surface}"
-    rounded: "{rounded.panel}"
+    backgroundColor: "{colors.white}"
+    rounded: "{rounded.square}"
+    padding: "28px 0"
   topic-filter-selected:
     backgroundColor: "{colors.blue}"
     textColor: "{colors.white}"
     rounded: "{rounded.filter}"
-    padding: "6px 18px"
+    padding: "7px 14px"
 ---
 
 # Design System: UTR
 
 ## Overview
 
-**Creative North Star: "A public programme poster display"**
+**Creative North Star: "Campus wayfinding and research index"**
 
-An institutional research portal whose public identity comes from authentic event posters, scholarly covers and a clear Persian editorial hierarchy. White and pale blue frame real content; university blue anchors navigation and participation. Private workspaces remain denser, task-focused surfaces.
+A Persian university research entrance: a white institutional masthead, one full-width university-blue opening, a direct title and a working public finder. The authentic wing artwork sits quietly behind the opening. White reading surfaces, upright source posters and journal covers carry the content below. The homepage helps visitors find research; directories prioritize reading, and private workspaces prioritize tasks.
 
-The original blue/cyan/white identity remains binding. The supplied university emblem remains prominent; the authentic wing artwork remains an available identity asset, not the redesigned homepage's main illustration. Vazirmatn is temporary: the exact reference font is unidentified. The rejected plain static group list is superseded by a controlled moving ribbon.
+The blue/cyan/white identity and authentic university emblem remain binding. The user's rejected split hero and tilted poster collage are superseded by this implementation. Vazirmatn remains explicitly temporary because the reference font is unidentified.
 
 **Key Characteristics:**
 
-- Persian-first RTL with isolated mixed-direction content.
-- Real posters and journal covers with institutional provenance.
-- White and blue editorial hierarchy with restrained depth around physical media.
-- Distinct public exploration and private academic operation.
+- Persian-first RTL with isolated dates and mixed-direction content.
+- Immediate public search and clear destinations.
+- Upright authentic imagery, thin dividers and purposeful whitespace.
+- A clear boundary between historical public records and private academic operations.
 
-This merges the earlier implementation document with the 2026-11-08 redesign, using the final cascade in `src/app/globals.css`, public pages and shared components. The reported capture run contains 39 screenshots at 390, 768 and 1440 pixels with no detected page overflow or broken images. Independent visual review identified corrections; all were fixed and affected screens recaptured. Final disposition is SHIP for the reviewed visual scope only. These checks do not certify production readiness, live authenticated flows or exact font fidelity; the former 18-screenshot review does not approve this redesign.
+This refresh merges durable product constraints with the implemented final cascade: `src/app/globals.css`, then `src/app/experience.css`, as imported by `src/app/layout.tsx`. The UX rebuild brief supplies the direction; this document records implementation, not user approval of a generated comp. Independent finish review inspected 50 captures and requested three corrections: complete finder result access, toggle hover/focus contrast, and mobile club pledge layout. All three corrections were scored resolved in a SHIP verdict after valid recaptures; this verdict covers the fix list. All 13 public browser tests passed. The complete evidence set contains 56 unique captures. No old visual verdict certifies this replacement.
 
 ## Colors
 
-### Primary
+University blue anchors the entrance and primary actions. Medium blue marks links, active navigation and focus; cyan remains a restrained identity accent. White, pale blue, ink and muted text provide the reading hierarchy. The club section uses its specific cool surface; archive posters sit on a neutral tray. Journal rows are white with dividers, without separate colored cover trays. The footer is deep blue. Frontmatter records current values, including the final overrides of earlier CSS variables.
 
-University blue owns primary actions, selected academic years, active topics and club surfaces. Medium blue carries editorial metadata, icons and focus. The deeper hover blue remains the primary control hover state. Frontmatter records the final CSS overrides, not the earlier declarations retained above them.
-
-### Secondary
-
-Cyan provides restrained identity accents, including the club manifest rule. Source artwork retains its authentic colors without making them interface tokens.
-
-### Neutral
-
-Ink and muted text sit on white and pale blue. Hero, poster board, poster trays and journal-cover trays use differentiated cool surfaces. The dark footer uses light headings and links. Error red accompanies explanatory text on a pale error surface.
-
-**The Source Color Rule.** Preserve original poster and cover colors; use the institutional palette for surrounding controls and layout.
+**The Source Color Rule.** Preserve original poster and cover colors; the institutional palette belongs to the interface around them. Error red accompanies explanatory text rather than acting as the only state signal.
 
 ## Typography
 
-Display, body and controls use self-hosted `Vazirmatn, sans-serif`; the root layout imports weights 400, 500, 700 and 800. This temporary substitute is not a claim of reference-font fidelity.
+All interface roles use self-hosted `Vazirmatn, sans-serif`; weights 400, 500, 700 and 800 are imported. This is a temporary substitute, not reference-font fidelity. Headings have zero letter spacing. Body text is 16px/1.9; supporting copy generally ranges from 12px to 18px.
 
-Home display uses the frontmatter clamp, with responsive overrides of 54px at 1100px, 43px at 800px and 46px/1.4 at 600px. Editorial heads use `clamp(38px, 4vw, 56px)`/1.55. Section headings drop to 25px on mobile. Poster titles use 19px/1.8, journal titles 20px/1.7, body 16px/1.9, and small metadata 10–14px according to context. The club slogan is its semantic h1, using clamp(42px, 5vw, 64px), weight 800 and white text; institutional identity is supporting copy. Main headings have -0.025em letter spacing, balanced text; paragraphs use pretty wrapping.
+The home display is `clamp(46px, 5.1vw, 74px)`/1.5 at weight 800, overridden to 54px at 950px and to 39px/1.6 at 600px. Its introduction is 18px/1.9, then 14px on mobile. Editorial and library titles are `clamp(32px, 3.3vw, 46px)`/1.65, then 31px on mobile. Discovery headings are 39px/1.65, 32px at 950px and 29px at 600px. Archive titles are 19px/1.8, then 15px on mobile. Journal titles are 20px, then 18px at 950px. The club slogan uses `clamp(40px, 4.5vw, 60px)` and 40px on mobile. Workspace titles are 32px, then 27px on mobile.
 
-Preserve Persian word separation across explicit line breaks. Isolate dates, email addresses and telephone numbers with `bdi`; journal titles use automatic direction.
+Preserve Persian word separation across line breaks. Use `bdi` for dates and mixed-direction contact details and automatic direction for content titles where appropriate. The final mobile discovery heading intentionally retains its line break.
 
 ## Layout
 
-Desktop container: `min(1240px, calc(100% - 64px))`. At 800px and below it has 20px side gutters; at 600px and below, 16px. Public sections use 76px vertical padding, then 50px and 40px. Existing workspace rules also retain a 1000px breakpoint; public header wrapping begins at 1100px.
+The shared container is `min(1280px, calc(100% - 96px))`, changing to 24px side gutters at 950px and 18px at 600px. The sticky masthead is at least 94px high, 82px at 950px and 76px at 600px. Scroll padding is 100px, then 80px on mobile. The finder is at most 940px wide inside the blue entrance; its results expand in document flow.
 
-At 1440px, home pairs a right-hand invitation with three layered posters; archive and journal directories use three columns and the service rail four. At 768px, hero remains two-column, directories become two-column and navigation wraps onto its own row. At 390px, hero copy precedes the poster board, club and library narratives stack, public navigation wraps and centers, and workspace links wrap. Archive and journal grids remain two-column at this width. The home preview also retains two columns, with its third item hidden at 800px and below. This is not a universal single-column mobile card system.
+Home proceeds through service links, a compact truthful current-week section, archive discovery, the club process, a five-cover publication strip, library feature, updates, group ribbon and FAQs. Discovery uses a 280px introduction and flexible content with a 70px gap, reduced to 220px/40px at 1150px. At 950px the introduction moves above two discovery columns; at 600px every discovery item becomes a compact image-and-text row. Discovery vertical padding is 90/60/40px at desktop/tablet/mobile. Other sections have their own observed spacing, not a universal section token. The mobile club manifest places its 55px emblem beside identity copy; the pledge spans the full grid width at 26px/1.8 with its intended line break restored.
 
-The body is a minimum-viewport-height flex column with expanding main content, keeping the footer at the page end. Archive search has shrinkable label/select sizing. Archive detail pairs facts with a complete poster. Posters and covers use contain fitting or natural height. The library photograph is an exception: mobile uses cover fitting with a 270px maximum height. Tables scroll within their wrapper as needed.
+At 950px the main navigation becomes a button-controlled two-column disclosure. On mobile the finder becomes a two-row grid: search input above, category and submit below. At 600px publications become a horizontally scrollable snap strip with 145px items; club, library, updates and footer stack.
+
+The archive grid has three desktop columns, two at the inherited 800px breakpoint, and one column of image-and-text rows at 600px. Its list mode uses two columns of 110px-image rows, then one column with 75px images on mobile. Journals use two columns of cover-and-text rows, then one at 600px; resources become one column at 950px. Preserve the inherited 1000px workspace and 1100/800px secondary-page rules where not overridden. Tables scroll inside their wrapper.
 
 ## Elevation & Depth
 
-White space, pale fills and thin lines remain primary separators. Media now uses subtle drop shadows and overlapping rotations. Board posters rise and straighten on hover/focus; archive posters and journal covers lift slightly on hover. The club manifest straightens on mobile. Task panels remain unshadowed.
+The main hierarchy comes from blue/white contrast, whitespace, pale fills and thin borders. Posters and covers stand upright. Archive posters use `0 7px 16px -9px #172c5040`, removed on mobile; journal covers and the club manifest have no shadow. Standard `.button` hover explicitly has no shadow. Some inherited native button selectors retain `0 5px 14px -8px #123f7b80`; do not describe every interactive element as shadow-free.
 
-Shared shadow: `0 18px 45px -24px #133d7150`. Button hover: `0 5px 14px -8px #123f7b80`. These support specific media and control states, not every content block.
+The decorative wing watermark uses screen blending and opacity 0.11, reduced to 0.08 at 950px. It is not an interactive or moving layer. The group ribbon is the existing automatic animation; preserve its pause and reduced-motion controls.
 
 ## Shapes
 
-Buttons use 10px corners; native fields 8px and form fields 9px. Panels and most media trays use 14px, feature surfaces 16px, badges 20px and topic pills 30px. The poster board has 16px corners with a 70px lower-left corner, becoming 14px/45px on mobile. Board images use 5px corners. These distinct roles supersede the earlier single-radius description.
+Standard action links/buttons use 8px corners; native form fields may retain their inherited 9px radius. Finder, result tray, discovery images and workspace panels use 12px; the library feature uses 16px. Topic filters use 6px and suggestion buttons 18px. Status badges retain 20px. Generic panels outside workspace retain their 14px token.
+
+Academic year selectors are square, transparent tabs with a 3px selected underline, not pills. Journal and resource rows are square with bottom dividers. Mobile poster/discovery images use 8px corners. Do not restore tilted images or the obsolete oversized asymmetric poster board.
 
 ## Components
 
-### Buttons and fields
+### Research finder
 
-Primary controls are blue/white and secondary controls white/blue. Standard buttons retain 48px minimum height and 10px 22px padding. Compact exceptions are the mobile header action and topic filters (42px), and ribbon control (36px). Disabled controls use 0.55 opacity. Focus is a 3px medium-blue outline with 5px offset. Search wrappers use a separate border and 10px corners; fields retain native labels or explicit accessible names.
+A white 12px search surface combines a named input, native content selector and blue submit action. Typing shows live matching public records; submitting or changing category also opens results. Persian letter variants, whitespace and Latin case are normalized. Results show a count and initially eight links; the load-more button reveals eight additional matches at a time until all are available, with an explicit empty message. Clear and Escape clear query/results; the close-results action also resets category. Suggestions populate the query. Journal/resource results open official external destinations. Home finder state is local; URL persistence belongs to archive filters.
 
-### Archive and editorial directories
+### Navigation
 
-Academic-year buttons expose pressed state. Initial archive year is 1404–1405; 1403–1404 is available and 1405–1406 explicitly shows coming soon. Archive title/presenter search normalizes Persian letter variants; topic filters narrow records. Empty results include reset. Journal/resource directories offer search, topic filters and official external destinations; journal contact details expand in native disclosure elements.
+The emblem and UTR wordmark lead the white sticky masthead. Five public destinations precede account access. Current routes and descendants expose `aria-current="page"`, medium-blue text and a 2px desktop underline. At 950px and below, the named disclosure exposes expanded state; Escape closes it and restores toggle focus, and choosing a destination closes it. Mobile links use pale rectangular backgrounds. The disclosure toggle keeps blue foreground on a pale hover/focus background without a shadow. The skip link remains available.
 
-**The Academic Boundary Rule.** Historical editorial records are readable archives, never live attendance, registration, summary-submission or credit opportunities. Current events and private academic operations remain separate.
+### Archive and directories
 
-### Authentic media and provenance
+Academic years expose pressed state; 1404–1405 is the default, 1403–1404 is available, and 1405–1406 displays coming soon. Search, topic, year and grid/list preference are reflected in URL parameters and restored on navigation events. The archive resets search/topic when changing year and offers reset for empty results. The two view buttons have accessible names, pressed state and a visible result count. Journal/resource directories provide search, topic filtering and official destinations; journal contact information expands in native disclosures.
 
-`public/assets/official/provenance.json` records each local WebP derivative, original image URL, source page and retrieval date (2026-11-08). Poster sources are Farabi news pages `https://farabi.ut.ac.ir/fa/news/43935` and `https://farabi.ut.ac.ir/fa/news/50799`; journal covers come from `https://farabi.ut.ac.ir/fa/page/4231`; the library photograph comes from `https://farabi.ut.ac.ir/fa/page/4230`. Visible source links let visitors consult the institution. Provenance records origin, not separate licensing certification.
+**The Academic Boundary Rule.** Historical records are readable archives, never live registration, attendance, summary submission or credit opportunities. Public discovery does not grant academic authority. Membership approval is distinct from email verification; superadmin does not inherit academic permissions, and unresolved policy disables affected actions.
 
-Production public content is database-managed; isolated preview uses a versioned snapshot of real public records. Empty/unpublished production results must not be repopulated from that snapshot. No invented activity belongs in these surfaces.
+### Controls and workspaces
 
-### Group ribbon
+Standard buttons retain 48px minimum height and 10px 22px padding. Finder submit and certain mobile actions use 42px; topic filters use 42px desktop and 38px mobile. Focus remains a 3px medium-blue outline with 5px offset. Disabled buttons use 0.55 opacity. Private workspaces retain pale sidebars, bordered task panels, named native forms and textual statuses. Workspace panels use 26px padding, then 20px on mobile. Authentication and real server authorization remain required; visual role switching is not permission.
 
-Three participating groups repeat in a 36-second linear loop. The duplicate copy is hidden from assistive technology. Explicit pause/resume exposes pressed state; hovering the ribbon or focusing within its section pauses motion. Reduced-motion preference removes animation and the duplicate, hides the toggle and makes the static row horizontally scrollable. Media transitions are disabled; board hover/focus transforms are removed. Do not claim every hover transform is eliminated.
+### Motion
 
-### Navigation and workspaces
+Control color/background transitions are 0.18s. No automatic hero or poster motion is introduced. The group ribbon repeats in a 36-second linear loop with pause/resume, hover/focus pause and a duplicate hidden from assistive technology. Reduced-motion preference removes ribbon animation and its duplicate, hides the toggle, leaves a static scrollable row, changes smooth scrolling to auto and reduces transition duration to 0.01ms. Archive and journal hover transforms are explicitly absent.
 
-Header: authentic emblem, blue top rule, five public destinations and account access. Footer: institutional scope, policy and verification links. A skip link serves keyboard users. Private workspaces use pale sidebar navigation, bordered white task panels, explicit status badges and labeled native forms. Visual role switching grants no academic permission.
+### Authentic media and data
+
+`public/assets/official/provenance.json` records local WebP derivatives, original URLs, source pages and retrieval date (2026-11-08). Posters originate from Farabi news pages 43935 and 50799, covers from page 4231, and the library photograph from page 4230. Preserve complete posters and covers with contain fitting or natural height and keep visible institutional source links. Provenance records origin, not separate licensing certification.
+
+Production content is database-managed. Isolated preview uses a versioned snapshot of real public records; empty or unpublished production results must not be filled from it. Do not invent activity, endorsement, achievements, counts or testimonials.
 
 ## Do's and Don'ts
 
 ### Do:
 
-- Do retain the authentic emblem and wing artwork and preserve the blue/cyan/white identity.
-- Do show source posters and journal covers completely with their real colors and provenance.
-- Do preserve keyboard focus, named controls, explicit status text and reduced-motion access.
-- Do verify long Persian text, mixed-direction content and layouts at 390, 768 and 1440 pixels.
-- Do distinguish historical editorial content from current academic records and keep empty states honest.
+- Do preserve the university emblem, authentic wing artwork and blue/cyan/white identity.
+- Do give public search and direct destinations clear priority.
+- Do keep source images upright, readable and attributable.
+- Do preserve keyboard focus, explicit state, responsive controls and reduced-motion access.
+- Do verify long Persian text and mixed-direction content at 390, 768 and 1440px.
+- Do keep historical archives, current activity and private academic authority distinct.
 
 ### Don't:
 
-- Don't claim the temporary Vazirmatn font matches the reference.
+- Don't restore the rejected split hero, tilted poster collage or repetitive colored trays.
+- Don't claim Vazirmatn matches the reference font.
 - Don't use decorative cyan for primary text or action labels.
-- Don't invent activity counts, endorsements, achievements or testimonials.
-- Don't infer permissions from visual role switching or historical archive membership.
-- Don't treat screenshot checks or this document as production-readiness approval.
+- Don't fabricate public activity or infer permissions from visual roles.
+- Don't treat this documentation or screenshot checks as authenticated-flow or production-readiness approval.

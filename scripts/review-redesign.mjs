@@ -1,6 +1,6 @@
 import { chromium } from "@playwright/test";
 import fs from "node:fs/promises";
-const root = ".impeccable/review/redesign";
+const root = process.env.REVIEW_OUTPUT || ".impeccable/review/redesign";
 await fs.mkdir(root, { recursive: true });
 const browser = await chromium.launch({
   channel: process.platform === "win32" ? "msedge" : undefined,
@@ -25,7 +25,9 @@ const results = [];
 for (const width of [390, 768, 1440]) {
   await page.setViewportSize({ width, height: 950 });
   for (const route of routes) {
-    await page.goto("http://127.0.0.1:3110" + route);
+    await page.goto(
+      (process.env.TEST_BASE_URL || "http://127.0.0.1:3110") + route,
+    );
     await page.evaluate(() => document.fonts.ready);
     await page.locator("img").evaluateAll(async (imgs) => {
       imgs.forEach((i) => (i.loading = "eager"));

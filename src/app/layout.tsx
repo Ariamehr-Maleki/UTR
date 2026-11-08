@@ -5,6 +5,8 @@ import "@fontsource/vazirmatn/500.css";
 import "@fontsource/vazirmatn/700.css";
 import "@fontsource/vazirmatn/800.css";
 import "./globals.css";
+import "./experience.css";
+import { SiteHeader } from "@/components/site-header";
 export const metadata: Metadata = {
   title: {
     default: "UTR | پلتفرم پژوهش و فناوری دانشکدگان فارابی",
@@ -24,32 +26,7 @@ export default function RootLayout({
         <a className="skip" href="#main">
           رفتن به محتوای اصلی
         </a>
-        <header className="site-header">
-          <div className="container header-inner">
-            <Link className="brand" href="/">
-              <img
-                src="/assets/ut-emblem.png"
-                width="48"
-                height="48"
-                alt="نشان دانشگاه تهران"
-              />
-              <span>
-                <b dir="ltr">UTR</b>
-                <small>پژوهش و فناوری · دانشکدگان فارابی</small>
-              </span>
-            </Link>
-            <nav aria-label="ناوبری اصلی">
-              <Link href="/events">رویدادها</Link>
-              <Link href="/club">باشگاه پژوهشیاران</Link>
-              <Link href="/opportunities">فرصت‌های پژوهشی</Link>
-              <Link href="/journals">نشریات</Link>
-              <Link href="/resources">کتابخانه</Link>
-            </nav>
-            <Link className="button small" href="/auth/login">
-              ورود به سامانه
-            </Link>
-          </div>
-        </header>
+        <SiteHeader />
         <main id="main">{children}</main>
         <footer className="footer">
           <div className="container footer-grid">

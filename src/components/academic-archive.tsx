@@ -1,12 +1,45 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
-import { ArrowUpLeft, CalendarDays, Search, Clock3 } from "lucide-react";
+import {
+  ArrowUpLeft,
+  CalendarDays,
+  Search,
+  Clock3,
+  LayoutGrid,
+  List,
+} from "lucide-react";
 import type { RecordItem } from "@/lib/data";
 export function AcademicArchive({ records }: { records: RecordItem[] }) {
   const [year, setYear] = useState("1404-1405");
   const [query, setQuery] = useState("");
   const [topic, setTopic] = useState("همه موضوع‌ها");
+  const [view, setView] = useState("grid");
+  useEffect(() => {
+    const restore = () => {
+      const p = new URLSearchParams(window.location.search);
+      const y = p.get("year");
+      setYear(
+        y && ["1403-1404", "1404-1405", "1405-1406"].includes(y)
+          ? y
+          : "1404-1405",
+      );
+      setQuery(p.get("q") || "");
+      setTopic(p.get("topic") || "همه موضوع‌ها");
+      setView(p.get("view") === "list" ? "list" : "grid");
+    };
+    restore();
+    window.addEventListener("popstate", restore);
+    return () => window.removeEventListener("popstate", restore);
+  }, []);
+  function remember(values: Record<string, string>) {
+    const url = new URL(window.location.href);
+    for (const [key, value] of Object.entries(values)) {
+      if (value) url.searchParams.set(key, value);
+      else url.searchParams.delete(key);
+    }
+    window.history.replaceState(null, "", url);
+  }
   const normalize = (s: string) =>
     s.replace(/ي/g, "ی").replace(/ك/g, "ک").replace(/‌/g, " ").trim();
   const topics = [
@@ -37,6 +70,7 @@ export function AcademicArchive({ records }: { records: RecordItem[] }) {
               setYear(value);
               setQuery("");
               setTopic("همه موضوع‌ها");
+              remember({ year: value, q: "", topic: "" });
             }}
           >
             <bdi>{label}</bdi>
@@ -55,7 +89,10 @@ export function AcademicArchive({ records }: { records: RecordItem[] }) {
           </p>
           <button
             className="button secondary"
-            onClick={() => setYear("1404-1405")}
+            onClick={() => {
+              setYear("1404-1405");
+              remember({ year: "1404-1405" });
+            }}
           >
             مرور برنامه‌های سال گذشته
           </button>
@@ -79,14 +116,23 @@ export function AcademicArchive({ records }: { records: RecordItem[] }) {
                 <input
                   aria-label="جست‌وجو در آرشیو"
                   value={query}
-                  onChange={(e) => setQuery(e.target.value)}
+                  onChange={(e) => {
+                    setQuery(e.target.value);
+                    remember({ q: e.target.value });
+                  }}
                   placeholder="عنوان یا نام ارائه‌دهنده"
                 />
               </label>
               <select
                 aria-label="موضوع آرشیو"
                 value={topic}
-                onChange={(e) => setTopic(e.target.value)}
+                onChange={(e) => {
+                  setTopic(e.target.value);
+                  remember({
+                    topic:
+                      e.target.value === "همه موضوع‌ها" ? "" : e.target.value,
+                  });
+                }}
               >
                 <option>همه موضوع‌ها</option>
                 {topics.map((t) => (
@@ -99,7 +145,34 @@ export function AcademicArchive({ records }: { records: RecordItem[] }) {
             <Clock3 size={16} /> این برنامه‌ها متعلق به آرشیو هستند؛ ثبت‌نام و
             ارسال خلاصه برای آن‌ها فعال نیست.
           </p>
-          <div className="poster-grid">
+          <div className="archive-view-controls">
+            <p role="status">{shown.length.toLocaleString("fa-IR")} برنامه</p>
+            <div aria-label="شیوه نمایش آرشیو">
+              <button
+                aria-label="نمای تصویری"
+                aria-pressed={view === "grid"}
+                onClick={() => {
+                  setView("grid");
+                  remember({ view: "" });
+                }}
+              >
+                <LayoutGrid size={18} />
+              </button>
+              <button
+                aria-label="نمای فهرستی"
+                aria-pressed={view === "list"}
+                onClick={() => {
+                  setView("list");
+                  remember({ view: "list" });
+                }}
+              >
+                <List size={18} />
+              </button>
+            </div>
+          </div>
+          <div
+            className={`poster-grid${view === "list" ? " poster-list" : ""}`}
+          >
             {shown.map((r) => (
               <article className="poster-card" key={r.id}>
                 <Link
@@ -138,6 +211,7 @@ export function AcademicArchive({ records }: { records: RecordItem[] }) {
                 onClick={() => {
                   setQuery("");
                   setTopic("همه موضوع‌ها");
+                  remember({ q: "", topic: "" });
                 }}
               >
                 پاک‌کردن فیلترها

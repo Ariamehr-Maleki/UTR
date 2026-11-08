@@ -6,11 +6,7 @@ export default async function Resources() {
     <div className="container content">
       <header className="library-hero">
         <div>
-          <h1>
-            جایی برای خواندن.
-            <br />
-            ابزاری برای کشف.
-          </h1>
+          <h1>کتابخانه و منابع علمی</h1>
           <p>
             کتابخانه مرکزی دانشکدگان فارابی؛ دسترسی به کتاب‌ها، پایان‌نامه‌ها،
             پایگاه‌های علمی و راهنماهای پژوهش.
