@@ -35,7 +35,7 @@ export function SiteHeader() {
           aria-label="UTR، صفحه اصلی"
         >
           <img
-            src="/assets/ut-emblem.png"
+            src="/assets/farabi-emblem.png"
             alt="نشان دانشگاه تهران"
             width="50"
             height="50"

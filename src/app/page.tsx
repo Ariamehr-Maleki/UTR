@@ -32,50 +32,34 @@ export default async function Home() {
   return (
     <>
       <section className="research-entry">
-        <img
-          className="entry-wings"
-          src="/assets/ut-wings.png"
-          width="900"
-          height="580"
-          alt=""
-          aria-hidden="true"
-        />
+        <div className="entry-art" aria-hidden="true">
+          <img
+            src="/assets/farabi-identity.png"
+            width="1672"
+            height="941"
+            alt=""
+            fetchPriority="high"
+          />
+        </div>
         <div className="container entry-content">
-          <div className="entry-kicker">
-            <span className="entry-kicker-line" /> پژوهش و فناوری دانشکدگان
-            فارابی دانشگاه تهران
-          </div>
           <h1>
-            پژوهش، از یک پرسش
+            پژوهش و فناوری،
             <br />
-            تا یک دستاورد.
+            در کنار شما
           </h1>
           <p>
-            UTR مسیر پژوهش در دانشکدگان فارابی است؛ از رویداد و فرصت علمی تا
-            نشریه، کتابخانه و باشگاه پژوهشیاران.
-            <br />
-            هر مسیر را از همین‌جا آغاز کنید.
+            UTR فضای پژوهش و فناوری دانشکدگان فارابی دانشگاه تهران است؛ برای
+            پیگیری رویدادها، باشگاه پژوهشیاران، نشریات، منابع علمی و فرصت‌های
+            پژوهشی.
           </p>
           <div className="entry-actions">
-            <Link className="button" href="/events">
+            <Link className="button" href="/club">
+              آشنایی با باشگاه پژوهشیاران <ArrowUpLeft size={18} />
+            </Link>
+            <Link className="entry-secondary" href="/events">
               دیدن رویدادها <ArrowUpLeft size={18} />
             </Link>
-            <Link className="entry-secondary" href="/club">
-              باشگاه پژوهشیاران <ArrowUpLeft size={18} />
-            </Link>
           </div>
-          <ResearchFinder records={content} />
-        </div>
-        <div className="entry-symbol" aria-hidden="true">
-          <img src="/assets/ut-emblem.png" alt="" width="220" height="220" />
-          <span>UTR</span>
-          <small>University of Tehran Research</small>
-        </div>
-        <div className="entry-bottom container">
-          <span dir="ltr">University of Tehran Research Hub</span>
-          <Link href="/club">
-            آشنایی با باشگاه پژوهشیاران <ArrowUpLeft size={20} />
-          </Link>
         </div>
       </section>
       <div className="container">
@@ -140,6 +124,10 @@ export default async function Home() {
             تقویم رویدادها <ArrowLeft size={18} />
           </Link>
         </section>
+        <div className="discovery-search">
+          <h2>در UTR جست‌وجو کنید</h2>
+          <ResearchFinder records={content} />
+        </div>
         <section className="discovery-section">
           <div className="discovery-intro">
             <h2>
@@ -288,11 +276,18 @@ export default async function Home() {
       </section>
       <section className="container updates-section">
         {[
-          ["opportunities", "فرصت‌های پژوهشی", "فراخوان جدیدی منتشر نشده است."],
+          ["opportunities", "فرصت‌های پژوهشی", "به زودی…"],
           ["news", "خبرها و دستاوردها", "خبر تازه‌ای منتشر نشده است."],
         ].map(([kind, title, empty]) => (
           <div key={kind}>
             <h2>{title}</h2>
+            {kind === "opportunities" && (
+              <p>
+                فرصت‌های همکاری پژوهشی، پروژه‌ها و فراخوان‌هایی که دانشجویان
+                دانشکدگان فارابی می‌توانند در آن‌ها مشارکت کنند، در این بخش
+                معرفی خواهد شد.
+              </p>
+            )}
             {content.filter((e) => e.kind === kind).length ? (
               content
                 .filter((e) => e.kind === kind)

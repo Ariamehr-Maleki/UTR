@@ -29,7 +29,7 @@ export default async function Certificate({
     <div className="container section">
       <article className="certificate">
         <img
-          src="/assets/ut-emblem.png"
+          src="/assets/farabi-emblem.png"
           width="100"
           height="100"
           alt="دانشگاه تهران"

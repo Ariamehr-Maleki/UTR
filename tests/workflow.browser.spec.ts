@@ -61,7 +61,11 @@ test("mobile upload survives failure, retries one attachment and confirms one re
     .selectOption(offering);
   await page.getByRole("checkbox").check();
   await page.getByRole("button", { name: "تأیید و ارسال نهایی" }).click();
-  await expect(page.getByText("durable-referral")).toBeVisible();
+  await expect(page.getByText("DURABLE-", { exact: true })).toBeVisible();
+  await page.getByText("شناسهٔ کامل برای پشتیبانی").click();
+  await expect(
+    page.getByText("durable-referral", { exact: true }),
+  ).toBeVisible();
   expect(ids).toHaveLength(2);
   expect(ids[0]).toBe(ids[1]);
   expect(referrals).toBe(1);
@@ -201,4 +205,28 @@ test("oversized replacement clears the previous file preview", async ({
   await expect(page.getByAltText("پیش‌نمایش خلاصه دست‌نویس")).toHaveCount(0);
   await page.getByRole("button", { name: "ذخیره فایل و ادامه" }).click();
   await expect(page.getByRole("status")).toContainText("فایل را انتخاب کنید");
+});
+
+test("mobile workspace shows the task before its navigation and lets users open the menu", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/?screen=sidebar");
+  await expect(page.getByRole("heading", { name: "میز دانشجو" })).toBeVisible();
+  const toggle = page.getByRole("button", { name: "بخش‌های فضای کار" });
+  await expect(toggle).toHaveAttribute("aria-expanded", "false");
+  await expect(
+    page.getByRole("navigation", { name: "بخش‌های فضای کار" }),
+  ).toBeHidden();
+  await toggle.click();
+  await expect(
+    page.getByRole("navigation", { name: "بخش‌های فضای کار" }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("link", { name: "رویدادها و حضور" }),
+  ).toBeVisible();
+  await page.getByRole("button", { name: "بستن فهرست" }).click();
+  await expect(
+    page.getByRole("navigation", { name: "بخش‌های فضای کار" }),
+  ).toBeHidden();
 });

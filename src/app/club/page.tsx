@@ -32,7 +32,12 @@ export default function Club() {
             </div>
           </div>
           <div className="club-manifest">
-            <img src="/assets/ut-emblem.png" alt="" width="85" height="85" />
+            <img
+              src="/assets/farabi-emblem.png"
+              alt=""
+              width="85"
+              height="85"
+            />
             <p>
               دانشکدگان فارابی
               <br />

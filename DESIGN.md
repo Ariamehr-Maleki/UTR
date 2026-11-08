@@ -1,6 +1,6 @@
 ---
 name: UTR
-description: Persian university research entrance with a working public finder and readable scholarly directories
+description: Persian Farabi research entrance led by the supplied institutional artwork, with readable public directories and role-specific workspaces
 colors:
   blue: "#123f7b"
   medium: "#0876be"
@@ -9,6 +9,9 @@ colors:
   muted: "#455d74"
   pale: "#f3f9fb"
   line: "#d5e5ee"
+  pale-cyan: "#eaf9fc"
+  art-border: "#c9e7ee"
+  action-border: "#9db5cc"
   white: "#ffffff"
   blue-hover: "#0b3061"
   entry-copy: "#d6e9f6"
@@ -22,7 +25,7 @@ colors:
 typography:
   display:
     fontFamily: "UTR Damavand, Vazirmatn, sans-serif"
-    fontSize: "clamp(46px, 5.1vw, 74px)"
+    fontSize: "clamp(42px, 4.5vw, 68px)"
     fontWeight: 800
     lineHeight: 1.5
     letterSpacing: "0"
@@ -105,11 +108,11 @@ components:
 
 ## Overview
 
-**Creative North Star: "Campus wayfinding and research index"**
+**Creative North Star: "Farabi institutional identity and research wayfinding"**
 
-A Persian university research entrance: a white institutional masthead, one full-width university-blue opening, a direct title and a working public finder. The authentic wing artwork sits quietly behind the opening. White reading surfaces, upright source posters and journal covers carry the content below. The homepage helps visitors find research; directories prioritize reading, and private workspaces prioritize tasks.
+A Persian university research entrance: the white masthead carries the supplied transparent cyan emblem. The first viewport places the owner's full institutional image beside a concise explanation of UTR's Farabi scope. Role entrances and the current-week strip follow immediately. The finder sits below them as a secondary discovery tool. Upright source posters and journal covers carry the content below; private workspaces prioritize tasks.
 
-The blue/cyan/white identity and authentic university emblem remain binding. The user's rejected split hero and tilted poster collage are superseded by this implementation. Vazirmatn remains explicitly temporary because the reference font is unidentified.
+The blue/cyan/white identity and user-supplied emblem remain binding. The older small emblem medallion and flat dark-blue club hero have been removed. Vazirmatn remains an explicit fallback for headings until a Damavand webfont license and file are available.
 
 **Key Characteristics:**
 
@@ -118,7 +121,7 @@ The blue/cyan/white identity and authentic university emblem remain binding. The
 - Upright authentic imagery, thin dividers and purposeful whitespace.
 - A clear boundary between historical public records and private academic operations.
 
-This refresh merges durable product constraints with the implemented final cascade: `src/app/globals.css`, then `src/app/experience.css`, as imported by `src/app/layout.tsx`. The UX rebuild brief supplies the direction; this document records implementation, not user approval of a generated comp. Independent finish review inspected 50 captures and requested three corrections: complete finder result access, toggle hover/focus contrast, and mobile club pledge layout. All three corrections were scored resolved in a SHIP verdict after valid recaptures; this verdict covers the fix list. All 13 public browser tests passed. The complete evidence set contains 56 unique captures. No old visual verdict certifies this replacement.
+The implemented cascade is `src/app/globals.css`, `src/app/experience.css`, `src/app/workspace.css`, `src/app/refinement.css`, then `src/app/landing-refresh.css`. The user's supplied image and landing composition guide this revision. It was visually checked at 390, 768 and 1440 pixels across the public sections and authentication screen; browser route tests passed after a corrected assertion. These checks do not establish hosted authenticated-workflow acceptance.
 
 ## Colors
 
@@ -130,17 +133,19 @@ University blue anchors the entrance and primary actions. Medium blue marks link
 
 On 2026-11-09 the owner selected Damavand for headings. Heading CSS now requests locally installed Damavand through the `--heading-font` token, with Vazirmatn as the fallback. No licensed Damavand webfont file is currently present in the project or installed font directories. The [publisher's font listing](https://noonfont.com/fonts/damavand) distinguishes free desktop use from a paid website/app license; third-party free downloads do not establish permission to self-host it. The deployed experience therefore still renders the fallback until a licensed WOFF2/WOFF file and web-use terms are supplied. Body text, forms and supporting labels use self-hosted Vazirmatn. This is not yet full Damavand typography fidelity. Headings have zero letter spacing. Body text is 16px/1.9; supporting copy generally ranges from 12px to 18px.
 
-The home display is `clamp(46px, 5.1vw, 74px)`/1.5 at weight 800, overridden to 54px at 950px and to 39px/1.6 at 600px. Its introduction is 18px/1.9, then 14px on mobile. Editorial and library titles are `clamp(32px, 3.3vw, 46px)`/1.65, then 31px on mobile. Discovery headings are 39px/1.65, 32px at 950px and 29px at 600px. Archive titles are 19px/1.8, then 15px on mobile. Journal titles are 20px, then 18px at 950px. The club slogan uses `clamp(40px, 4.5vw, 60px)` and 40px on mobile. Workspace titles are 32px, then 27px on mobile.
+The home display is `clamp(42px, 4.5vw, 68px)`/1.4 at weight 800; at 700px it becomes `clamp(34px, 9vw, 46px)`. Its introduction is 17px/2, then 15px/1.9 on mobile. Editorial and library titles retain `clamp(32px, 3.3vw, 46px)`/1.65. The club slogan uses `clamp(43px, 4.6vw, 64px)`/1.48. Workspace titles remain task-focused. These additional steps are intentional because the supplied artwork has different visual weight from the preceding hero.
 
 Preserve Persian word separation across line breaks. Use `bdi` for dates and mixed-direction contact details and automatic direction for content titles where appropriate. The final mobile discovery heading intentionally retains its line break.
 
 ## Layout
 
-The shared container is `min(1280px, calc(100% - 96px))`, changing to 24px side gutters at 950px and 18px at 600px. The sticky masthead is at least 94px high, 82px at 950px and 76px at 600px. Scroll padding is 100px, then 80px on mobile. The finder is at most 940px wide inside the blue entrance; its results expand in document flow.
+The shared container is `min(1280px, calc(100% - 96px))`, changing to 24px side gutters at 950px and 18px at 600px. The sticky masthead is 88px on desktop, 82px at 950px and 76px at 600px. The hero uses a 52% artwork column on desktop and puts the full artwork above the copy at 980px and below. Search follows the week strip; its results expand in document flow.
 
 Home proceeds through service links, a compact truthful current-week section, archive discovery, the club process, a five-cover publication strip, library feature, updates, group ribbon and FAQs. Discovery uses a 280px introduction and flexible content with a 70px gap, reduced to 220px/40px at 1150px. At 950px the introduction moves above two discovery columns; at 600px every discovery item becomes a compact image-and-text row. Discovery vertical padding is 90/60/40px at desktop/tablet/mobile. Other sections have their own observed spacing, not a universal section token. The mobile club manifest places its 55px emblem beside identity copy; the pledge spans the full grid width at 26px/1.8 with its intended line break restored.
 
 At 950px the main navigation becomes a button-controlled two-column disclosure. On mobile the finder becomes a two-row grid: search input above, category and submit below. At 600px publications become a horizontally scrollable snap strip with 145px items; club, library, updates and footer stack.
+
+The operational workspace keeps its role navigation visible in a desktop sidebar. At 700px and below, that navigation collapses to a labeled, keyboard-operable button so the current task and status appear in the first mobile viewport. Role switching and logout remain inside the expanded menu; this layout does not change authorization.
 
 The archive grid has three desktop columns, two at the inherited 800px breakpoint, and one column of image-and-text rows at 600px. Its list mode uses two columns of 110px-image rows, then one column with 75px images on mobile. Journals use two columns of cover-and-text rows, then one at 600px; resources become one column at 950px. Preserve the inherited 1000px workspace and 1100/800px secondary-page rules where not overridden. Tables scroll inside their wrapper.
 
@@ -148,7 +153,7 @@ The archive grid has three desktop columns, two at the inherited 800px breakpoin
 
 The main hierarchy comes from blue/white contrast, whitespace, pale fills and thin borders. Posters and covers stand upright. Archive posters use `0 7px 16px -9px #172c5040`, removed on mobile; journal covers and the club manifest have no shadow. Standard `.button` hover explicitly has no shadow. Some inherited native button selectors retain `0 5px 14px -8px #123f7b80`; do not describe every interactive element as shadow-free.
 
-The decorative wing watermark uses screen blending and opacity 0.11, reduced to 0.08 at 950px. It is not an interactive or moving layer. The group ribbon is the existing automatic animation; preserve its pause and reduced-motion controls.
+The hero uses the supplied institutional artwork directly rather than a decorative wing watermark. The club hero now uses a pale cyan-to-white field, dark navy text and a restrained cyan-edged identity panel. The group ribbon is static when all three groups fit on desktop and retains its automatic motion, pause and reduced-motion controls on narrower screens.
 
 ## Shapes
 
@@ -182,7 +187,7 @@ Control color/background transitions are 0.18s. No automatic hero or poster moti
 
 ### Authentic media and data
 
-`public/assets/official/provenance.json` records local WebP derivatives, original URLs, source pages and retrieval date (2026-11-08). Posters originate from Farabi news pages 43935 and 50799, covers from page 4231, and the library photograph from page 4230. Preserve complete posters and covers with contain fitting or natural height and keep visible institutional source links. Provenance records origin, not separate licensing certification.
+`public/assets/farabi-emblem.png` and `public/assets/farabi-identity.png` are the owner's supplied PNG assets. The former replaces the prior header and certificate emblem; the latter leads the landing viewport. `public/assets/official/provenance.json` records local WebP derivatives, original URLs, source pages and retrieval date (2026-11-08). Posters originate from Farabi news pages 43935 and 50799, covers from page 4231, and the library photograph from page 4230. Preserve complete posters and covers with contain fitting or natural height and keep visible institutional source links. Provenance records origin, not separate licensing certification.
 
 Production content is database-managed. Isolated preview uses a versioned snapshot of real public records; empty or unpublished production results must not be filled from it. Do not invent activity, endorsement, achievements, counts or testimonials.
 

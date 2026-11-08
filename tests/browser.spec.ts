@@ -4,8 +4,16 @@ test("research entrance routes each audience and journal to a useful destination
 }) => {
   await page.goto("/");
   await expect(
-    page.getByRole("heading", { name: /پژوهش، از یک پرسش/ }),
+    page.getByRole("heading", { name: /پژوهش و فناوری، در کنار شما/ }),
   ).toBeVisible();
+  await expect(page.locator(".entry-art img")).toHaveAttribute(
+    "src",
+    "/assets/farabi-identity.png",
+  );
+  await expect(page.locator(".masthead-brand img")).toHaveAttribute(
+    "src",
+    "/assets/farabi-emblem.png",
+  );
   for (const role of ["student", "instructor", "admin"])
     await expect(
       page.locator(`.role-entrances a[href="/auth/login?role=${role}"]`),
@@ -138,6 +146,7 @@ test("journal and library directories expose sourced services", async ({
 test("club ribbon can be paused and respects reduced motion", async ({
   page,
 }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/club");
   await page.getByRole("button", { name: "توقف حرکت گروه‌ها" }).click();
   await expect(page.locator(".ribbon-track")).toHaveCSS(
@@ -158,6 +167,19 @@ test("club ribbon can be paused and respects reduced motion", async ({
   await expect(
     page.getByRole("button", { name: "توقف حرکت گروه‌ها" }),
   ).toBeHidden();
+});
+
+test("opportunities explains its purpose and the login form protects passwords", async ({
+  page,
+}) => {
+  await page.goto("/opportunities");
+  await expect(page.getByText("به زودی…", { exact: true })).toBeVisible();
+  await expect(
+    page.getByText("دانشجویان دانشکدگان فارابی", { exact: false }),
+  ).toBeVisible();
+  await page.goto("/auth/login?role=student");
+  await expect(page.locator("form[method=post]")).toBeVisible();
+  await expect(page.locator(".login-role-options")).toHaveCount(0);
 });
 
 test("research finder searches public content and recovers from empty results", async ({

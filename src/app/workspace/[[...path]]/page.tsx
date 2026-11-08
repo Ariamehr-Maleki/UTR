@@ -1,11 +1,10 @@
-import { RoleSwitch } from "@/components/role-switch";
+import { WorkspaceSidebar } from "@/components/workspace-sidebar";
 import { cookies } from "next/headers";
 import {
   approvedRoles,
   isWorkspaceRole,
   roleForView,
   roleHome,
-  roleLabels,
   workspaceNavigation,
 } from "@/lib/workspace-roles";
 import { WorkspaceOverview } from "@/components/workspace-overview";
@@ -77,6 +76,8 @@ export default async function Workspace({
     roles || [],
     profile?.membership || "pending",
   );
+  if (view === "" && availableRoles.length === 0)
+    redirect("/workspace/profile");
   const savedRole = (await cookies()).get("utr_workspace_role")?.value;
   const requestedRole = query.role || savedRole;
   const explicitRole = roleForView(view);
@@ -98,59 +99,70 @@ export default async function Workspace({
   } else if (view === "profile") {
     const { data: deps = [] } = await db.from("departments").select("*");
     body = (
-      <ActionForm
-        action="profile"
-        fields={[
-          {
-            name: "display_name",
-            label: "نام و نام خانوادگی",
-            value: profile?.display_name,
-          },
-          {
-            name: "student_number",
-            label: "شماره دانشجویی",
-            value: profile?.student_number,
-            required: !(instructor || admin || superadmin),
-          },
-          {
-            name: "degree",
-            label: "مقطع",
-            options: [
-              { value: "bachelor", label: "کارشناسی" },
-              { value: "master", label: "کارشناسی ارشد" },
-              { value: "doctorate", label: "دکتری" },
-            ],
-            value: profile?.degree,
-            required: !(instructor || admin || superadmin),
-          },
-          {
-            name: "department_id",
-            label: "گروه آموزشی",
-            options: (deps || []).map((d) => ({ value: d.id, label: d.name })),
-            value: profile?.department_id,
-            required: !(instructor || admin || superadmin),
-          },
-          {
-            name: "leaderboard_consent",
-            label: "نمایش در جدول مشارکت عمومی",
-            options: [
-              { value: "false", label: "خیر" },
-              { value: "true", label: "بله" },
-            ],
-            value: String(profile?.leaderboard_consent || false),
-          },
-          {
-            name: "publication_consent",
-            label:
-              "رضایت اولیه برای بررسی انتشار خلاصه (نیازمند حذف اطلاعات شخصی)",
-            options: [
-              { value: "false", label: "خیر" },
-              { value: "true", label: "بله" },
-            ],
-            value: String(profile?.publication_consent || false),
-          },
-        ]}
-      />
+      <>
+        {profile?.membership !== "approved" && (
+          <div className="notice">
+            حساب شما ساخته شده و می‌توانید مشخصات دانشگاهی را همین‌جا تکمیل
+            کنید. دسترسی دانشجویی پس از بررسی و تأیید معاونت پژوهشی فعال می‌شود.
+          </div>
+        )}
+        <ActionForm
+          action="profile"
+          fields={[
+            {
+              name: "display_name",
+              label: "نام و نام خانوادگی",
+              value: profile?.display_name,
+            },
+            {
+              name: "student_number",
+              label: "شماره دانشجویی",
+              value: profile?.student_number,
+              required: !(instructor || admin || superadmin),
+            },
+            {
+              name: "degree",
+              label: "مقطع",
+              options: [
+                { value: "bachelor", label: "کارشناسی" },
+                { value: "master", label: "کارشناسی ارشد" },
+                { value: "doctorate", label: "دکتری" },
+              ],
+              value: profile?.degree,
+              required: !(instructor || admin || superadmin),
+            },
+            {
+              name: "department_id",
+              label: "گروه آموزشی",
+              options: (deps || []).map((d) => ({
+                value: d.id,
+                label: d.name,
+              })),
+              value: profile?.department_id,
+              required: !(instructor || admin || superadmin),
+            },
+            {
+              name: "leaderboard_consent",
+              label: "نمایش در جدول مشارکت عمومی",
+              options: [
+                { value: "false", label: "خیر" },
+                { value: "true", label: "بله" },
+              ],
+              value: String(profile?.leaderboard_consent || false),
+            },
+            {
+              name: "publication_consent",
+              label:
+                "رضایت اولیه برای بررسی انتشار خلاصه (نیازمند حذف اطلاعات شخصی)",
+              options: [
+                { value: "false", label: "خیر" },
+                { value: "true", label: "بله" },
+              ],
+              value: String(profile?.publication_consent || false),
+            },
+          ]}
+        />
+      </>
     );
   } else if (view === "support") {
     const { data: appeals } = await db
@@ -588,22 +600,12 @@ export default async function Workspace({
   } else notFound();
   return (
     <div className="container workspace workspace-v2">
-      <aside className="sidebar">
-        <h2>{activeRole ? roleLabels[activeRole] : "حساب پژوهشی"}</h2>
-        <RoleSwitch roles={availableRoles} current={activeRole} />
-        {menu
-          .filter(([url]) => liveEnabled() || url === "profile")
-          .map(([url, title]) => (
-            <Link
-              href={`/workspace/${url}${activeRole ? `?role=${activeRole}` : ""}`}
-              key={url}
-              aria-current={view === url ? "page" : undefined}
-            >
-              {title}
-            </Link>
-          ))}
-        <ActionForm action="logout" fields={[]} button="خروج" />
-      </aside>
+      <WorkspaceSidebar
+        activeRole={activeRole}
+        availableRoles={availableRoles}
+        view={view}
+        live={liveEnabled()}
+      />
       <section>
         <h1>
           {menu.find((x) => x[0] === view)?.[1] ||

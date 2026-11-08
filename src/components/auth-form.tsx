@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import Link from "next/link";
-import { roleLabels, isWorkspaceRole } from "@/lib/workspace-roles";
+import { isWorkspaceRole } from "@/lib/workspace-roles";
 const titles: Record<string, string> = {
   login: "ورود به حساب",
   register: "درخواست عضویت",
@@ -22,13 +22,17 @@ export function AuthForm({
   const [message, setMessage] = useState("");
   const [busy, setBusy] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [role, setRole] = useState(
-    isWorkspaceRole(initialRole) ? initialRole : "",
-  );
   return (
     <>
       <h1>{titles[mode]}</h1>
       <p>پلتفرم پژوهش و فناوری دانشکدگان فارابی</p>
+      {mode === "login" && (
+        <p className="auth-guidance">
+          با یک حساب وارد شوید؛ فضای کاری بر اساس نقش‌های تأییدشدهٔ شما باز
+          می‌شود. اگر عضویتتان در انتظار بررسی است، ابتدا به تکمیل پروفایل
+          می‌روید.
+        </p>
+      )}
       {!enabled && (
         <div className="notice">
           {unavailableMessage ||
@@ -49,6 +53,7 @@ export function AuthForm({
       )}
       <form
         className="form"
+        method="post"
         onSubmit={async (e) => {
           e.preventDefault();
           setBusy(true);
@@ -63,21 +68,13 @@ export function AuthForm({
               headers: { "Content-Type": "application/json" },
             });
             const data = await res.json();
-            if (data.redirect && mode === "login" && role) {
-              const selected = await fetch("/api/role", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ role }),
-              });
-              const result = await selected.json();
-              if (selected.ok && result.redirect)
-                location.assign(result.redirect);
-              else
-                setMessage(
-                  result.message ||
-                    "این نقش برای حساب شما تأیید نشده است. از بخش حساب کاربری وضعیت عضویت را بررسی کنید.",
-                );
-            } else if (data.redirect) location.assign(data.redirect);
+            if (data.redirect && mode === "login")
+              location.assign(
+                isWorkspaceRole(initialRole)
+                  ? `/workspace?role=${initialRole}`
+                  : data.redirect,
+              );
+            else if (data.redirect) location.assign(data.redirect);
             else setMessage(data.message);
           } catch {
             setMessage("ارتباط برقرار نشد. دوباره تلاش کنید.");
@@ -86,28 +83,6 @@ export function AuthForm({
           }
         }}
       >
-        {mode === "login" && (
-          <fieldset className="login-role-options">
-            <legend>فضای کاری شما</legend>
-            {(["student", "instructor", "admin"] as const).map((item) => (
-              <label key={item}>
-                <input
-                  type="radio"
-                  name="workspace_role"
-                  value={item}
-                  checked={role === item}
-                  onChange={() => setRole(item)}
-                />
-                {roleLabels[item]}
-              </label>
-            ))}
-            <p className="role-help">
-              اگر چند نقش تأییدشده دارید، فضای کاری را انتخاب کنید. این انتخاب
-              مجوز تازه‌ای ایجاد نمی‌کند؛ پس از ورود هم می‌توانید نقش را عوض
-              کنید. اگر نقشی ندارید، پروفایل خود را تکمیل کنید.
-            </p>
-          </fieldset>
-        )}
         {mode !== "password" && (
           <label>
             ایمیل

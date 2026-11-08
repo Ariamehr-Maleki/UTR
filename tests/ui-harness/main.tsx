@@ -2,9 +2,14 @@ import { createRoot } from "react-dom/client";
 import "@fontsource/vazirmatn/400.css";
 import "@fontsource/vazirmatn/700.css";
 import "../../src/app/globals.css";
+import "../../src/app/experience.css";
+import "../../src/app/workspace.css";
+import "../../src/app/refinement.css";
+import "../../src/app/landing-refresh.css";
 import { UploadFlow } from "../../src/components/upload-flow";
 import { AdminConsole } from "../../src/components/admin-console";
 import { Assessment } from "../../src/components/assessment";
+import { WorkspaceSidebar } from "../../src/components/workspace-sidebar";
 const event = "00000000-0000-4000-8000-000000000001",
   offering = "00000000-0000-4000-8000-000000000002",
   attachment = "00000000-0000-4000-8000-000000000003",
@@ -28,7 +33,20 @@ createRoot(document.getElementById("root")!).render(
       تمام نام‌ها و اطلاعات این صفحه ساختگی و فقط برای آزمون خودکار هستند. این
       صفحه جزو برنامه منتشرشده نیست.
     </p>
-    {screen === "admin" ? (
+    {screen === "sidebar" ? (
+      <div className="workspace workspace-v2">
+        <WorkspaceSidebar
+          activeRole="student"
+          availableRoles={["student"]}
+          view=""
+          live={true}
+        />
+        <section>
+          <h1>میز دانشجو</h1>
+          <p>رویدادها، خلاصه‌ها و نتیجهٔ ارزیابی در این بخش قرار می‌گیرند.</p>
+        </section>
+      </div>
+    ) : screen === "admin" ? (
       <AdminConsole superadmin={false} academic={true} catalog={{}} />
     ) : screen === "assessment" ? (
       <Assessment

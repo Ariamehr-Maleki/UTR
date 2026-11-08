@@ -283,10 +283,9 @@ try {
       await expect(
         page.getByRole("heading", { name: "۴ · بازبینی و انتشار" }),
       ).toBeVisible();
-      await expect(page.locator('.admin-event-form input[name="id"]')).toHaveAttribute(
-        "type",
-        "hidden",
-      );
+      await expect(
+        page.locator('.admin-event-form input[name="id"]'),
+      ).toHaveAttribute("type", "hidden");
       await page.screenshot({
         path: ".impeccable/review/integration/admin-event-setup-1440.png",
         fullPage: true,

@@ -8,6 +8,9 @@ export default defineConfig({
     alias: {
       "@": root + "src",
       "next/link": fileURLToPath(new URL("./link.tsx", import.meta.url)),
+      "next/navigation": fileURLToPath(
+        new URL("./navigation.ts", import.meta.url),
+      ),
     },
   },
   oxc: { jsx: { runtime: "automatic" } },
