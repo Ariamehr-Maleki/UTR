@@ -23,7 +23,7 @@
 - [ ] Exercise real hosted Storage/RLS and authenticated mobile upload/assessment across test roles, including revoked sessions and network retries.
 - [ ] Supply approved official form; configure trusted PDF scanner if PDFs are enabled.
 - [ ] Approve revision/referral rules, institutional identity checks and retention policy. Weekly boundary is approved.
-- [ ] Identify and securely bootstrap the first verified technical and institution-approved academic administrators.
+- [x] Identify and securely bootstrap the first verified technical and institution-approved academic administrators.
 - [ ] Confirm exact font (unknown to user); current Vazirmatn remains a substitute.
 - [ ] Enable live/signup gates only after the above verification. No production-readiness claim.
 
@@ -32,7 +32,7 @@
 - [x] Real hosted signup without email confirmation, sessions, login/logout, pending membership, role escalation denial and cross-profile isolation verified with temporary accounts then cleaned up.
 - [x] Independent account activation gate: academic routes still require UTR_LIVE_ENABLED. 43 automated tests pass, including seven academic-action gate cases.
 - [ ] Complete private-upload/assessment hosted acceptance before enabling academic workflows.
-- [ ] Technical administrator email supplied; ownership verification and secure bootstrap remain pending.
+- [x] Technical administrator ownership verified and both separately authorized administrative roles bootstrapped.
 
 - [x] Account-only production deployment verified in a real browser: signup, saved profile, logout/login, unauthenticated redirect, blocked academic action, and no horizontal overflow at 390/768/1440. Temporary browser accounts removed after each run.
 - [x] Migration 17 initializes only the three user-supplied participating departments, with an audit reason.
