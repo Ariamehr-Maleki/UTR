@@ -158,6 +158,11 @@ export default async function Workspace({
       .select("*")
       .eq("student_id", user.id)
       .order("created_at", { ascending: false });
+    const { data: supportSubmissions } = await db
+      .from("submissions")
+      .select("id,events(title)")
+      .eq("student_id", user.id)
+      .order("created_at", { ascending: false });
     body = (
       <>
         <ActionForm
@@ -165,7 +170,11 @@ export default async function Workspace({
           fields={[
             {
               name: "submission_id",
-              label: "شناسه پرونده (اختیاری)",
+              label: "پروندهٔ مرتبط (اختیاری)",
+              options: (supportSubmissions || []).map((s: any) => ({
+                value: s.id,
+                label: `${s.events?.title || "رویداد"} — ${s.id.slice(0, 8).toUpperCase()}`,
+              })),
               required: false,
               value: query.submission,
             },
@@ -453,7 +462,8 @@ export default async function Workspace({
               <h3>{s.events?.title}</h3>
               <span className="badge">{statusLabel[s.state] || s.state}</span>
               <p>
-                شناسه پیگیری: <bdi dir="ltr">{s.id}</bdi>
+                شمارهٔ پیگیری:{" "}
+                <bdi dir="ltr">{s.id.slice(0, 8).toUpperCase()}</bdi>
               </p>
               <p>مهلت اولیه: {persianDate(s.deadline_snapshot)}</p>
               {s.referrals?.map((r: any) => (
@@ -615,9 +625,6 @@ export default async function Workspace({
           </div>
         )}
         {body}
-        <p className="muted">
-          شناسه حساب شما: <bdi dir="ltr">{user.id}</bdi>
-        </p>
       </section>
     </div>
   );

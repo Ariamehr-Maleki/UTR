@@ -56,7 +56,14 @@ export function AdminTools({
             <ActionForm
               action="extend_deadline"
               fields={[
-                { name: "submission_id", label: "شناسه پرونده" },
+                {
+                  name: "submission_id",
+                  label: "پرونده",
+                  options: (catalog.submissions || []).map((s) => ({
+                    value: s.id,
+                    label: `${(catalog.events || []).find((e) => e.id === s.event_id)?.title || "رویداد"} — ${s.id.slice(0, 8).toUpperCase()}`,
+                  })),
+                },
                 {
                   name: "deadline",
                   label: "مهلت جدید به وقت تهران",

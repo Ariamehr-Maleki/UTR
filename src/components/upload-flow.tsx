@@ -125,10 +125,14 @@ export function UploadFlow({
     return (
       <div className="panel" role="status">
         <h2>خلاصه شما ثبت شد</h2>
-        <p>شناسه پیگیری پایدار:</p>
+        <p>شمارهٔ پیگیری:</p>
         <p>
-          <bdi>{receipt}</bdi>
+          <bdi dir="ltr">{receipt.slice(0, 8).toUpperCase()}</bdi>
         </p>
+        <details>
+          <summary>شناسهٔ کامل برای پشتیبانی</summary>
+          <bdi dir="ltr">{receipt}</bdi>
+        </details>
         <p>نتیجه بررسی در پرونده و اعلان‌های شما نمایش داده می‌شود.</p>
         <Link className="button" href="/workspace/submissions">
           مشاهده پرونده‌ها

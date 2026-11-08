@@ -465,7 +465,10 @@ export function AdminConsole({
             });
             const result = await res.json();
             setMessage(
-              result.message + (result.id ? ` شناسه پیگیری: ${result.id}` : ""),
+              result.message +
+                (result.id
+                  ? ` شمارهٔ پیگیری: ${String(result.id).slice(0, 8).toUpperCase()}`
+                  : ""),
             );
             if (res.ok && result.id)
               setNextAction(
