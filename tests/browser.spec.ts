@@ -14,10 +14,13 @@ test("research entrance routes each audience and journal to a useful destination
     "src",
     "/assets/farabi-emblem.png",
   );
-  for (const role of ["student", "instructor", "admin"])
+  for (const role of ["student", "instructor"])
     await expect(
       page.locator(`.role-entrances a[href="/auth/login?role=${role}"]`),
     ).toBeVisible();
+  await expect(
+    page.locator('.staff-access a[href="/auth/login?role=admin"]'),
+  ).toBeVisible();
   const journal = page.locator(".publication-strip a").first();
   await expect(journal).toBeVisible();
   expect(await journal.getAttribute("href")).not.toBe("/journals");

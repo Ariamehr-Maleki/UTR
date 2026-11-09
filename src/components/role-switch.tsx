@@ -11,13 +11,12 @@ export function RoleSwitch({
   const [busy, setBusy] = useState(false);
   const options = [
     { role: "student", label: "دانشجو", path: "/workspace" },
-    { role: "instructor", label: "استاد", path: "/workspace/instructor" },
+    { role: "instructor", label: "استاد", path: "/workspace/review" },
     {
       role: "admin",
       label: "معاونت پژوهشی",
-      path: "/workspace/administration",
+      path: "/workspace/users",
     },
-    { role: "superadmin", label: "مدیریت فنی", path: "/workspace/technical" },
   ].filter((x) => roles.includes(x.role));
   if (options.length < 2) return null;
   return (

@@ -99,6 +99,13 @@ export async function POST(req: Request) {
           p_event: uuid.parse(d.event_id),
         });
         break;
+      case "review_user":
+        result = await db.rpc("review_user", {
+          p_user: uuid.parse(d.user_id),
+          p_role: z.enum(["student", "instructor"]).parse(d.role),
+          p_reason: z.string().min(5).max(2000).parse(d.reason),
+        });
+        break;
       case "begin":
         result = await db.rpc("begin_submission", {
           p_event: uuid.parse(d.event_id),

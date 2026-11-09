@@ -112,6 +112,16 @@ export function AuthForm({
             />
           </label>
         )}
+        {mode === "register" && (
+          <label>
+            نوع درخواست عضویت
+            <select name="requested_role" defaultValue="student">
+              <option value="student">دانشجو</option>
+              <option value="instructor">استاد</option>
+            </select>
+            <small>این انتخاب فقط درخواست ثبت می‌کند و مجوزی نمی‌دهد.</small>
+          </label>
+        )}
         {mode !== "reset" && (
           <button
             type="button"

@@ -139,13 +139,13 @@ Preserve Persian word separation across line breaks. Use `bdi` for dates and mix
 
 ## Layout
 
-The shared container is `min(1280px, calc(100% - 96px))`, changing to 24px side gutters at 950px and 18px at 600px. The sticky masthead is 88px on desktop, 82px at 950px and 76px at 600px. The hero uses a 52% artwork column on desktop and puts the full artwork above the copy at 980px and below. Search follows the week strip; its results expand in document flow.
+The shared container is `min(1280px, calc(100% - 96px))`, changing to 24px side gutters at 950px and 18px at 600px. The sticky masthead is 88px on desktop, 82px at 950px and 76px at 600px. The hero uses a 54% artwork column in a 470px desktop entrance and puts the full artwork above the copy at 980px and below. The mobile header keeps its menu, account entry and emblem on one row. Search follows the week strip; its results expand in document flow.
 
-Home proceeds through service links, a compact truthful current-week section, archive discovery, the club process, a five-cover publication strip, library feature, updates, group ribbon and FAQs. Discovery uses a 280px introduction and flexible content with a 70px gap, reduced to 220px/40px at 1150px. At 950px the introduction moves above two discovery columns; at 600px every discovery item becomes a compact image-and-text row. Discovery vertical padding is 90/60/40px at desktop/tablet/mobile. Other sections have their own observed spacing, not a universal section token. The mobile club manifest places its 55px emblem beside identity copy; the pledge spans the full grid width at 26px/1.8 with its intended line break restored.
+Home proceeds through two prominent academic workspace entrances, a quieter administration entry, a compact truthful current-week section, archive discovery, the club process, a five-cover publication strip, library feature, updates, group ribbon and FAQs. The masthead carries direct service navigation, so the entrance does not repeat those links. Discovery uses a 280px introduction and flexible content with a 70px gap, reduced to 220px/40px at 1150px. At 950px the introduction moves above two discovery columns; at 600px every discovery item becomes a compact image-and-text row. Discovery vertical padding is 90/60/40px at desktop/tablet/mobile. Other sections have their own observed spacing, not a universal section token. The mobile club manifest places its 55px emblem beside identity copy; the pledge spans the full grid width at 26px/1.8 with its intended line break restored.
 
 At 950px the main navigation becomes a button-controlled two-column disclosure. On mobile the finder becomes a two-row grid: search input above, category and submit below. At 600px publications become a horizontally scrollable snap strip with 145px items; club, library, updates and footer stack.
 
-The operational workspace keeps its role navigation visible in a desktop sidebar. At 700px and below, that navigation collapses to a labeled, keyboard-operable button so the current task and status appear in the first mobile viewport. Role switching and logout remain inside the expanded menu; this layout does not change authorization.
+The operational workspace keeps its role navigation visible in a desktop sidebar. At 700px and below, that navigation collapses to a labeled, keyboard-operable button so the current task and status appear in the first mobile viewport. Account, approved-role switching and logout live in a compact topbar menu. Student and instructor menus expose two primary destinations each; research administration exposes four. This layout does not change authorization.
 
 The archive grid has three desktop columns, two at the inherited 800px breakpoint, and one column of image-and-text rows at 600px. Its list mode uses two columns of 110px-image rows, then one column with 75px images on mobile. Journals use two columns of cover-and-text rows, then one at 600px; resources become one column at 950px. Preserve the inherited 1000px workspace and 1100/800px secondary-page rules where not overridden. Tables scroll inside their wrapper.
 
@@ -204,7 +204,7 @@ Production content is database-managed. Isolated preview uses a versioned snapsh
 
 ### Don't:
 
-- Don't restore the rejected split hero, tilted poster collage or repetitive colored trays.
+- Don't restore the rejected flat dark-blue hero, tilted poster collage or repetitive colored trays.
 - Don't claim Vazirmatn matches the reference font.
 - Don't use decorative cyan for primary text or action labels.
 - Don't fabricate public activity or infer permissions from visual roles.

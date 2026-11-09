@@ -1,6 +1,7 @@
 "use client";
 import { Fragment, useState } from "react";
 import { weekBounds } from "@/lib/time";
+import { statusLabel } from "@/lib/status";
 type Item = {
   [key: string]: any;
   id: string;
@@ -150,6 +151,15 @@ const operations: Record<string, [string, string[]]> = {
     ],
   ],
 };
+const operationGroups = [
+  ["اعضا و دسترسی", ["membership", "instructor", "enrollment", "role"]],
+  [
+    "نیمسال و رویداد",
+    ["semester", "offering", "event", "relevance", "attendance"],
+  ],
+  ["محتوای عمومی و قواعد", ["content", "form", "policy", "department"]],
+  ["رسیدگی به پرونده‌ها", ["appeal", "correction"]],
+] as const;
 const selects: Record<string, string[][]> = {
   membership: [
     ["pending", "در انتظار بررسی"],
@@ -200,14 +210,18 @@ export function AdminConsole({
   academic,
   catalog = {},
   initialOperation,
+  allowedOperations,
 }: {
   superadmin: boolean;
   academic: boolean;
   catalog?: Record<string, Item[]>;
   initialOperation?: string;
+  allowedOperations?: string[];
 }) {
-  const allowed = Object.keys(operations).filter((k) =>
-    ["role", "department"].includes(k) ? superadmin : academic,
+  const allowed = Object.keys(operations).filter(
+    (k) =>
+      (["role", "department"].includes(k) ? superadmin : academic) &&
+      (!allowedOperations || allowedOperations.includes(k)),
   );
   const [op, setOp] = useState(
     initialOperation && allowed.includes(initialOperation)
@@ -229,6 +243,10 @@ export function AdminConsole({
   )[op];
   const records = catalog[table] || [];
   const record = records.find((r) => r.id === selected);
+  const pendingMembers =
+    op === "membership"
+      ? records.filter((r) => r.membership === "pending")
+      : [];
   function value(key: string) {
     if (key === "user_id" && ["membership", "instructor"].includes(op))
       return record?.id || "";
@@ -288,14 +306,55 @@ export function AdminConsole({
               setNextAction(null);
             }}
           >
-            {allowed.map((k) => (
-              <option key={k} value={k}>
-                {operations[k][0]}
-              </option>
-            ))}
+            {operationGroups.map(([group, keys]) => {
+              const visible = keys.filter((key) => allowed.includes(key));
+              return visible.length ? (
+                <optgroup key={group} label={group}>
+                  {visible.map((key) => (
+                    <option key={key} value={key}>
+                      {operations[key][0]}
+                    </option>
+                  ))}
+                </optgroup>
+              ) : null;
+            })}
           </select>
         </label>
       </div>
+      {op === "membership" && (
+        <section className="membership-queue" aria-label="درخواست‌های عضویت">
+          <div className="membership-queue-heading">
+            <h2>درخواست‌های در انتظار بررسی</h2>
+            <span>{pendingMembers.length.toLocaleString("fa-IR")} پرونده</span>
+          </div>
+          {pendingMembers.length ? (
+            <div className="membership-queue-list">
+              {pendingMembers.map((member) => (
+                <button
+                  key={member.id}
+                  type="button"
+                  aria-pressed={selected === member.id}
+                  onClick={() => {
+                    setSelected(member.id);
+                    setMutationId(crypto.randomUUID());
+                    setMessage("");
+                  }}
+                >
+                  <strong>{member.display_name || "نام تکمیل نشده"}</strong>
+                  <span>
+                    {member.student_number
+                      ? `شماره دانشجویی ${member.student_number}`
+                      : "مشخصات تحصیلی ناتمام"}
+                  </span>
+                  <span aria-hidden="true">←</span>
+                </button>
+              ))}
+            </div>
+          ) : (
+            <p>درخواستی برای بررسی باقی نمانده است.</p>
+          )}
+        </section>
+      )}
       {op === "event" && (
         <section className="event-setup" aria-label="آماده‌سازی رویداد">
           <h2>مسیر انتشار نخستین رویداد</h2>
@@ -330,7 +389,15 @@ export function AdminConsole({
               )
                 ? "✓"
                 : "۳"}{" "}
-              <span>سیاست مصوب ۷۲ ساعته</span>
+              <span>سیاست مصوب ۷۲ ساعته</span>{" "}
+              {!catalog.policies?.some(
+                (x) =>
+                  x.approved &&
+                  x.revision_hours === 72 &&
+                  x.max_alternatives === 2,
+              ) && (
+                <a href="/workspace/settings?operation=policy">بررسی سیاست</a>
+              )}
             </li>
             <li>
               {catalog.forms?.some(
@@ -338,7 +405,10 @@ export function AdminConsole({
               )
                 ? "✓"
                 : "۴"}{" "}
-              <span>فرم رسمی UTR-RFC-01</span>
+              <span>فرم رسمی UTR-RFC-01</span>{" "}
+              {!catalog.forms?.some(
+                (x) => x.approved && x.version === "UTR-RFC-01",
+              ) && <a href="/workspace/settings?operation=form">بررسی فرم</a>}
             </li>
             <li>
               ۵ <span>پیش‌نویس رویداد، سپس ارتباط با درس</span>{" "}
@@ -365,8 +435,16 @@ export function AdminConsole({
             <option value="">رکورد جدید / انتخاب کنید</option>
             {records.map((r) => (
               <option key={r.id} value={r.id}>
-                {r.title || r.subject || r.display_name || r.id} —{" "}
-                {r.status || r.state || r.membership || ""}
+                {r.title ||
+                  r.subject ||
+                  r.display_name ||
+                  `شناسه ${r.id.slice(0, 8).toUpperCase()}`}{" "}
+                —{" "}
+                {statusLabel[r.status || r.state || r.membership] ||
+                  r.status ||
+                  r.state ||
+                  r.membership ||
+                  ""}
               </option>
             ))}
           </select>
@@ -407,6 +485,16 @@ export function AdminConsole({
             تأیید عضویت را پس از تطبیق این مشخصات با مدارک یا مرجع دانشگاهی ثبت
             کنید.
           </p>
+          {op === "membership" &&
+            (!record.display_name?.trim() ||
+              !record.student_number?.trim() ||
+              !record.degree ||
+              !record.department_id) && (
+              <p className="notice" role="status">
+                برای تأیید عضویت دانشجویی، ابتدا نام، شمارهٔ دانشجویی، مقطع و
+                گروه آموزشی باید تکمیل و سپس از مرجع دانشگاهی بررسی شوند.
+              </p>
+            )}
         </section>
       )}
       <form

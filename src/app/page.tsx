@@ -5,7 +5,6 @@ import {
   ArrowLeft,
   BookOpen,
   GraduationCap,
-  ClipboardCheck,
 } from "lucide-react";
 import { publicRecords } from "@/lib/data";
 import { inWeek, persianDate } from "@/lib/time";
@@ -80,29 +79,10 @@ export default async function Home() {
             </span>
             <ArrowUpLeft size={18} />
           </Link>
-          <Link href="/auth/login?role=admin">
-            <ClipboardCheck size={23} />{" "}
-            <span>
-              <strong>برای معاونت پژوهشی</strong>
-              <small>رویدادها، تأییدها و گزارش‌ها</small>
-            </span>
-            <ArrowUpLeft size={18} />
-          </Link>
         </nav>
-        <nav className="explore-nav" aria-label="خدمات پژوهشی">
-          <Link href="/events">
-            رویدادها <ArrowUpLeft />
-          </Link>
-          <Link href="/journals">
-            نشریات علمی <ArrowUpLeft />
-          </Link>
-          <Link href="/resources">
-            کتابخانه و منابع <ArrowUpLeft />
-          </Link>
-          <Link href="/opportunities">
-            فرصت‌های پژوهشی <ArrowUpLeft />
-          </Link>
-        </nav>
+        <div className="staff-access">
+          <Link href="/auth/login?role=admin">ورود معاونت پژوهشی</Link>
+        </div>
         <section className="current-week">
           <div className="current-week-label">
             <CalendarDays size={25} />

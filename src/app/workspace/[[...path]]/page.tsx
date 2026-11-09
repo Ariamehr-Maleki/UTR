@@ -18,6 +18,8 @@ import { UploadFlow } from "@/components/upload-flow";
 import { Assessment } from "@/components/assessment";
 import { AdminConsole } from "@/components/admin-console";
 import { AdminTools } from "@/components/admin-tools";
+import { AdminUsers } from "@/components/admin-users";
+import { ReportDetail } from "@/components/report-detail";
 import { CreditTable } from "@/components/credit-table";
 import { persianDate } from "@/lib/time";
 import { statusLabel } from "@/lib/status";
@@ -89,6 +91,19 @@ export default async function Workspace({
       : availableRoles[0]);
   if (view === "" && activeRole && activeRole !== "student")
     redirect(roleHome[activeRole]);
+  if (["technical", "administration"].includes(view))
+    redirect("/workspace/users");
+  if (view === "instructor") redirect("/workspace/review");
+  if (view === "admin") {
+    const operation = query.operation || "";
+    if (["membership", "instructor", "role"].includes(operation))
+      redirect("/workspace/users");
+    if (["event", "attendance", "relevance"].includes(operation))
+      redirect("/workspace/admin-events");
+    if (["semester", "offering", "enrollment"].includes(operation))
+      redirect("/workspace/admin-courses");
+    redirect("/workspace/settings");
+  }
   const menu = workspaceNavigation(activeRole);
   let body: React.ReactNode;
   if (
@@ -102,8 +117,15 @@ export default async function Workspace({
       <>
         {profile?.membership !== "approved" && (
           <div className="notice">
-            حساب شما ساخته شده و می‌توانید مشخصات دانشگاهی را همین‌جا تکمیل
-            کنید. دسترسی دانشجویی پس از بررسی و تأیید معاونت پژوهشی فعال می‌شود.
+            <strong>
+              ورود به حساب انجام شده است؛ عضویت در انتظار بررسی است.
+            </strong>
+            <p>
+              مشخصات دانشگاهی خود را در این صفحه بررسی و در صورت نیاز اصلاح
+              کنید. معاونت پژوهشی پس از احراز وضعیت دانشگاهی، دسترسی به رویدادها
+              و ارسال خلاصه را فعال می‌کند. ساخت دوبارهٔ حساب لازم نیست.
+            </p>
+            <Link href="/about">راه ارتباط با معاونت پژوهشی</Link>
           </div>
         )}
         <ActionForm
@@ -118,7 +140,12 @@ export default async function Workspace({
               name: "student_number",
               label: "شماره دانشجویی",
               value: profile?.student_number,
-              required: !(instructor || admin || superadmin),
+              required: !(
+                instructor ||
+                admin ||
+                superadmin ||
+                profile?.requested_role === "instructor"
+              ),
             },
             {
               name: "degree",
@@ -129,7 +156,12 @@ export default async function Workspace({
                 { value: "doctorate", label: "دکتری" },
               ],
               value: profile?.degree,
-              required: !(instructor || admin || superadmin),
+              required: !(
+                instructor ||
+                admin ||
+                superadmin ||
+                profile?.requested_role === "instructor"
+              ),
             },
             {
               name: "department_id",
@@ -139,7 +171,12 @@ export default async function Workspace({
                 label: d.name,
               })),
               value: profile?.department_id,
-              required: !(instructor || admin || superadmin),
+              required: !(
+                instructor ||
+                admin ||
+                superadmin ||
+                profile?.requested_role === "instructor"
+              ),
             },
             {
               name: "leaderboard_consent",
@@ -205,10 +242,97 @@ export default async function Workspace({
         ))}
       </>
     );
-  } else if (view === "admin") {
+  } else if (view === "users") {
+    if (activeRole !== "admin") notFound();
+    body = (
+      <AdminUsers db={db} query={query} id={path[1]} canApprove={!!admin} />
+    );
+  } else if (view === "report") {
+    body = <ReportDetail db={db} id={path[1]} />;
+  } else if (view === "report-list") {
+    if (!admin && !superadmin) notFound();
+    const { data: reports, error: reportsError } = await db
+      .from("submissions")
+      .select("id,state,student_id,created_at,events(title)")
+      .order("created_at", { ascending: false })
+      .limit(100);
+    body = reportsError ? (
+      <p className="notice error" role="alert">
+        دریافت گزارش‌ها انجام نشد.
+      </p>
+    ) : reports?.length ? (
+      <div className="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">رویداد</th>
+              <th scope="col">ثبت</th>
+              <th scope="col">وضعیت</th>
+              <th scope="col">اقدام</th>
+            </tr>
+          </thead>
+          <tbody>
+            {reports.map((report: any) => (
+              <tr key={report.id}>
+                <th scope="row">{report.events?.title || "رویداد"}</th>
+                <td>{persianDate(report.created_at)}</td>
+                <td>{statusLabel[report.state] || report.state}</td>
+                <td>
+                  <Link href={`/workspace/report/${report.id}`}>
+                    مشاهدهٔ مسیر گزارش
+                  </Link>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    ) : (
+      <Empty text="هنوز گزارش پژوهشی در دامنهٔ مجاز شما ثبت نشده است." />
+    );
+  } else if (view === "admin-events" || view === "admin-courses") {
+    if (!admin) notFound();
+    const catalog: Record<string, any[]> = {};
+    for (const table of [
+      "departments",
+      "profiles",
+      "semesters",
+      "events",
+      "offerings",
+      "forms",
+      "policies",
+      "content",
+    ]) {
+      const { data } = await db.from(table).select("*");
+      catalog[table] = data || [];
+    }
+    const eventPanel = view === "admin-events";
+    body = (
+      <>
+        <p className="notice">
+          {eventPanel
+            ? "رویداد را ابتدا به‌صورت پیش‌نویس ثبت کنید. برای مشارکت باشگاه، فرم و سیاست مصوب، درس مرتبط و شیوهٔ ثبت حضور را بررسی کنید."
+            : "نیمسال، درس و استاد تأییدشده را تعریف کنید؛ سپس ارتباط دانشجو با درس را ثبت و تأیید کنید."}
+        </p>
+        <AdminConsole
+          academic
+          superadmin={false}
+          catalog={catalog}
+          initialOperation={
+            query.operation || (eventPanel ? "event" : "semester")
+          }
+          allowedOperations={
+            eventPanel
+              ? ["event", "attendance", "relevance", "semester", "offering"]
+              : ["semester", "offering", "enrollment", "instructor"]
+          }
+        />
+      </>
+    );
+  } else if (view === "settings") {
     if (
       !activeRole ||
-      !["admin", "superadmin"].includes(activeRole) ||
+      activeRole !== "admin" ||
       !availableRoles.includes(activeRole)
     )
       notFound();
@@ -233,14 +357,14 @@ export default async function Workspace({
       <>
         <AdminConsole
           key={`${activeRole}:${query.operation || ""}`}
-          superadmin={!!superadmin && activeRole === "superadmin"}
-          academic={!!admin && activeRole === "admin"}
+          superadmin={!!superadmin}
+          academic={!!admin}
           catalog={catalog}
           initialOperation={query.operation}
         />
         <AdminTools
-          technical={!!superadmin && activeRole === "superadmin"}
-          academic={!!admin && activeRole === "admin"}
+          technical={!!superadmin}
+          academic={!!admin}
           catalog={catalog}
         />
       </>
@@ -277,15 +401,18 @@ export default async function Workspace({
     );
   } else if (view === "review") {
     if (!instructor) notFound();
+    const detailId = path[1];
     const history = query.queue === "history";
-    const { data: refs, error: reviewError } = await db
+    let reviewQuery = db
       .from("referrals")
       .select(
         "*,offerings(title),submissions(event_id,state),attachments(version,mime)",
       )
       .eq("instructor_id", user.id)
-      .eq("active", !history)
-      .order("created_at", { ascending: true });
+      .order("created_at", { ascending: detailId ? false : true });
+    if (detailId) reviewQuery = reviewQuery.eq("id", detailId);
+    else reviewQuery = reviewQuery.eq("active", !history);
+    const { data: refs, error: reviewError } = await reviewQuery;
     await Promise.all(
       (refs || []).map(async (r) => {
         const { data } = await db.rpc("referral_context", { p_referral: r.id });
@@ -300,7 +427,27 @@ export default async function Workspace({
             Number(r.context.review_hours) * 3600000 <
             Date.now()),
     );
-    body = (
+    body = detailId ? (
+      reviewError ? (
+        <p className="notice error" role="alert">
+          دریافت گزارش انجام نشد.
+        </p>
+      ) : refs?.[0] ? (
+        <>
+          <p>
+            <Link href="/workspace/review">بازگشت به گزارش‌های دریافتی</Link>
+          </p>
+          <Assessment referral={refs[0]} readOnly={!refs[0].active} />
+          <p>
+            <Link href={`/workspace/report/${refs[0].submission_id}`}>
+              مسیر کامل نسخه‌ها و تصمیم‌ها
+            </Link>
+          </p>
+        </>
+      ) : (
+        <p className="notice error">این گزارش برای شما در دسترس نیست.</p>
+      )
+    ) : (
       <>
         <nav className="queue-tabs" aria-label="صف‌های ارزیابی">
           {[
@@ -324,9 +471,39 @@ export default async function Workspace({
             دریافت صف ارزیابی انجام نشد. صفحه را دوباره بارگذاری کنید.
           </div>
         ) : visible.length ? (
-          visible.map((r) => (
-            <Assessment key={r.id} referral={r} readOnly={history} />
-          ))
+          <div className="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th scope="col">رویداد</th>
+                  <th scope="col">درس</th>
+                  <th scope="col">دریافت</th>
+                  <th scope="col">وضعیت</th>
+                  <th scope="col">اقدام</th>
+                </tr>
+              </thead>
+              <tbody>
+                {visible.map((r: any) => (
+                  <tr key={r.id}>
+                    <th scope="row">
+                      {r.context?.event_title || "گزارش پژوهشی"}
+                    </th>
+                    <td>{r.offerings?.title || "درس مرتبط"}</td>
+                    <td>{persianDate(r.created_at)}</td>
+                    <td>
+                      {statusLabel[r.submissions?.state] ||
+                        r.submissions?.state}
+                    </td>
+                    <td>
+                      <Link href={`/workspace/review/${r.id}`}>
+                        {history ? "مشاهدهٔ تصمیم" : "بررسی خلاصه"}
+                      </Link>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         ) : (
           <Empty
             text={
@@ -513,6 +690,11 @@ export default async function Workspace({
               <Link href={`/workspace/support?submission=${s.id}`}>
                 درخواست بررسی اداری
               </Link>
+              <p>
+                <Link href={`/workspace/report/${s.id}`}>
+                  مشاهدهٔ مسیر کامل گزارش
+                </Link>
+              </p>
             </article>
           ))
         ) : (
@@ -619,13 +801,15 @@ export default async function Workspace({
               } as Record<string, string>
             )[view]}
         </h1>
-        {profile?.membership !== "approved" && (
-          <div className="notice">
-            وضعیت عضویت:{" "}
-            {statusLabel[profile?.membership] || profile?.membership}. تأیید
-            ایمیل به‌تنهایی تأیید وضعیت دانشجویی نیست.
-          </div>
-        )}
+        {view !== "profile" &&
+          activeRole === "student" &&
+          profile?.membership !== "approved" && (
+            <div className="notice">
+              وضعیت عضویت:{" "}
+              {statusLabel[profile?.membership] || profile?.membership}. تأیید
+              ایمیل به‌تنهایی تأیید وضعیت دانشجویی نیست.
+            </div>
+          )}
         {body}
       </section>
     </div>

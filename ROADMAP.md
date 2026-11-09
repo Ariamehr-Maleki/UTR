@@ -1,6 +1,6 @@
 # Implementation tracker
 
-Current status (2026-11-08): production authentication and academic routes are enabled with approved membership checks. Official form UTR-RFC-01 and the 72-hour/two-alternative policy are configured. The checklists below contain historical milestones; [ACCEPTANCE.md](ACCEPTANCE.md) tracks current product journeys. The club leaderboard now derives three actual activity metrics rather than unapproved point values; certificates require manual academic administration. Hosted full grading acceptance, SMTP, and arbitrary PDF scanning still need attention.
+Current status (2026-11-09): production authentication and academic routes are enabled with approved membership checks. Official form UTR-RFC-01 and the 72-hour/two-alternative policy are configured. The three visible workspaces and scoped user-review migration have been implemented; hosted authenticated acceptance is still open. [ACCEPTANCE.md](ACCEPTANCE.md) tracks journey evidence. The club leaderboard derives three actual activity metrics rather than unapproved point values; certificates require manual academic administration. SMTP and arbitrary PDF scanning remain deferred.
 
 ## Implemented and locally verified
 
@@ -12,8 +12,8 @@ Current status (2026-11-08): production authentication and academic routes are e
 - [x] Canonical submissions, private versioned uploads, retained originals, file checks, exact-version assessments, zero referral and positive lock.
 - [x] Academic/technical administration, record editing, appeals, notifications, reports, audited exceptions.
 - [x] Opt-in ranking by confirmed attendance, submitted summaries or accumulated club credit; manual scoped certificate issuance and revocation. Unapproved numerical point/badge values remain disabled.
-- [x] Eighteen versioned migrations; isolated PostgreSQL RLS/concurrency tests.
-- [x] 51 automated unit/database tests; 14 public browser tests and isolated operational integration tests; captures at 390/768/1440.
+- [x] Versioned migrations including the scoped user-review migration; isolated PostgreSQL checks for RLS/concurrency and user approval.
+- [x] 26 unit tests passed locally; 25 database tests require the isolated Supabase CI stack. Public and synthetic-workflow browser cases were exercised at 390/768/1440; the Windows runner's web-server cleanup stalled after case completion.
 - [x] Further user-requested discovery/navigation redesign captured at 390/768/1440; independent visual review completed; all three material fixes scored resolved after recapture.
 - [x] Operational, bootstrap, retention, deployment and backup instructions.
 

@@ -20,6 +20,7 @@ export async function POST(req: Request) {
         mode: z.enum(["login", "register", "reset", "password", "logout"]),
         email: z.email().optional(),
         password: z.string().min(1).max(128).optional(),
+        requested_role: z.enum(["student", "instructor"]).optional(),
       })
       .parse(await req.json());
     if (["register", "password"].includes(body.mode))
@@ -44,7 +45,10 @@ export async function POST(req: Request) {
       const result = await db.auth.signUp({
         email: body.email!,
         password: body.password!,
-        options: { emailRedirectTo: `${origin}/auth/callback` },
+        options: {
+          emailRedirectTo: `${origin}/auth/callback`,
+          data: { requested_role: body.requested_role || "student" },
+        },
       });
       error = result.error;
       if (!error && result.data.session)

@@ -47,7 +47,22 @@ createRoot(document.getElementById("root")!).render(
         </section>
       </div>
     ) : screen === "admin" ? (
-      <AdminConsole superadmin={false} academic={true} catalog={{}} />
+      <AdminConsole
+        superadmin={false}
+        academic={true}
+        catalog={{
+          profiles: [
+            {
+              id: "00000000-0000-4000-8000-000000000006",
+              display_name: "دانشجوی آزمایشی",
+              student_number: null,
+              degree: null,
+              department_id: null,
+              membership: "pending",
+            },
+          ],
+        }}
+      />
     ) : screen === "assessment" ? (
       <Assessment
         referral={{

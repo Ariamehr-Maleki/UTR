@@ -36,9 +36,9 @@ export function SiteHeader() {
         >
           <img
             src="/assets/farabi-emblem.png"
-            alt="نشان دانشگاه تهران"
-            width="50"
-            height="50"
+            alt="نشان دانشکدگان فارابی دانشگاه تهران"
+            width="58"
+            height="58"
           />
           <span>
             <b dir="ltr">UTR</b>

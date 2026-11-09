@@ -190,6 +190,34 @@ test("editorial creation retries keep the same record identity", async ({
   expect(ids[0]).toBe(ids[1]);
 });
 
+test("administration can find a pending member and see missing verification fields", async ({
+  page,
+}, info) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/?screen=admin");
+  await expect(
+    page.getByRole("heading", { name: "درخواست‌های در انتظار بررسی" }),
+  ).toBeVisible();
+  await page
+    .getByRole("button", { name: /دانشجوی آزمایشی.*مشخصات تحصیلی ناتمام/ })
+    .click();
+  await expect(
+    page.getByRole("heading", { name: "مشخصات برای بررسی عضویت" }),
+  ).toBeVisible();
+  await expect(
+    page.getByText("برای تأیید عضویت دانشجویی", { exact: false }),
+  ).toBeVisible();
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= innerWidth,
+    ),
+  ).toBe(true);
+  await page.screenshot({
+    path: info.outputPath("pending-membership-390.png"),
+    fullPage: true,
+  });
+});
+
 test("oversized replacement clears the previous file preview", async ({
   page,
 }) => {
@@ -223,7 +251,7 @@ test("mobile workspace shows the task before its navigation and lets users open 
     page.getByRole("navigation", { name: "بخش‌های فضای کار" }),
   ).toBeVisible();
   await expect(
-    page.getByRole("link", { name: "رویدادها و حضور" }),
+    page.getByRole("link", { name: "رویدادها و گزارش‌های من" }),
   ).toBeVisible();
   await page.getByRole("button", { name: "بستن فهرست" }).click();
   await expect(

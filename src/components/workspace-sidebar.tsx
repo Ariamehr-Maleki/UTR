@@ -27,40 +27,57 @@ export function WorkspaceSidebar({
     ([url]) => live || url === "profile",
   );
   return (
-    <aside className="sidebar workspace-sidebar">
-      <div className="workspace-menu-heading">
-        <h2>{activeRole ? roleLabels[activeRole] : "حساب پژوهشی"}</h2>
-        <button
-          type="button"
-          className="workspace-menu-toggle"
-          aria-label={open ? "بستن فهرست" : "بخش‌های فضای کار"}
-          aria-expanded={open}
-          aria-controls="workspace-navigation"
-          onClick={() => setOpen(!open)}
+    <>
+      <header className="workspace-topbar">
+        <Link href="/" className="workspace-brand" aria-label="UTR، صفحه اصلی">
+          <img src="/assets/farabi-emblem.png" alt="" width="38" height="38" />
+          <span>
+            <strong>UTR</strong>
+            <small>پژوهش و فناوری دانشکدگان فارابی</small>
+          </span>
+        </Link>
+        <details className="workspace-account-menu">
+          <summary>حساب من</summary>
+          <div>
+            <RoleSwitch roles={availableRoles} current={activeRole} />
+            <Link href="/workspace/profile">پروفایل من</Link>
+            <ActionForm action="logout" fields={[]} button="خروج از حساب" />
+          </div>
+        </details>
+      </header>
+      <aside className="sidebar workspace-sidebar">
+        <div className="workspace-menu-heading">
+          <h2>{activeRole ? roleLabels[activeRole] : "حساب پژوهشی"}</h2>
+          <button
+            type="button"
+            className="workspace-menu-toggle"
+            aria-label={open ? "بستن فهرست" : "بخش‌های فضای کار"}
+            aria-expanded={open}
+            aria-controls="workspace-navigation"
+            onClick={() => setOpen(!open)}
+          >
+            {open ? <X size={19} /> : <Menu size={19} />}
+            {open ? "بستن" : "فهرست"}
+          </button>
+        </div>
+        <div
+          id="workspace-navigation"
+          className={`workspace-menu-content${open ? " is-open" : ""}`}
         >
-          {open ? <X size={19} /> : <Menu size={19} />}
-          {open ? "بستن" : "فهرست"}
-        </button>
-      </div>
-      <div
-        id="workspace-navigation"
-        className={`workspace-menu-content${open ? " is-open" : ""}`}
-      >
-        <RoleSwitch roles={availableRoles} current={activeRole} />
-        <nav aria-label="بخش‌های فضای کار">
-          {menu.map(([url, title]) => (
-            <Link
-              href={`/workspace/${url}${activeRole ? `?role=${activeRole}` : ""}`}
-              key={url}
-              aria-current={view === url ? "page" : undefined}
-              onClick={() => setOpen(false)}
-            >
-              {title}
-            </Link>
-          ))}
-        </nav>
-        <ActionForm action="logout" fields={[]} button="خروج از حساب" />
-      </div>
-    </aside>
+          <nav aria-label="بخش‌های فضای کار">
+            {menu.map(([url, title]) => (
+              <Link
+                href={`/workspace/${url}${activeRole ? `?role=${activeRole}` : ""}`}
+                key={url}
+                aria-current={view === url ? "page" : undefined}
+                onClick={() => setOpen(false)}
+              >
+                {title}
+              </Link>
+            ))}
+          </nav>
+        </div>
+      </aside>
+    </>
   );
 }
