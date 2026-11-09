@@ -51,8 +51,13 @@ export function Assessment({
         </p>
       )}
       <p>
-        نسخه فایل: {r.attachments?.version} · شناسه ارجاع: <bdi>{r.id}</bdi>
+        نسخهٔ فایل: {r.attachments?.version} · شمارهٔ پیگیری:{" "}
+        <bdi dir="ltr">{r.id.slice(0, 8).toUpperCase()}</bdi>
       </p>
+      <details>
+        <summary>شناسهٔ کامل برای پشتیبانی</summary>
+        <bdi dir="ltr">{r.id}</bdi>
+      </details>
       <div className="actions">
         <button type="button" onClick={() => setZoom(Math.min(zoom + 0.25, 3))}>
           بزرگ‌نمایی
