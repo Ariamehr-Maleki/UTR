@@ -38,7 +38,7 @@ function missing(row: DirectoryRow) {
   ];
 }
 function href(status: string, role: string, q: string, page = 1) {
-  const params = new URLSearchParams({ status, role });
+  const params = new URLSearchParams({ status, filter: role });
   if (q) params.set("q", q);
   if (page > 1) params.set("page", String(page));
   return `/workspace/users?${params}`;
