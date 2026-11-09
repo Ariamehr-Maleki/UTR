@@ -73,17 +73,36 @@ export default async function Section({
                   )}
                 </article>
               ))
+            ) : section === "opportunities" ? (
+              <section
+                className="opportunity-preview"
+                aria-labelledby="opportunity-preview-title"
+              >
+                <div>
+                  <span className="opportunity-preview-label">
+                    فرصت‌های پیش رو در فارابی
+                  </span>
+                  <h2 id="opportunity-preview-title">به زودی…</h2>
+                  <p>
+                    پروژه‌ها و فراخوان‌های پژوهشیِ قابل مشارکت برای دانشجویان،
+                    همراه با شرایط، مهلت و راه اقدام در این بخش معرفی می‌شوند.
+                  </p>
+                </div>
+                <div className="opportunity-preview-next">
+                  <strong>تا انتشار نخستین فرصت</strong>
+                  <p>
+                    برای آگاهی از برنامه‌های پژوهشی جاری، تقویم رویدادها را
+                    ببینید.
+                  </p>
+                  <Link href="/events">رفتن به تقویم رویدادها</Link>
+                </div>
+              </section>
             ) : (
               <div className="empty">
-                <strong>
-                  {section === "opportunities"
-                    ? "به زودی…"
-                    : "هنوز موردی منتشر نشده است"}
-                </strong>
+                <strong>هنوز موردی منتشر نشده است</strong>
                 <p>
-                  {section === "opportunities"
-                    ? "فرصت‌های تأییدشده پس از آماده‌شدن این بخش، همراه با شرایط و راه اقدام نمایش داده می‌شوند."
-                    : "پس از بررسی و انتشار مسئول مربوط، اطلاعات این بخش در دسترس قرار می‌گیرد."}
+                  پس از بررسی و انتشار مسئول مربوط، اطلاعات این بخش در دسترس
+                  قرار می‌گیرد.
                 </p>
                 <Link href="/">بازگشت به صفحه اصلی</Link>
               </div>
