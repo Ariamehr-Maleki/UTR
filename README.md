@@ -4,7 +4,7 @@ Persian/RTL research platform for the **Farabi campus** of the University of Teh
       
 ## Run locally  
    
-Node 24; PostgreSQL 15+ (tests exercised on PostgreSQL 18).                         
+Node 24; PostgreSQL 15+ (tests exercised on PostgreSQL 18).                           
 
 ```sh
 npm ci
