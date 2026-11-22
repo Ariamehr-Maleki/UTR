@@ -8,7 +8,7 @@ Node 24; PostgreSQL 15+ (tests exercised on PostgreSQL 18).
 
 ```sh                  
 npm ci
-cp .env.example .env.local
+cp .env.example .env.local 
 npm run dev
 npm run build
 npm test
