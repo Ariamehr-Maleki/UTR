@@ -2,7 +2,7 @@
 
 Persian/RTL research platform for the **Farabi campus** of the University of Tehran. The Research Fellows Club is the first operational module. Production academic workflows are active with approved roles, the v2 policy and official form; see [launch record](docs/LAUNCH-APPROVAL.md). The product remains under development against the [journey acceptance matrix](ACCEPTANCE.md), especially administrator usability and hosted grading acceptance.
       
-## Run locally         
+## Run locally             
    
 Node 24; PostgreSQL 15+ (tests exercised on PostgreSQL 18).                           
 
