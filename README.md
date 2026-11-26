@@ -6,7 +6,7 @@ Persian/RTL research platform for the **Farabi campus** of the University of Teh
    
 Node 24; PostgreSQL 15+ (tests exercised on PostgreSQL 18).                           
 
-```sh                         
+```sh                                  
 npm ci
 cp .env.example .env.local 
 npm run dev
